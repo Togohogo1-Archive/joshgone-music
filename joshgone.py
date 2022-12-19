@@ -14,7 +14,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 # Our prefix is % or @joshgone
-command_prefix = commands.when_mentioned_or("%")
+command_prefix = commands.when_mentioned_or(";")
 
 # This function exists so that bot is garbage collected after the function
 # ends. The loop's .close method is overridden to do nothing while the bot is
