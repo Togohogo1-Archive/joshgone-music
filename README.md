@@ -103,4 +103,3 @@ pew inraw joshgone-pypy pip install -r requirements-soundit.txt
 You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to run PyPy inside the virtual environment, where it can access the libraries it needs.
 
 ## Todo
-- Maybe refork entire bot to deal for a clean start (databases might be useful) - songs + geelang
