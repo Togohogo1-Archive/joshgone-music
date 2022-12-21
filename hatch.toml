@@ -6,8 +6,8 @@ dependencies = [
 	"aiohttp==3.7.3",
 	"aiosqlite==0.16.0",
 	"discord.py[voice]==1.7.3",
-	"setuptools==57.1.0",  # yoyo-migrations needs it but didn't declare it :/
-	"simpleeval==0.9.10",
+	"setuptools==58.0.0",  # yoyo-migrations needs it but didn't declare it :/
+	"simpleeval==0.9.11",
 	"soundit==0.2.1",
 	"yoyo-migrations==7.3.2",
 	"yt-dlp==2021.9.2",
