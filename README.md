@@ -102,3 +102,8 @@ pew inraw joshgone-pypy pip install -r requirements-soundit.txt
 
 You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to run PyPy inside the virtual environment, where it can access the libraries it needs.
 
+## TODO
+- Note about guild_join server table ;running command combo causing chants to work
+- Note about adding extensions
+- Notes about installation
+- Hatch file generations
