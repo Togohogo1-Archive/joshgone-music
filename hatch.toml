@@ -29,18 +29,3 @@ dependencies = [
 	"websockets==9.1",
 	"yarl==1.6.3",
 ]
-
-[envs.os]
-extra-dependencies = [
-	"httpx==0.22.0",
-	"pure-protobuf==2.1.0",
-	# Pinned sub-dependencies
-	"anyio==3.5.0",
-	"certifi==2021.10.8",
-	"charset-normalizer==2.0.12",
-	"h11==0.12.0",
-	"httpcore==0.14.7",
-	"idna==3.1",  # Duplicated sub-dependency but eh
-	"rfc3986==1.5.0",
-	"sniffio==1.2.0",
-]
