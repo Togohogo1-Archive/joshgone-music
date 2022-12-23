@@ -51,4 +51,12 @@ dependencies = [
   "yarl==1.6.3",
 ]
 [tool.hatch.envs.default.scripts]
-jgm = ""
+jgm = "python -m jgm"
+
+[tool.hatch.envs.docs]
+skip-install = true
+dependencies = [
+  "mkdocs-material==8.5.11"
+]
+[tool.hatch.envs.docs.scripts]
+serve = "mkdocs serve"

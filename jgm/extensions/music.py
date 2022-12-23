@@ -18,7 +18,7 @@ from discord.ext import tasks
 
 import yt_dlp as youtube_dl
 
-import patched_player
+import jgm.patched_player as patched_player
 import soundit as s
 
 try:
