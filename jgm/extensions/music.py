@@ -21,12 +21,7 @@ import yt_dlp as youtube_dl
 import jgm.patched_player as patched_player
 import soundit as s
 
-try:
-    import online_sequencer_get_note_infos as os_note_infos
-except ImportError:
-    has_os = False
-else:
-    has_os = True
+has_os = False
 
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
