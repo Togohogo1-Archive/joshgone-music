@@ -59,7 +59,7 @@ class Admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def shutdown(self, ctx):
-        await ctx.send("Shutting bot shut down.")
+        await ctx.send("Shutting bot down.")
         await self.bot.close()
 
     @commands.command(hidden=True)
