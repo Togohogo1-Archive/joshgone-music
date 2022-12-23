@@ -1,17 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "joshgone"
-description = "A Discord bot with some random commands"
+name = "joshgone-music"
+description = "JoshGone's Discord vc music playing features"
 readme = "README.md"
-license = { text = "MIT" }
 requires-python = ">=3.9"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Kevin Wang", email = "59260907+Togohogo1@users.noreply.github.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = []
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://github.com/GeeTransit/joshgone"
-
-[[project.authors]]
-name = "George Zhang"
-email = "geetransit@gmail.com"
+Documentation = "https://github.com/unknown/joshgone-music#readme"
+Issues = "https://github.com/unknown/joshgone-music/issues"
+Source = "https://github.com/unknown/joshgone-music"
 
 [tool.hatch.version]
-source = "vcs"
+path = "joshgone_music/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest",
+  "pytest-cov",
+]
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=joshgone_music --cov=tests {args}"
+no-cov = "cov --no-cov {args}"
+
+[[tool.hatch.envs.test.matrix]]
+python = ["37", "38", "39", "310", "311"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+  "joshgone_music/__about__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
