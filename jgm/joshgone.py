@@ -65,6 +65,3 @@ def main():
         command_prefix=command_prefix,
         intents=intents,
     )
-
-if __name__ == "__main__":
-    main()
