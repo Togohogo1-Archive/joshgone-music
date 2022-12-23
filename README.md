@@ -107,3 +107,4 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Note about adding extensions
 - Notes about installation
 - Hatch file generations
+- Clean up the database generation (some stuff aren't necessary anymore)
