@@ -51,6 +51,25 @@ class Music(commands.Cog):
         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     }
 
+        # 'options': '-vn -filter:a "atempo=1.5"',
+    _OTHER_FFMPEG_OPTS = {
+        'options': '-vn -filter:a asetrate=44800*1.2,aresample=44800,atempo=1.1',
+        # Source: https://stackoverflow.com/questions/66070749/
+        "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+    }
+
+    _OTHER_FFMPEG_OPTS2 = {
+        'options': '-vn -filter:a asetrate=44800*0.8,aresample=44800,atempo=1.1',
+        # Source: https://stackoverflow.com/questions/66070749/
+        "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+    }
+
+    _FFMPEG_3 = {
+        'options': '-vn -af bass=g=20',
+        # Source: https://stackoverflow.com/questions/66070749/
+        "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+    }
+
     ONLINE_SEQUENCER_URL_PREFIX = "https://onlinesequencer.net/"
 
     def __init__(
@@ -90,6 +109,8 @@ class Music(commands.Cog):
                 "oscollection",
             )
         self.os_directory = os_directory
+        self.current_ffmpegpcmaudio = None
+        self.b = False
 
     # Cancel just the advancer and the auto-restart tasks
     def cog_unload(self):
@@ -165,6 +186,7 @@ class Music(commands.Cog):
         try:
             # If we are processing it right now...
             if info["processing"]:
+                print("proc")
                 # Wait a bit and reschedule it again
                 await asyncio.sleep(1)
                 self.advance_queue.put_nowait(item)
@@ -192,6 +214,8 @@ class Music(commands.Cog):
                 async with channel.typing():
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
                     ctx.voice_client.play(source, after=after)
+                    self.current_ffmpegpcmaudio = source
+                    # print(dir(source.original))
                 await channel.send(f"Now playing: {title}")
             else:
                 await channel.send(f"Queue empty")
@@ -241,8 +265,12 @@ class Music(commands.Cog):
         if 'entries' in data:
             # take first item from a playlist
             data = data['entries'][0]
+        if "is_live" in data:
+            print(data["is_live"])
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
+        print(dir(audio))
+
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -361,6 +389,56 @@ class Music(commands.Cog):
         return source
 
     @commands.command()
+    async def dc(self, ctx):
+        self.ffmpeg_opts = self._OTHER_FFMPEG_OPTS2
+        await ctx.send("daycore options set, will activate on the next song if current one is playing")
+
+    @commands.command()
+    async def nc(self, ctx):
+        self.ffmpeg_opts = self._OTHER_FFMPEG_OPTS
+        await ctx.send("nightcore options set, will activate on the next song if current one is playing")
+
+    @commands.command()
+    async def bb(self, ctx):
+        self.ffmpeg_opts = self._FFMPEG_3
+        await ctx.send("maximum bass boost set, will activate on the next song if current one is playing")
+
+    @commands.command()
+    @commands.is_owner()
+    async def tim(self, ctx, *, _time):
+        after = lambda error, ctx=ctx: self.schedule(ctx, error)
+        _FFMPEG_3 = {
+            'options': f'-vn',
+            # Source: https://stackoverflow.com/questions/66070749/
+            "before_options": f"-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss {_time}",
+        }
+        self.ffmpeg_opts = _FFMPEG_3
+        # ctx.voice_client.stop()
+        # print("b")
+        # ctx.voice_client.play(self.amogus, after=after)
+        # print("c")
+        await ctx.send("skip to time")
+
+    @commands.command()
+    async def timn(self, ctx):
+        self.ffmpeg_opts = self._DEFAULT_FFMPEG_OPTS
+        await ctx.send("original ffmpeg opts will be applied when the next song plays")
+
+    @commands.command()
+    async def skip10(self, ctx):
+        self.current_ffmpegpcmaudio.original.seekfw10()
+        await ctx.send("forward10")
+
+    @commands.command()
+    async def rev10(self, ctx):
+        self.current_ffmpegpcmaudio.original.seekbw10()
+        await ctx.send("backward10")
+
+    @commands.command()
+    async def ctms(self, ctx):
+        await ctx.send(str(self.current_ffmpegpcmaudio.original.read_count*0.02) + " seconds in")
+
+    @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel
 
@@ -402,6 +480,7 @@ class Music(commands.Cog):
         queue.append({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
+        self.b = True
         await ctx.send(f"Added to queue: {ty} {url}")
 
     if has_os:
