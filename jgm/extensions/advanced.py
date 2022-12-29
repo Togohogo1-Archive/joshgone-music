@@ -1,77 +1,36 @@
-"""
-Ideas for advanced commands
+import discord
+from discord.ext import commands
+from discord.ext import tasks
 
-sleep timer (sleep in hh:mm:ss) or just raw seconds
-- remove the sleep timer
-- change the sleep timer
+class Advanced(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.mus = bot.cogs["Music"]  # Getting active music object
 
-fast forward
-- fast forward x seconds
+    @commands.command()
+    async def skip10(self, ctx):
+        self.mus.current_audio_stream.original.seekfw10()
+        await ctx.send("forward10")
 
-rewind
-- go backwards x seconds
+    @commands.command()
+    async def rev10(self, ctx):
+        self.mus.current_audio_stream.original.seekbw10()
+        await ctx.send("backward10")
 
-goto
-- go to hh:mm:ss
-- use fast ff and rw if time difference is less than x minutes (set to 10?)
-- seems like vlc android doesn't allow jumping to ms
+    @commands.command()
+    async def loc(self, ctx):
+        await ctx.send(str(self.mus.current_audio_stream.original.read_count*0.02) + " seconds in")
 
-shuffle
-- shuffle
+    @commands.command()
+    @commands.is_owner()
+    async def tim(self, ctx, *, _time):
+        _FFMPEG_3 = {
+            'options': f'-vn',
+            # Source: https://stackoverflow.com/questions/66070749/
+            "before_options": f"-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss {_time}",
+        }
+        self.mus.ffmpeg_opts = _FFMPEG_3
+        await ctx.send("skip to time")
 
-loop current song
-- continuously play the current song
-
-previous song
-- store a queue of previously played songs?
-- size of the queue configurable?
-- or just be able to do one previous song
-
-more detailed song info?
-[on vlc]
-- length
-- file size
-- 0:00/5:00
-- bitrate
-- codec
-- sample rate
-
-playback speed
-- a value between 0.25 to 4
-- ^ if thats too laggy then do 0.5 to 2
-- will be applied on next song
-
-Equalizer
-- gain for 10? diff audio frequencies?
-- easy ffmpeg setting
-
-Filters
-- preset, some examples include:
-- nightcore
-- daycore
-- bass boost
-- vaporwave (reverb)
-- radio
-- will require complete redesign of _DEFAULT_FFMPEG_OPTS
-
-ABrepeat
-- continuously play the song from start_time to end_time without any lag
-- only use with fast seeking type
-- cancel abrepeat
-
-forceskip
-- skips the song and YEETS it from the queue
-
-playlist support
--
-
-
-features that might not be implemented
-===============
-- stop after some track
-- browse parent (does this imply view filesystem)
-- song bookmarking (play this bookmark -> song x at 1:25)
-- the ability to sort tracks?
-- playback history
-
-"""
+def setup(bot):
+    bot.add_cog(Advanced(bot))
