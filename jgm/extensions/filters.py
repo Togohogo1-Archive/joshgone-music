@@ -44,7 +44,7 @@ class Filters(commands.Cog):
 
     @commands.command()
     async def bb(self, ctx):
-        self.ffmpeg_opts = self._FFMPEG_3
+        self.mus.ffmpeg_opts = self._FFMPEG_3
         await ctx.send("maximum bass boost set, will activate on the next song if current one is playing")
 
 
