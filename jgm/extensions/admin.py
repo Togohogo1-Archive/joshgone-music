@@ -35,7 +35,7 @@ class Admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def load(self, ctx, *, module: str):
-        self.bot.load_extension(module)
+        self.bot.load_extension(f"jgm.extensions.{module}")
         await ctx.send("Extension loaded.")
 
     @commands.command(hidden=True)
