@@ -32,9 +32,9 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         self.creationflags = creationflags
         self.read_count = 0
 
-        self.MAX_BUF_SZ = 5000
-        self.buffer = deque(maxlen=self.MAX_BUF_SZ)
-        self.unread_buffer = deque(maxlen=self.MAX_BUF_SZ)
+        self._MAX_BUF_SZ = 5000
+        self.buffer = deque(maxlen=self._MAX_BUF_SZ)
+        self.unread_buffer = deque(maxlen=self._MAX_BUF_SZ)
         super().__init__(source, **kwargs)
 
     def _spawn_process(self, args, **subprocess_kwargs):
