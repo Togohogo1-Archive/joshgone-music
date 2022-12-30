@@ -6,11 +6,17 @@ from discord.ext import commands
 class Database(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bot.loop.create_task(self._ensure_running())
+
+    async def _ensure_running(self):
+        # Ensure that guilds the bot was previous in have been initialized
+        for guild in self.bot.guilds:
+            await self.on_guild_join(guild)
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            await db.execute("INSERT INTO server (server_id, running) VALUES (?, ?);", (guild.id, True))
+            await db.execute("INSERT OR IGNORE INTO server (server_id, running) VALUES (?, ?);", (guild.id, True))
             await db.commit()
 
     @commands.Cog.listener()
