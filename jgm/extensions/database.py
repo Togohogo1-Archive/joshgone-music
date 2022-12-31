@@ -6,9 +6,9 @@ from discord.ext import commands
 class Database(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bot.loop.create_task(self._ensure_running())
 
-    @commands.Cog.listener()
-    async def on_ready(self):
+    async def _ensure_running(self):
         # Ensure that guilds the bot was previous in have been initialized
         for guild in self.bot.guilds:
             await self.on_guild_join(guild)
