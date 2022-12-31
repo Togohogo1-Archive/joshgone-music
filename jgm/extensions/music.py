@@ -66,6 +66,7 @@ class Music(commands.Cog):
         self.advance_task = None
         self.advancer.start()
         self.current_audio_stream = None
+        self.current_audio_link = None
 
     # Cancel just the advancer and the auto-restart tasks
     def cog_unload(self):
@@ -213,6 +214,8 @@ class Music(commands.Cog):
         if "is_live" in data:
             print(data["is_live"])
         filename = data['url'] if stream else ytdl.prepare_filename(data)
+        print(filename)
+        self.current_audio_link = filename
         audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
         print(dir(audio))
 
