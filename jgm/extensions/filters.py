@@ -26,6 +26,7 @@ class Filters(commands.Cog):
         self.bot = bot
         self.mus = bot.cogs["Music"]  # Getting active music object
         print(dir(self.mus))
+    '''
 
     @commands.command()
     async def dc(self, ctx):
@@ -46,7 +47,7 @@ class Filters(commands.Cog):
     async def bb(self, ctx):
         self.mus.ffmpeg_opts = self._FFMPEG_3
         await ctx.send("maximum bass boost set, will activate on the next song if current one is playing")
-
+    '''
 
 
 def setup(bot):

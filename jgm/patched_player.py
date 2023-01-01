@@ -32,7 +32,12 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         self.creationflags = creationflags
         self.read_count = 0
 
-        self._MAX_BUF_SZ = 5000
+        # Allow the rewinding of 5 times the maximum rewind time (15 seconds)
+        # _MAX_BUF_SZ is the number of 20ms "packets"
+        # Assume 20ms has an upper bound of 2**12 = 4096 bytes (actually closer to 3840)
+        # deque then takes up approx 4096 * (1/20) * 1000 * 15 * 5 = 15360000 bytes = 15MB upper bound
+        self._MAX_BUF_SZ = 5 * 15 * 50
+
         self.buffer = deque(maxlen=self._MAX_BUF_SZ)
         self.unread_buffer = deque(maxlen=self._MAX_BUF_SZ)
         super().__init__(source, **kwargs)
@@ -68,16 +73,14 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         self.buffer.append(ret)
         return ret
 
-    def seekbw10(self):
+    def seek_bw(self, t_sec):
         # Move from buffer to unread_buffer
-        for _ in range(500):
+        for _ in range(t_sec*50):
             if not self.buffer:
                 break
             self.unread_buffer.appendleft(self.buffer.pop())
             self.read_count -= 1
-        print("unseeked 10k ms?")
 
-    def seekfw10(self):
-        for _ in range(500):
+    def seek_fw(self, t_sec):
+        for _ in range(t_sec*50):  # t_sec*1000 / 20 = t_sec*50 reads
             self.read()
-        print("seekeed 10k ms?")

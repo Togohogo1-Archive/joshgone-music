@@ -4,23 +4,20 @@ from discord.ext import tasks
 
 import jgm.patched_player as pp
 
-class Advanced(commands.Cog):
+class Extra(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.mus = bot.cogs["Music"]  # Getting active music object
 
-    @commands.command()
-    async def skip10(self, ctx):
-        ctx.voice_client.pause()
-        self.mus.current_audio_stream.original.seekfw10()
-        ctx.voice_client.resume()
-        await ctx.send("forward10")
+    @commands.command(aliases=["ff"])
+    async def fast_forward(self, ctx, sec=5):
+        await self.mus._fast_forward(ctx, sec)
 
-    @commands.command()
-    async def rev10(self, ctx):
-        self.mus.current_audio_stream.original.seekbw10()
-        await ctx.send("backward10")
+    @commands.command(aliases=["rr"])
+    async def rewind(self, ctx, sec=5):
+        await self.mus._rewind(ctx, sec)
 
+    '''
     @commands.command()
     async def loc(self, ctx):
         await ctx.send(str(self.mus.current_audio_stream.original.read_count*0.02) + " seconds in")
@@ -44,6 +41,7 @@ class Advanced(commands.Cog):
         # self.mus.ffmpeg_opts = _FFMPEG_3
         b = time.time() - a
         await ctx.send(b)
+    '''
 
 def setup(bot):
-    bot.add_cog(Advanced(bot))
+    bot.add_cog(Extra(bot))

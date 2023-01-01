@@ -222,6 +222,10 @@ class Music(commands.Cog):
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
+    # ==================================================
+    # Original music.py functions
+    # ==================================================
+
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel
@@ -476,6 +480,34 @@ class Music(commands.Cog):
             return
         info["loop"] = loop
         await ctx.send(f"Queue {'is now' if info['loop'] else 'is now not'} looping")
+
+    # ==================================================
+    # Functions referenced by filters.py
+    # ==================================================
+
+
+
+    # ==================================================
+    # Functions referenced by extra.py
+    # ==================================================
+
+    async def _fast_forward(self, ctx, sec: int):
+        if not (1 <= sec <= 15):
+            raise commands.CommandError(f"Seek time [{sec}] outside of seek range from 1 to 15 seconds inclusive")
+
+        ctx.voice_client.pause()  # Prevent audio chops
+        self.current_audio_stream.original.seek_fw(sec)
+        ctx.voice_client.resume()
+        await ctx.send(f"Seeked {sec} second{'s'*(sec!=1)} forward")
+
+    async def _rewind(self, ctx, sec: int):
+        if not (1 <= sec <= 15):
+            raise commands.CommandError(f"Seek time [{sec}] outside of seek range from 1 to 15 seconds inclusive")
+
+        ctx.voice_client.pause()  # Prevent audio chops
+        self.current_audio_stream.original.seek_bw(sec)
+        ctx.voice_client.resume()
+        await ctx.send(f"Seeked {sec} second{'s'*(sec!=1)} backward")
 
     @commands.command()
     @commands.is_owner()
