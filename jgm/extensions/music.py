@@ -2,6 +2,7 @@
 
 import asyncio
 import random
+import re
 import typing
 import traceback
 import json
@@ -550,6 +551,16 @@ class Music(commands.Cog):
         self.current_audio_stream.original.seek_bw(sec)
         ctx.voice_client.resume()
         await ctx.send(f"Seeked {sec} second(s) backward")
+
+    def valid_pos(self, pos):
+        # Based off of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
+        # [HH:]MM:SS
+        # Or integer seconds
+        ...
+
+    async def _jump(self, ctx, pos):
+        await ctx.send(f"Jumped to time {pos}")
+
 
     @commands.command()
     @commands.is_owner()

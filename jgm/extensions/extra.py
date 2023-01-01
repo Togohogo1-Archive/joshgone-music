@@ -11,15 +11,16 @@ class Extra(commands.Cog):
 
     @commands.command(aliases=["ff"])
     async def fast_forward(self, ctx, sec: int = 5):
+        # TODO shouldn't be albe to fast forward when paused
         await self.mus._fast_forward(ctx, sec)
 
     @commands.command(aliases=["rr"])
     async def rewind(self, ctx, sec: int = 5):
         await self.mus._rewind(ctx, sec)
 
-
     @commands.command(aliases=["goto", "j"])
-    async def jump(self, ctx, pos=None):
+    async def jump(self, ctx, pos):
+
         await ctx.send("TBA")
     '''
     @commands.command()
