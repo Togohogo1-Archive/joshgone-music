@@ -110,3 +110,5 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Clean up the database generation (some stuff aren't necessary anymore)
 - Options is single quote, before options is double quote
 - `self.var` <- double check for consiststency
+- Make volume a permanent setting?
+- Inconsistency in error quotes (`ExtensionNotFound` vs `CommandNotFound` single & double quotes)

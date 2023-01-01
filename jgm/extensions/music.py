@@ -43,6 +43,15 @@ class Music(commands.Cog):
         # Source: https://stackoverflow.com/questions/66070749/
         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     }
+    # Filters
+    _FILTERS = {
+        "bassboost": "bass=g=20",
+        "deepfry": "'acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1'",  # Source: https://www.vacing.com/ffmpeg_audio_filters/index.html
+        "nightcore": "asetrate=48000*1.25,aresample=48000",
+        "daycore": "asetrate=48000*0.75,aresample=48000"
+    }
+
+# -filter_complex "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1"
 
     def __init__(
         self,
@@ -55,6 +64,11 @@ class Music(commands.Cog):
         # Options are stores on the instance in case they need to be changed
         self.ytdl_opts = ytdl_opts
         self.ffmpeg_opts = ffmpeg_opts
+
+        # Filters and speed
+        self.current_filter = "normal"
+        self.current_speed = 1
+
         # Data is persistent between extension reloads
         if not hasattr(bot, "_music_data"):
             bot._music_data = {}
@@ -485,13 +499,41 @@ class Music(commands.Cog):
     # Functions referenced by filters.py
     # ==================================================
 
+    def _set_audio_filter(self, afilter):
+        self.current_filter = afilter
 
+    def _set_speed_filter(self, factor):
+        if not (0.5 <= factor <= 2):
+            raise commands.CommandError(f"Speed factor [{factor}] outside of factor range from 0.5 to 2 inclusive")
+
+        self.current_speed = factor
+
+    async def _apply_filter(self, ctx, complx=False):
+        # Filter name always guaranteed to be valid
+        filter_li = []
+        prefix = "-filter_complex" if complx else "-af"
+
+        if self.current_filter != "normal":
+            filter_li.append(self._FILTERS[self.current_filter])
+        if self.current_speed != 1:
+            filter_li.append(f"atempo={self.current_speed}")
+
+        if filter_li:
+            temp_ffmpeg = self._DEFAULT_FFMPEG_OPTS.copy()
+            add_options = f" {prefix} {','.join(filter_li)}"
+            temp_ffmpeg["options"] += add_options
+            self.ffmpeg_opts = temp_ffmpeg
+            await ctx.send(f"Filter \"{self.current_filter}\" and x{self.current_speed} speed will be applied to the next song [this much info is not needed when the ;info command is impelemente]")
+        # If nothing in list then it means its default options
+        else:
+            self.ffmpeg_opts = self._DEFAULT_FFMPEG_OPTS
+            await ctx.send("Default filter restored for subsequent songs")
 
     # ==================================================
     # Functions referenced by extra.py
     # ==================================================
 
-    async def _fast_forward(self, ctx, sec: int):
+    async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] outside of seek range from 1 to 15 seconds inclusive")
 
@@ -500,7 +542,7 @@ class Music(commands.Cog):
         ctx.voice_client.resume()
         await ctx.send(f"Seeked {sec} second(s) forward")
 
-    async def _rewind(self, ctx, sec: int):
+    async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] outside of seek range from 1 to 15 seconds inclusive")
 
