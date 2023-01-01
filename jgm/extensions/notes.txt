@@ -4,12 +4,6 @@ sleep timer (sleep in hh:mm:ss) or just raw seconds
 - remove the sleep timer
 - change the sleep timer
 
-fast forward
-- fast forward x seconds
-
-rewind
-- go backwards x seconds
-
 goto
 - go to hh:mm:ss
 - use fast ff and rw if time difference is less than x minutes (set to 10?)
