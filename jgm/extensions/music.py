@@ -498,7 +498,7 @@ class Music(commands.Cog):
         ctx.voice_client.pause()  # Prevent audio chops
         self.current_audio_stream.original.seek_fw(sec)
         ctx.voice_client.resume()
-        await ctx.send(f"Seeked {sec} second{'s'*(sec!=1)} forward")
+        await ctx.send(f"Seeked {sec} second(s) forward")
 
     async def _rewind(self, ctx, sec: int):
         if not (1 <= sec <= 15):
@@ -507,7 +507,7 @@ class Music(commands.Cog):
         ctx.voice_client.pause()  # Prevent audio chops
         self.current_audio_stream.original.seek_bw(sec)
         ctx.voice_client.resume()
-        await ctx.send(f"Seeked {sec} second{'s'*(sec!=1)} backward")
+        await ctx.send(f"Seeked {sec} second(s) backward")
 
     @commands.command()
     @commands.is_owner()
