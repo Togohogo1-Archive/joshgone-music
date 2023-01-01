@@ -10,13 +10,17 @@ class Extra(commands.Cog):
         self.mus = bot.cogs["Music"]  # Getting active music object
 
     @commands.command(aliases=["ff"])
-    async def fast_forward(self, ctx, sec=5):
+    async def fast_forward(self, ctx, sec: int = 5):
         await self.mus._fast_forward(ctx, sec)
 
     @commands.command(aliases=["rr"])
-    async def rewind(self, ctx, sec=5):
+    async def rewind(self, ctx, sec: int = 5):
         await self.mus._rewind(ctx, sec)
 
+
+    @commands.command(aliases=["goto", "j"])
+    async def jump(self, ctx, pos=None):
+        await ctx.send("TBA")
     '''
     @commands.command()
     async def loc(self, ctx):
