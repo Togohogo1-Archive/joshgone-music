@@ -41,7 +41,7 @@ class Admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def unload(self, ctx, *, module: str):
-        self.bot.unload_extension(module)
+        self.bot.unload_extension(f"jgm.extensions.{module}")
         await ctx.send("Extension unloaded.")
 
     @commands.command(hidden=True)
