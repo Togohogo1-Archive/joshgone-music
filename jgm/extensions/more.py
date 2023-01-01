@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext import tasks
 
-class Filters(commands.Cog):
+class More(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.mus = bot.cogs["Music"]  # Getting active music object
@@ -46,4 +46,4 @@ class Filters(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Filters(bot))
+    bot.add_cog(More(bot))
