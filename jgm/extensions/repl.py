@@ -5,7 +5,6 @@ import asyncio.__main__ as asyncio_main
 import discord
 from discord.ext import commands
 
-
 # Subclass of AsyncIOInteractiveConsole that doesn't use globals
 import types
 import inspect
@@ -14,8 +13,8 @@ import asyncio.futures
 
 # Pig repl
 import sys
-sys.ps1 = "🐷🐷 >>\t"
-sys.ps2 = "🐽🐽 ..\t"
+sys.ps1 = "🐷🐷🐷 ┃"
+sys.ps2 = "🐽🐽🐽 ┆"
 
 
 class AsyncIOInteractiveConsole(asyncio_main.AsyncIOInteractiveConsole):
