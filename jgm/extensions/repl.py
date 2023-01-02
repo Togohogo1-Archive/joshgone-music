@@ -13,7 +13,7 @@ import asyncio.futures
 
 # Pig repl
 import sys
-sys.ps1 = "🐷🐷🐷 ┃"
+sys.ps1 = "🐷🐷🐷 │"
 sys.ps2 = "🐽🐽🐽 ┆"
 
 
