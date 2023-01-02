@@ -12,6 +12,12 @@ import inspect
 import concurrent.futures
 import asyncio.futures
 
+# Pig repl
+import sys
+sys.ps1 = "🐷🐷 >>\t"
+sys.ps2 = "🐽🐽 ..\t"
+
+
 class AsyncIOInteractiveConsole(asyncio_main.AsyncIOInteractiveConsole):
 
     def __init__(self, locals, loop):
