@@ -69,6 +69,8 @@ class Music(commands.Cog):
         # Filters and speed
         self.current_filter = "normal"
         self.current_speed = 1
+        self.seek_option = None
+        self.seek_temp = False
 
         # Data is persistent between extension reloads
         if not hasattr(bot, "_music_data"):
@@ -82,6 +84,7 @@ class Music(commands.Cog):
         self.advancer.start()
         self.current_audio_stream = None
         self.current_audio_link = None
+        # TODO init is not run once when reloaded
 
     # Cancel just the advancer and the auto-restart tasks
     def cog_unload(self):
@@ -97,6 +100,11 @@ class Music(commands.Cog):
 
     # Searches various sites using url. Title is data["title"] or url
     async def _play_stream(self, url):
+        print("_",self.seek_temp)
+        if self.seek_temp:
+            print("eeee")
+            return self.current_audio_stream, "placeholder"
+
         original_url = url
         if url[0] == "<" and url[-1] == ">":
             url = url[1:-1]
@@ -130,6 +138,7 @@ class Music(commands.Cog):
     # (such as when the cog is getting unloaded)
     @advancer.after_loop
     async def on_advancer_cancel(self):
+        print("after the coro is run ")
         if self.advancer.is_being_cancelled():
             if self.advance_task is not None:
                 self.advance_task.cancel()
@@ -137,9 +146,13 @@ class Music(commands.Cog):
 
     # The advancer task loop
     async def handle_advances(self):
+        i = 0
         while True:
             item = await self.advance_queue.get()
+            print("__iteration " + str(i))
             asyncio.create_task(self.handle_advance(item))
+            print("iteration " + str(i))
+            i += 1
 
     # The actual music advancing logic
     async def handle_advance(self, item):
@@ -174,9 +187,19 @@ class Music(commands.Cog):
                 # Get an audio source and play it
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
+                    # if self.seek_temp:
+                    #     ffmpeg_temp = {
+                    #         'options': '-vn',
+                    #         # Source: https://stackoverflow.com/questions/66070749/
+                    #         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss 01:01:00",
+                    #     }
+                    #     # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
+                    #     # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
+                    #     self.current_audio_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
+                    print(source, title)
+                    self.seek_temp = False
                     ctx.voice_client.play(source, after=after)
-                    self.current_audio_stream = source
                 await channel.send(f"Now playing: {title}")
             else:
                 await channel.send(f"Queue empty")
@@ -232,8 +255,6 @@ class Music(commands.Cog):
         print(filename)
         self.current_audio_link = filename
         audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
-        print(dir(audio))
-
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -496,9 +517,31 @@ class Music(commands.Cog):
         info["loop"] = loop
         await ctx.send(f"Queue {'is now' if info['loop'] else 'is now not'} looping")
 
+    @commands.command()
+    @commands.is_owner()
+    async def reschedule(self, ctx):
+        """Reschedules the current guild onto the advancer task"""
+        self.schedule(ctx, force=True)
+        await ctx.send("Rescheduled")
+
     # ==================================================
     # Functions referenced by filters.py
     # ==================================================
+
+    def ffmpeg_sets_copy(self, filter_complex=False):
+        # Filter name always guaranteed to be valid
+        filter_li = []
+        prefix = "-filter_complex" if filter_complex else "-af"
+
+        if self.current_filter != "normal":
+            filter_li.append(self._FILTERS[self.current_filter])
+        if self.current_speed != 1:
+            filter_li.append(f"atempo={self.current_speed}")
+
+        if filter_li:
+            temp_ffmpeg = self._DEFAULT_FFMPEG_OPTS.copy()
+            add_options = f" {prefix} {','.join(filter_li)}"
+            temp_ffmpeg["options"] += add_options
 
     def _set_audio_filter(self, afilter):
         self.current_filter = afilter
@@ -509,10 +552,9 @@ class Music(commands.Cog):
 
         self.current_speed = factor
 
-    async def _apply_filter(self, ctx, complx=False):
+    async def _apply_filter(self, ctx):
         # Filter name always guaranteed to be valid
         filter_li = []
-        prefix = "-filter_complex" if complx else "-af"
 
         if self.current_filter != "normal":
             filter_li.append(self._FILTERS[self.current_filter])
@@ -521,7 +563,7 @@ class Music(commands.Cog):
 
         if filter_li:
             temp_ffmpeg = self._DEFAULT_FFMPEG_OPTS.copy()
-            add_options = f" {prefix} {','.join(filter_li)}"
+            add_options = f" -filter_complex {','.join(filter_li)}"
             temp_ffmpeg["options"] += add_options
             self.ffmpeg_opts = temp_ffmpeg
             await ctx.send(f"Filter \"{self.current_filter}\" and x{self.current_speed} speed will be applied to the next song [this much info is not needed when the ;info command is impelemente]")
@@ -533,10 +575,15 @@ class Music(commands.Cog):
     # ==================================================
     # Functions referenced by extra.py
     # ==================================================
+    # TODO test unloading reloading with filters
+    @commands.command()
+    async def debug(self, ctx):
+        info = self.get_info(ctx)
+        print(info)
 
     async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
-            raise commands.CommandError(f"Seek time [{sec}] outside of seek range from 1 to 15 seconds inclusive")
+            raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
         ctx.voice_client.pause()  # Prevent audio chops
         self.current_audio_stream.original.seek_fw(sec)
@@ -545,7 +592,7 @@ class Music(commands.Cog):
 
     async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):
-            raise commands.CommandError(f"Seek time [{sec}] outside of seek range from 1 to 15 seconds inclusive")
+            raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
         ctx.voice_client.pause()  # Prevent audio chops
         self.current_audio_stream.original.seek_bw(sec)
@@ -553,21 +600,38 @@ class Music(commands.Cog):
         await ctx.send(f"Seeked {sec} second(s) backward")
 
     def valid_pos(self, pos):
-        # Based off of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
-        # [HH:]MM:SS
-        # Or integer seconds
-        ...
+        # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
+        # Match [[HH:]MM:]SS or integer seconds, brackets optional
+
+        # First check regex match
+        # Regex pattern slightly modified from: https://stackoverflow.com/a/8318367
+        if re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos):
+            return True
+        elif pos.isdigit():
+            return True
+
+        return False
 
     async def _jump(self, ctx, pos):
-        await ctx.send(f"Jumped to time {pos}")
+        ctx.voice_client.pause()  # Small amount of audio may be read here
+        if not self.valid_pos(pos):
+            raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
 
+        self.seek_temp = True
+        ctx.voice_client.stop()
+        ffmpeg_temp = {
+            'options': '-vn',
+            # Source: https://stackoverflow.com/questions/66070749/
+            "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss 0:01:00",
+        }
+        # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
+        # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
+        after = lambda error, ctx=ctx: self.schedule(ctx, error)
+        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
+        ctx.voice_client.play(strem)
+        print(self.get_info(ctx)["waiting"])
 
-    @commands.command()
-    @commands.is_owner()
-    async def reschedule(self, ctx):
-        """Reschedules the current guild onto the advancer task"""
-        self.schedule(ctx, force=True)
-        await ctx.send("Rescheduled")
+        await ctx.send("valid pos")
 
     @local.before_invoke
     @stream.before_invoke
