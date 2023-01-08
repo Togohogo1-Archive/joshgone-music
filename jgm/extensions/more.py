@@ -22,11 +22,12 @@ class More(commands.Cog):
     @commands.command(aliases=["goto", "j"])
     async def jump(self, ctx, pos):
         await self.mus._jump(ctx, pos)
-    '''
+
     @commands.command()
     async def loc(self, ctx):
-        await ctx.send(str(self.mus.current_audio_stream.original.read_count*0.02) + " seconds in")
-
+        # rename this to smth better later
+        await self.mus._loc(ctx)
+    '''
     @commands.command()
     @commands.is_owner()
     async def tim(self, ctx, *, _time):

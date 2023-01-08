@@ -180,7 +180,6 @@ class Music(commands.Cog):
             # Prioritizing jump over queue message
             if info["jumped"]:  # Was a jump
                 info["jumped"] = False
-                await channel.send("jumped 🐸🐸🐸🐸")
             elif queue:
                 # Get the next song
                 current = queue.popleft()
@@ -188,15 +187,6 @@ class Music(commands.Cog):
                 # Get an audio source and play it
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
-                    # if self.seek_temp:
-                    #     ffmpeg_temp = {
-                    #         'options': '-vn',
-                    #         # Source: https://stackoverflow.com/questions/66070749/
-                    #         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss 01:01:00",
-                    #     }
-                    #     # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
-                    #     # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
-                    #     self.current_audio_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
                     # print(source, title)
                     self.current_audio_stream = source
@@ -623,14 +613,13 @@ class Music(commands.Cog):
         # ctx.voice_client.pause()  # Small amount of audio may be read here
         if not self.valid_pos(pos):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
-
         self.seek_temp = True
         print(info)
         ctx.voice_client.stop()
         ffmpeg_temp = {
             'options': '-vn',
             # Source: https://stackoverflow.com/questions/66070749/
-            "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss 0:01:00",
+            "before_options": f"-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss {pos}",
         }
 
         # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
@@ -646,13 +635,31 @@ class Music(commands.Cog):
         print("previously played ^ ")
         print(info)
         info["jumped"] = True
+        secs = self.seconds(pos)
+        self.current_audio_stream.original.read_count = secs*50
         print("[end] ---------------- jump ------------------")
-        await ctx.send("ay bruh")
+        await ctx.send(f"jumped to {pos} = {secs}s = {secs*50} 20ms frames 🐸🐸🐸🐸")
         '''
         print(self.get_info(ctx)["waiting"])
 
         await ctx.send("valid pos")
         '''
+
+    def seconds(self, hhmmss):
+        '''
+        if len 1 -> ss
+        if len 2 -> mm:ss
+        if len 3 -> hh:mm:ss
+
+        never hh:ss
+        '''
+        hhmmss_list = hhmmss.split(":")
+        hour_s = int(hhmmss_list[-3])*3600 if len(hhmmss_list) >= 3 else 0
+        min_s = int(hhmmss_list[-2])*60 if len(hhmmss_list) >= 2 else 0
+        return hour_s + min_s + int(hhmmss_list[-1])
+
+    async def _loc(self, ctx):
+        await ctx.send(str(self.current_audio_stream.original.read_count*0.02) + " seconds in")
 
     @local.before_invoke
     @stream.before_invoke
