@@ -319,19 +319,6 @@ class Music(commands.Cog):
         self.b = True
         await ctx.send(f"Added to queue: {ty} {url}")
 
-    async def add_to_queue(self, ctx, source):
-        """Plays the specified source"""
-        if ctx.voice_client is None:
-            if ctx.author.voice:
-                await ctx.author.voice.channel.connect()
-            else:
-                raise RuntimeError("Author not connected to a voice channel")
-        info = self.get_info(ctx)
-        queue = info["queue"]
-        queue.append({"ty": "raw", "query": source})
-        if info["current"] is None:
-            self.schedule(ctx)
-
     @commands.command()
     async def _add_playlist(self, ctx, *, url):
         """Adds all songs in a playlist to the queue"""
