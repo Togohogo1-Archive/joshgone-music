@@ -198,6 +198,7 @@ class Music(commands.Cog):
                     #     self.current_audio_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
                     print(source, title)
+                    self.current_audio_stream = source
                     self.seek_temp = False
                     ctx.voice_client.play(source, after=after)
                 await channel.send(f"Now playing: {title}")
