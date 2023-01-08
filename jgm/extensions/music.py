@@ -396,6 +396,14 @@ class Music(commands.Cog):
     async def resume(self, ctx):
         """Resumes playing"""
         ctx.voice_client.resume()
+        info = self.get_info(ctx)
+        after = lambda error, ctx=ctx: self.schedule(ctx, error)
+        print(info["jumped"])
+        if info["jumped"]:
+            ctx.voice_client.play(self.current_audio_stream, after=after)
+        else:
+            ctx.voice_client.resume()
+
 
     @commands.command()
     async def leave(self, ctx):
@@ -615,7 +623,6 @@ class Music(commands.Cog):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
         self.seek_temp = True
         print(info)
-        ctx.voice_client.stop()
         ffmpeg_temp = {
             'options': '-vn',
             # Source: https://stackoverflow.com/questions/66070749/
@@ -631,7 +638,9 @@ class Music(commands.Cog):
 
         print("did this execute ???")
 
-        ctx.voice_client.play(strem, after=after)
+        if not ctx.voice_client.is_paused():
+            ctx.voice_client.stop()
+            ctx.voice_client.play(strem, after=after)
         print("previously played ^ ")
         print(info)
         info["jumped"] = True
