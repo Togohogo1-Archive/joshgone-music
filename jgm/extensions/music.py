@@ -638,6 +638,7 @@ class Music(commands.Cog):
         after = lambda error, ctx=ctx: self.schedule(ctx, error)
         print("in jump")
         strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
+        self.current_audio_stream = strem
 
         print("did this execute ???")
 
