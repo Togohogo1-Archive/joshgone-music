@@ -59,6 +59,7 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
             message = f"Popen failed: {type(exc).__name__}: {exc}"
             raise discord.ClientException(message) from exc
 
+    # bug when unloading/reloading (ff doesn't work)
     def read(self) -> bytes:
         # data in unread_buf guaranteed to be valid:
         if self.unread_buffer:  # Evaluates to true if unread_buffer has contents

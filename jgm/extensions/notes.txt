@@ -1,5 +1,7 @@
 Ideas for advanced commands
 
+seeking forward and backward
+
 sleep timer (sleep in hh:mm:ss) or just raw seconds
 - remove the sleep timer
 - change the sleep timer
@@ -47,13 +49,11 @@ Filters
 - radio
 - will require complete redesign of _DEFAULT_FFMPEG_OPTS
 
-ABrepeat
-- continuously play the song from start_time to end_time without any lag
-- only use with fast seeking type
-- cancel abrepeat
-
 forceskip
 - skips the song and YEETS it from the queue
+
+append command
+- appends at the front of the list instead of the back
 
 playlist support
 -
@@ -66,3 +66,4 @@ features that might not be implemented
 - song bookmarking (play this bookmark -> song x at 1:25)
 - the ability to sort tracks?
 - playback history
+- abrepeat

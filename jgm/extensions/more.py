@@ -4,7 +4,8 @@ from discord.ext import tasks
 
 import jgm.patched_player as pp
 
-class Extra(commands.Cog):
+class More(commands.Cog):
+    # TODO make these filters go to the next song
     def __init__(self, bot):
         self.bot = bot
         self.mus = bot.cogs["Music"]  # Getting active music object
@@ -20,8 +21,7 @@ class Extra(commands.Cog):
 
     @commands.command(aliases=["goto", "j"])
     async def jump(self, ctx, pos):
-
-        await ctx.send("TBA")
+        await self.mus._jump(ctx, pos)
     '''
     @commands.command()
     async def loc(self, ctx):
@@ -49,4 +49,4 @@ class Extra(commands.Cog):
     '''
 
 def setup(bot):
-    bot.add_cog(Extra(bot))
+    bot.add_cog(More(bot))
