@@ -100,11 +100,6 @@ class Music(commands.Cog):
 
     # Searches various sites using url. Title is data["title"] or url
     async def _play_stream(self, url):
-        print("_",self.seek_temp)
-        if self.seek_temp:
-            print("eeee")
-            return self.current_audio_stream, "placeholder"
-
         original_url = url
         if url[0] == "<" and url[-1] == ">":
             url = url[1:-1]
@@ -179,8 +174,14 @@ class Music(commands.Cog):
             # If we're looping, put the current song at the end of the queue
             if info["loop"] and info["current"] is not None:
                 queue.append(info["current"])
-            info["current"] = None
-            if queue:
+            if not info["jumped"]:  # If wasn't jumped, run if False
+                info["current"] = None
+
+            # Prioritizing jump over queue message
+            if info["jumped"]:  # Was a jump
+                info["jumped"] = False
+                await channel.send("jumped 🐸🐸🐸🐸")
+            elif queue:
                 # Get the next song
                 current = queue.popleft()
                 info["current"] = current
@@ -197,7 +198,7 @@ class Music(commands.Cog):
                     #     # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
                     #     self.current_audio_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
-                    print(source, title)
+                    # print(source, title)
                     self.current_audio_stream = source
                     self.seek_temp = False
                     ctx.voice_client.play(source, after=after)
@@ -231,6 +232,7 @@ class Music(commands.Cog):
             wrapped["loop"] = False
             wrapped["processing"] = False
             wrapped["version"] = 3
+            wrapped["jumped"] = False
         else:
             wrapped = self.data[guild_id]
         if wrapped["version"] == 3:
@@ -253,7 +255,7 @@ class Music(commands.Cog):
         if "is_live" in data:
             print(data["is_live"])
         filename = data['url'] if stream else ytdl.prepare_filename(data)
-        print(filename)
+        # print(filename)
         self.current_audio_link = filename
         audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
         player = discord.PCMVolumeTransformer(audio)
@@ -614,25 +616,42 @@ class Music(commands.Cog):
         return False
 
     async def _jump(self, ctx, pos):
-        ctx.voice_client.pause()  # Small amount of audio may be read here
+        print("[start] ---------------- jump ------------------")
+        info = self.get_info(ctx)
+        # honestly just gonna make it not hand back to the main loop
+
+        # ctx.voice_client.pause()  # Small amount of audio may be read here
         if not self.valid_pos(pos):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
 
         self.seek_temp = True
+        print(info)
         ctx.voice_client.stop()
         ffmpeg_temp = {
             'options': '-vn',
             # Source: https://stackoverflow.com/questions/66070749/
             "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss 0:01:00",
         }
+
         # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
         # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
         after = lambda error, ctx=ctx: self.schedule(ctx, error)
+        print("in jump")
         strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
-        ctx.voice_client.play(strem)
+
+        print("did this execute ???")
+
+        ctx.voice_client.play(strem, after=after)
+        print("previously played ^ ")
+        print(info)
+        info["jumped"] = True
+        print("[end] ---------------- jump ------------------")
+        await ctx.send("ay bruh")
+        '''
         print(self.get_info(ctx)["waiting"])
 
         await ctx.send("valid pos")
+        '''
 
     @local.before_invoke
     @stream.before_invoke
