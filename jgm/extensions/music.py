@@ -395,7 +395,6 @@ class Music(commands.Cog):
     @commands.command(aliases=["start"])
     async def resume(self, ctx):
         """Resumes playing"""
-        ctx.voice_client.resume()
         info = self.get_info(ctx)
         after = lambda error, ctx=ctx: self.schedule(ctx, error)
         print(info["jumped"])
