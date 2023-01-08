@@ -2,48 +2,51 @@ import discord
 from discord.ext import commands
 from discord.ext import tasks
 
-class More(commands.Cog):
+import jgm.patched_player as pp
+
+class Extra(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.mus = bot.cogs["Music"]  # Getting active music object
-        print(dir(self.mus))
 
-    @commands.command(aliases=["bb"])
-    async def bassboost(self, ctx):
-        self.mus._set_audio_filter("bassboost")
-        await self.mus._apply_filter(ctx)
+    @commands.command(aliases=["ff"])
+    async def fast_forward(self, ctx, sec: int = 5):
+        # TODO shouldn't be albe to fast forward when paused
+        await self.mus._fast_forward(ctx, sec)
+
+    @commands.command(aliases=["rr"])
+    async def rewind(self, ctx, sec: int = 5):
+        await self.mus._rewind(ctx, sec)
+
+    @commands.command(aliases=["goto", "j"])
+    async def jump(self, ctx, pos):
+
+        await ctx.send("TBA")
+    '''
+    @commands.command()
+    async def loc(self, ctx):
+        await ctx.send(str(self.mus.current_audio_stream.original.read_count*0.02) + " seconds in")
 
     @commands.command()
-    async def deepfry(self, ctx):
-        self.mus._set_audio_filter("deepfry")
-        await self.mus._apply_filter(ctx, complx=True)
+    @commands.is_owner()
+    async def tim(self, ctx, *, _time):
+        _FFMPEG_3 = {
+            'options': '-vn',
+            # Source: https://stackoverflow.com/questions/66070749/
+            "before_options": f"-ss {_time} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
+        }
+        import time
+        a = time.time()
+        new_audio = pp.FFmpegPCMAudio(self.mus.current_audio_link, **_FFMPEG_3)
+        await self.mus.skip(ctx)
 
-    @commands.command(aliases=["nc"])
-    async def nightcore(self, ctx):
-        self.mus._set_audio_filter("nightcore")
-        await self.mus._apply_filter(ctx)
-
-    @commands.command(aliases=["dc"])
-    async def daycore(self, ctx):
-        self.mus._set_audio_filter("daycore")
-        await self.mus._apply_filter(ctx)
-
-    @commands.command(aliases=["no"])
-    async def normal(self, ctx):
-        self.mus._set_audio_filter("normal")
-        await self.mus._apply_filter(ctx)
-
-    @commands.command(aliases=["df"])
-    async def defaults(self, ctx):
-        self.mus._set_audio_filter("normal")
-        self.mus._apply_speed_filter(1)
-        await self.mus._apply_filter(ctx)
-
-    @commands.command(aliases=["sp"])
-    async def speed(self, ctx, factor: float):
-        self.mus._apply_speed_filter(factor)
-        await self.mus._apply_filter(ctx)
-
+        after = lambda error, ctx=ctx: self.mus.schedule(ctx, error)
+        # ctx.voice_client.stop()
+        ctx.voice_client.play(new_audio, after=after)
+        # self.mus.ffmpeg_opts = _FFMPEG_3
+        b = time.time() - a
+        await ctx.send(b)
+    '''
 
 def setup(bot):
-    bot.add_cog(More(bot))
+    bot.add_cog(Extra(bot))

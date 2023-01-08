@@ -13,8 +13,8 @@ import asyncio.futures
 
 # Pig repl
 import sys
-sys.ps1 = "🐷🐷🐷 │"
-sys.ps2 = "🐽🐽🐽 ┆"
+sys.ps1 = "🐷🐷🐷 |"
+sys.ps2 = "🐽🐽🐽 :"
 
 
 class AsyncIOInteractiveConsole(asyncio_main.AsyncIOInteractiveConsole):
