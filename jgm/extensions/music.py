@@ -204,7 +204,7 @@ class Music(commands.Cog):
             info["waiting"] = False
             info["processing"] = False
 
-    # Schedules advancement of the queue
+    #  advancement of the queue
     def schedule(self, ctx, error=None, *, force=False):
         info = self.get_info(ctx)
         if force or not info["waiting"]:
@@ -244,6 +244,8 @@ class Music(commands.Cog):
             data = data['entries'][0]
         if "is_live" in data:
             print(data["is_live"])
+        if "duration" in data:
+            print(data["duration"])
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         # print(filename)
         self.current_audio_link = filename
@@ -295,6 +297,23 @@ class Music(commands.Cog):
         queue = info["queue"]
         ty = "local" if url == "coco.mp4" else "stream"
         queue.append({"ty": ty, "query": url})
+        if info["current"] is None:
+            self.schedule(ctx)
+        self.b = True
+        await ctx.send(f"Added to queue: {ty} {url}")
+
+    @commands.command(aliases=["yta", "playa", "a"])
+    async def append(self, ctx, *, url):
+        """Plays from a url (almost anything youtube_dl supports)"""
+        if len(url) > 100:
+            raise ValueError("url too long (length over 100)")
+        if not url.isprintable():
+            raise ValueError(f"url not printable: {url!r}")
+        print(ctx.message.author.name, "queued", repr(url))
+        info = self.get_info(ctx)
+        queue = info["queue"]
+        ty = "local" if url == "coco.mp4" else "stream"
+        queue.appendleft({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
         self.b = True
@@ -402,7 +421,6 @@ class Music(commands.Cog):
             ctx.voice_client.play(self.current_audio_stream, after=after)
         else:
             ctx.voice_client.resume()
-
 
     @commands.command()
     async def leave(self, ctx):
@@ -573,7 +591,7 @@ class Music(commands.Cog):
             await ctx.send("Default filter restored for subsequent songs")
 
     # ==================================================
-    # Functions referenced by extra.py
+    # Functions referenced by more.py
     # ==================================================
     # TODO test unloading reloading with filters
     @commands.command()
@@ -585,18 +603,14 @@ class Music(commands.Cog):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
-        ctx.voice_client.pause()  # Prevent audio chops
         self.current_audio_stream.original.seek_fw(sec)
-        ctx.voice_client.resume()
         await ctx.send(f"Seeked {sec} second(s) forward")
 
     async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
-        ctx.voice_client.pause()  # Prevent audio chops
         self.current_audio_stream.original.seek_bw(sec)
-        ctx.voice_client.resume()
         await ctx.send(f"Seeked {sec} second(s) backward")
 
     def valid_pos(self, pos):
@@ -613,6 +627,7 @@ class Music(commands.Cog):
         return False
 
     async def _jump(self, ctx, pos):
+        was_paused = ctx.voice_client.is_paused()
         print("[start] ---------------- jump ------------------")
         info = self.get_info(ctx)
         # honestly just gonna make it not hand back to the main loop
@@ -637,8 +652,8 @@ class Music(commands.Cog):
 
         print("did this execute ???")
 
-        if not ctx.voice_client.is_paused():
-            ctx.voice_client.stop()
+        ctx.voice_client.stop()
+        if not was_paused:
             ctx.voice_client.play(strem, after=after)
         print("previously played ^ ")
         print(info)
