@@ -508,7 +508,7 @@ class Music(commands.Cog):
         """Skips current song"""
         info = self.get_info(ctx)
         current = info["current"]
-        info["jumped"] = False  # reproduce without: skip to 10000, then ;s
+        info["jumped"] = False
         ctx.voice_client.stop()
         if current is not None and not info["waiting"]:
             await ctx.send(f"Skipped: {current['query']}")
@@ -615,6 +615,7 @@ class Music(commands.Cog):
         return False
 
     async def _jump(self, ctx, pos):
+        # put a cap on how much you can jump
         print("[start] ---------------- jump ------------------")
         info = self.get_info(ctx)
         # honestly just gonna make it not hand back to the main loop
