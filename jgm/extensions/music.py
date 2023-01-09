@@ -100,7 +100,7 @@ class Music(commands.Cog):
             "before_options": ""
         }
         source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **local_ffmpog))
-        self.current_audio_link = -99999999999
+        self.current_audio_link = query
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
