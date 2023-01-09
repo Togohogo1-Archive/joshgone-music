@@ -401,13 +401,13 @@ class Music(commands.Cog):
     @commands.command(aliases=["start"])
     async def resume(self, ctx):
         """Resumes playing"""
-        info = self.get_info(ctx)
         after = lambda error, ctx=ctx: self.schedule(ctx, error)
-        print(info["jumped"])
+        info = self.get_info(ctx)
         if info["jumped"]:
+            info["jumped"] = False
             ctx.voice_client.play(self.current_audio_stream, after=after)
-        else:
-            ctx.voice_client.resume()
+            print("jump moment")
+        ctx.voice_client.resume()
 
     @commands.command()
     async def leave(self, ctx):
@@ -508,6 +508,7 @@ class Music(commands.Cog):
         """Skips current song"""
         info = self.get_info(ctx)
         current = info["current"]
+        info["jumped"] = False  # reproduce without: skip to 10000, then ;s
         ctx.voice_client.stop()
         if current is not None and not info["waiting"]:
             await ctx.send(f"Skipped: {current['query']}")
@@ -614,7 +615,6 @@ class Music(commands.Cog):
         return False
 
     async def _jump(self, ctx, pos):
-        was_paused = ctx.voice_client.is_paused()
         print("[start] ---------------- jump ------------------")
         info = self.get_info(ctx)
         # honestly just gonna make it not hand back to the main loop
@@ -639,8 +639,8 @@ class Music(commands.Cog):
 
         print("did this execute ???")
 
-        ctx.voice_client.stop()
-        if not was_paused:
+        if not ctx.voice_client.is_paused():
+            ctx.voice_client.stop()
             ctx.voice_client.play(strem, after=after)
         print("previously played ^ ")
         print(info)
