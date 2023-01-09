@@ -95,7 +95,12 @@ class Music(commands.Cog):
 
     # Finds a file using query. Title is query
     async def _play_local(self, query):
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        local_ffmpog = {
+            "options": "",
+            "before_options": ""
+        }
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **local_ffmpog))
+        self.current_audio_link = -99999999999
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
@@ -190,7 +195,6 @@ class Music(commands.Cog):
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
                     # print(source, title)
                     self.current_audio_stream = source
-                    self.seek_temp = False
                     ctx.voice_client.play(source, after=after)
                 await channel.send(f"Now playing: {title}")
             else:
@@ -299,7 +303,6 @@ class Music(commands.Cog):
         queue.append({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        self.b = True
         await ctx.send(f"Added to queue: {ty} {url}")
 
     @commands.command(aliases=["yta", "playa", "a"])
@@ -316,7 +319,6 @@ class Music(commands.Cog):
         queue.appendleft({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        self.b = True
         await ctx.send(f"Added to queue: {ty} {url}")
 
     @commands.command()
@@ -631,6 +633,10 @@ class Music(commands.Cog):
             "before_options": f"-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss {pos}",
         }
 
+        ffmpeg_temp = {
+            "before_options": f"-ss {pos}",
+        }
+
         # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
         # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
         after = lambda error, ctx=ctx: self.schedule(ctx, error)
@@ -655,6 +661,13 @@ class Music(commands.Cog):
 
         await ctx.send("valid pos")
         '''
+
+    async def _loop1(self, ctx):
+        """
+        clear the queue or swap it out for a temporary one
+        have the variable as true so adding new songs and removing is disabled?
+        """
+        await ctx.send("TBA")
 
     def seconds(self, hhmmss):
         '''

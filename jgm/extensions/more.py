@@ -27,6 +27,10 @@ class More(commands.Cog):
     async def loc(self, ctx):
         # rename this to smth better later
         await self.mus._loc(ctx)
+
+    @commands.command()
+    async def loop1(self, ctx):
+        await self.mus._loop1(ctx)
     '''
     @commands.command()
     @commands.is_owner()
