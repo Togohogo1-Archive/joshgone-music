@@ -39,10 +39,14 @@ class Music(commands.Cog):
         'source_address': '0.0.0.0', # bind to ipv4 since ipv6 addresses cause issues sometimes
     }
     # Options passed to FFmpeg
-    _DEFAULT_FFMPEG_OPTS = {
+    _STREAM_FFMPEG_OPTS = {
         'options': '-vn',
         # Source: https://stackoverflow.com/questions/66070749/
         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+    }
+    _LOCAL_FFMPEG_OPTS = {
+        "options": "-vn",  # Filter out video
+        "before_options": ""
     }
     # Filters
     _FILTERS = {
@@ -96,7 +100,7 @@ class Music(commands.Cog):
     # Finds a file using query. Title is query
     async def _play_local(self, query):
         local_ffmpog = {
-            "options": "",
+            "options": "-vn",  # Skip inclusion of video
             "before_options": ""
         }
         source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **local_ffmpog))
@@ -289,7 +293,7 @@ class Music(commands.Cog):
             self.schedule(ctx)
         await ctx.send(f"Added to queue: local {query}")
 
-    @commands.command(aliases=["yt", "play", "p"])
+    @commands.command(aliases=["play", "p"])
     async def stream(self, ctx, *, url):
         """Plays from a url (almost anything youtube_dl supports)"""
         if len(url) > 100:
@@ -305,8 +309,8 @@ class Music(commands.Cog):
             self.schedule(ctx)
         await ctx.send(f"Added to queue: {ty} {url}")
 
-    @commands.command(aliases=["yta", "playa", "a"])
-    async def append(self, ctx, *, url):
+    @commands.command(aliases=["prplay", "pr"])
+    async def prepend(self, ctx, *, url):
         """Plays from a url (almost anything youtube_dl supports)"""
         if len(url) > 100:
             raise ValueError("url too long (length over 100)")
