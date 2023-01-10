@@ -309,8 +309,8 @@ class Music(commands.Cog):
             self.schedule(ctx)
         await ctx.send(f"Added to queue: {ty} {url}")
 
-    @commands.command(aliases=["prplay", "pr"])
-    async def prepend(self, ctx, *, url):
+    @commands.command(aliases=["prepend","pplay", "pp"])
+    async def stream_prepend(self, ctx, *, url):
         """Plays from a url (almost anything youtube_dl supports)"""
         if len(url) > 100:
             raise ValueError("url too long (length over 100)")
