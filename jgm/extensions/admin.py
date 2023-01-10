@@ -64,63 +64,6 @@ class Admin(commands.Cog):
         await self.bot.close()
 
     @commands.command(hidden=True)
-    async def execold(self, ctx, *, text):
-        """Executes some code
-
-        The code needs to be approved by the bot owner to be run.
-        """
-        lines = text.splitlines()
-        if len(lines) == 1:
-            line = lines[0]
-            if len(line) >= 2 and line[0] == "`" and line[-1] == "`":
-                line = line[1:-1]
-            if len(line) >= 2 and line[0] == "`" and line[-1] == "`":
-                line = line[1:-1]
-            if "return" not in line:
-                line = f"return {line}"
-            lines[0] = line
-        elif len(lines) >= 2:
-            if lines[0] != "```py":
-                await ctx.send(f"First line has to be \\`\\`\\`py")
-                return
-            if lines[-1] != "```":
-                await ctx.send(f"Last line has to be \\`\\`\\`")
-                return
-            del lines[0]
-            del lines[-1]
-        if ctx.author.id != self.bot.owner_id:
-            message = await ctx.reply(f"Awaiting approval...", mention_author=False)
-            try:
-                await message.add_reaction("✅")
-                await message.add_reaction("❌")
-                def check(reaction, user):
-                    return (
-                        reaction.message.id == message.id
-                        and reaction.emoji in {"✅", "❌"}
-                        and user.id == self.bot.owner_id
-                    )
-                try:
-                    reaction, user = await self.bot.wait_for("reaction_add", timeout=60, check=check)
-                except asyncio.TimeoutError:
-                    await message.edit(content=f"{message.content}\nApproval timed out")
-                    return
-                if reaction.emoji == "❌":
-                    await message.edit(content=f"{message.content}\nCode denied :(")
-                    return
-                await message.edit(content=f"{message.content}\nCode approved :D")
-            except discord.NotFound:
-                return
-        for i, line in enumerate(lines):
-            lines[i] = f"    {line}"
-        lines.insert(0, "async def ____thingy(bot, ctx):\n    pass")
-        code = "\n".join(lines)
-        scope = globals().copy()
-        exec(code, scope)
-        result = await scope["____thingy"](self.bot, ctx)
-        if result is not None:
-            await ctx.send(result)
-
-    @commands.command(hidden=True)
     @commands.is_owner()
     async def apply(self, ctx):
         await asyncio.to_thread(self.apply_outstanding)
