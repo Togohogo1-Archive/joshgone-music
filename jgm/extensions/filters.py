@@ -10,40 +10,32 @@ class Filters(commands.Cog):
 
     @commands.command(aliases=["bb"])
     async def bassboost(self, ctx):
-        self.mus._set_audio_filter("bassboost")
-        await self.mus._apply_filter(ctx)
+        await self.mus._set_audio_filter(ctx, "bassboost")
 
     @commands.command()
     async def deepfry(self, ctx):
-        self.mus._set_audio_filter("deepfry")
-        await self.mus._apply_filter(ctx)
+        await self.mus._set_audio_filter(ctx, "deepfry")
 
     @commands.command(aliases=["nc"])
     async def nightcore(self, ctx):
-        self.mus._set_audio_filter("nightcore")
-        await self.mus._apply_filter(ctx)
+        await self.mus._set_audio_filter(ctx, "nightcore")
 
     @commands.command(aliases=["dc"])
     async def daycore(self, ctx):
-        self.mus._set_audio_filter("daycore")
-        await self.mus._apply_filter(ctx)
+        await self.mus._set_audio_filter(ctx, "daycore")
 
     @commands.command(aliases=["no"])
     # rename this to flat?
     async def normal(self, ctx):
-        self.mus._set_audio_filter("normal")
-        await self.mus._apply_filter(ctx)
+        await self.mus._set_audio_filter(ctx, "normal")
 
     @commands.command(aliases=["df"])
     async def defaults(self, ctx):
-        self.mus._set_audio_filter("normal")
-        self.mus._set_speed_filter(1)
-        await self.mus._apply_filter(ctx)
+        await ctx.send("TBA, for now run 2 commands")
 
     @commands.command(aliases=["sp"])
     async def speed(self, ctx, factor: float):
-        self.mus._set_speed_filter(factor)
-        await self.mus._apply_filter(ctx)
+        await self.mus._set_speed_filter(ctx, factor)
 
 
 def setup(bot):

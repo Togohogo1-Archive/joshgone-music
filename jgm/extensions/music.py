@@ -63,18 +63,12 @@ class Music(commands.Cog):
         bot,
         *,
         ytdl_opts=_DEFAULT_YTDL_OPTS,
-        ffmpeg_opts=_DEFAULT_FFMPEG_OPTS,
+        ffmpeg_opts=_STREAM_FFMPEG_OPTS,
     ):
         self.bot = bot
         # Options are stores on the instance in case they need to be changed
         self.ytdl_opts = ytdl_opts
         self.ffmpeg_opts = ffmpeg_opts
-
-        # Filters and speed
-        self.current_filter = "normal"
-        self.current_speed = 1
-        self.seek_option = None
-        self.seek_temp = False
 
         # Data is persistent between extension reloads
         if not hasattr(bot, "_music_data"):
@@ -98,21 +92,20 @@ class Music(commands.Cog):
     # Returns a source object and the title of the song
 
     # Finds a file using query. Title is query
-    async def _play_local(self, query):
-        local_ffmpog = {
-            "options": "-vn",  # Skip inclusion of video
-            "before_options": ""
-        }
-        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **local_ffmpog))
+    async def _play_local(self, ctx, query):
+        # Runs when new song
+        self.ffmpeg_opts = self._LOCAL_FFMPEG_OPTS
+        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **new_ffmpeg_opts))
         self.current_audio_link = query
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
-    async def _play_stream(self, url):
+    async def _play_stream(self, ctx, url):
         original_url = url
         if url[0] == "<" and url[-1] == ">":
             url = url[1:-1]
-        player, data = await self.player_from_url(url, stream=True)
+        player, data = await self.player_from_url(ctx, url, stream=True)
         return player, data.get("title", original_url)
 
     # Returns the raw source (calling the function if possible)
@@ -196,7 +189,7 @@ class Music(commands.Cog):
                 # Get an audio source and play it
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
-                    source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
+                    source, title = await getattr(self, f"_play_{current['ty']}")(ctx, current['query'])
                     # print(source, title)
                     self.current_audio_stream = source
                     ctx.voice_client.play(source, after=after)
@@ -204,6 +197,7 @@ class Music(commands.Cog):
             else:
                 await channel.send(f"Queue empty")
         except Exception as e:
+            traceback.print_exception(type(e), e, e.__traceback__)
             await channel.send(f"Internal Error: {e!r}")
             info["waiting"] = False
             await self.skip(ctx)
@@ -230,7 +224,14 @@ class Music(commands.Cog):
             wrapped["loop"] = False
             wrapped["processing"] = False
             wrapped["version"] = 3
+
+            # New
             wrapped["jumped"] = False
+            wrapped["cur_audio_filter"] = "normal"
+            wrapped["cur_speed_filter"] = 1
+            wrapped["next_audio_filter"] = "normal"
+            wrapped["next_speed_filter"] = 1
+
         else:
             wrapped = self.data[guild_id]
         if wrapped["version"] == 3:
@@ -243,7 +244,9 @@ class Music(commands.Cog):
         return self.data.pop(ctx.guild.id, None)
 
     # Creates an audio source from a url
-    async def player_from_url(self, url, *, loop=None, stream=False):
+    async def player_from_url(self, ctx, url, *, loop=None, stream=False):
+        self.ffmpeg_opts = self._STREAM_FFMPEG_OPTS  # Needed so dont have to do casework when jumping
+        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
         ytdl = youtube_dl.YoutubeDL(self.ytdl_opts)
         loop = loop or asyncio.get_running_loop()
         data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
@@ -257,7 +260,7 @@ class Music(commands.Cog):
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         # print(filename)
         self.current_audio_link = filename
-        audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
+        audio = patched_player.FFmpegPCMAudio(filename, **new_ffmpeg_opts)
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -555,34 +558,44 @@ class Music(commands.Cog):
             add_options = f" {prefix} {','.join(filter_li)}"
             temp_ffmpeg["options"] += add_options
 
-    def _set_audio_filter(self, afilter):
-        self.current_filter = afilter
+    async def _set_audio_filter(self, ctx, afilter):
+        info = self.get_info(ctx)
+        info["next_audio_filter"] = afilter
+        await ctx.send(f"filter = `{afilter}`")
 
-    def _set_speed_filter(self, factor):
+
+    async def _set_speed_filter(self, ctx, factor):
+        # TODO floating poin precision deal with
         if not (0.5 <= factor <= 2):
             raise commands.CommandError(f"Speed factor [{factor}] outside of factor range from 0.5 to 2 inclusive")
 
-        self.current_speed = factor
+        info = self.get_info(ctx)
+        info["next_speed_filter"] = factor
+        await ctx.send(f"speed = x{factor}")
 
-    async def _apply_filter(self, ctx):
+    def apply_filters(self, ctx, opts):
         # Filter name always guaranteed to be valid
+        info = self.get_info(ctx)
+
+        # Setting current to next, don't reset next (because it means filter is being reset)
+        info["cur_audio_filter"] = info["next_audio_filter"]
+        info["cur_speed_filter"] = info["next_speed_filter"]
+        current_filter = info["cur_audio_filter"]
+        current_speed = info["cur_speed_filter"]
+
         filter_li = []
 
-        if self.current_filter != "normal":
-            filter_li.append(self._FILTERS[self.current_filter])
-        if self.current_speed != 1:
-            filter_li.append(f"atempo={self.current_speed}")
+        if current_filter != "normal":
+            filter_li.append(self._FILTERS[current_filter])
+        if current_speed != 1:
+            filter_li.append(f"atempo={current_speed}")
 
         if filter_li:
-            temp_ffmpeg = self._DEFAULT_FFMPEG_OPTS.copy()
             add_options = f" -filter_complex {','.join(filter_li)}"
-            temp_ffmpeg["options"] += add_options
-            self.ffmpeg_opts = temp_ffmpeg
-            await ctx.send(f"Filter \"{self.current_filter}\" and x{self.current_speed} speed will be applied to the next song [this much info is not needed when the ;info command is impelemente]")
+            opts["options"] += add_options
         # If nothing in list then it means its default options
-        else:
-            self.ffmpeg_opts = self._DEFAULT_FFMPEG_OPTS
-            await ctx.send("Default filter restored for subsequent songs")
+
+        return opts
 
     # ==================================================
     # Functions referenced by more.py
@@ -622,49 +635,37 @@ class Music(commands.Cog):
 
     async def _jump(self, ctx, pos):
         # put a cap on how much you can jump
-        print("[start] ---------------- jump ------------------")
         info = self.get_info(ctx)
-        # honestly just gonna make it not hand back to the main loop
 
-        # ctx.voice_client.pause()  # Small amount of audio may be read here
         if not self.valid_pos(pos):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
-        self.seek_temp = True
-        print(info)
-        ffmpeg_temp = {
-            'options': '-vn',
-            # Source: https://stackoverflow.com/questions/66070749/
-            "before_options": f"-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -ss {pos}",
-        }
 
-        ffmpeg_temp = {
-            "before_options": f"-ss {pos}",
-        }
+        # Not new song, so can keep current filter settings
+        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
+        new_ffmpeg_opts["before_options"] += f" -ss {pos}"
 
         # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
-        # TODO bug - when lagging lagging due to a long seek, ;s skips the next song
         after = lambda error, ctx=ctx: self.schedule(ctx, error)
-        print("in jump")
-        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **ffmpeg_temp))
+        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **new_ffmpeg_opts))
         self.current_audio_stream = strem
-
-        print("did this execute ???")
 
         if not ctx.voice_client.is_paused():
             ctx.voice_client.stop()
             ctx.voice_client.play(strem, after=after)
-        print("previously played ^ ")
-        print(info)
         info["jumped"] = True
         secs = self.seconds(pos)
         self.current_audio_stream.original.read_count = secs*50
-        print("[end] ---------------- jump ------------------")
         await ctx.send(f"jumped to {pos} = {secs}s = {secs*50} 20ms frames 🐸🐸🐸🐸")
         '''
         print(self.get_info(ctx)["waiting"])
 
         await ctx.send("valid pos")
         '''
+
+    @commands.command()
+    async def ffmpog(self, ctx):
+        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
+        await ctx.send(new_ffmpeg_opts)
 
     async def _loop1(self, ctx):
         """
