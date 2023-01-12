@@ -176,13 +176,13 @@ class Music(commands.Cog):
             # If we're looping, put the current song at the end of the queue
             if info["loop"] and info["current"] is not None:
                 queue.append(info["current"])
-            if not info["jumped"]:  # If wasn't jumped, run if False
-                info["current"] = None
+            # if not info["jumped"]:  # If wasn't jumped, run if False
+            #     info["current"] = None
 
             # Prioritizing jump over queue message
-            if info["jumped"]:  # Was a jump
-                info["jumped"] = False
-            elif queue:
+            # if info["jumped"]:  # Was a jump
+            #     info["jumped"] = False
+            if queue:
                 # Get the next song
                 current = queue.popleft()
                 info["current"] = current
@@ -410,12 +410,12 @@ class Music(commands.Cog):
     @commands.command(aliases=["start"])
     async def resume(self, ctx):
         """Resumes playing"""
-        after = lambda error, ctx=ctx: self.schedule(ctx, error)
-        info = self.get_info(ctx)
-        if info["jumped"]:
-            info["jumped"] = False
-            ctx.voice_client.play(self.current_audio_stream, after=after)
-            print("jump moment")
+        # after = lambda error, ctx=ctx: self.schedule(ctx, error)
+        # info = self.get_info(ctx)
+        # if info["jumped"]:
+        #     info["jumped"] = False
+        #     ctx.voice_client.play(self.current_audio_stream, after=after)
+        #     print("jump moment")
         ctx.voice_client.resume()
 
     @commands.command()
@@ -517,7 +517,7 @@ class Music(commands.Cog):
         """Skips current song"""
         info = self.get_info(ctx)
         current = info["current"]
-        info["jumped"] = False
+        # info["jumped"] = False
         ctx.voice_client.stop()
         if current is not None and not info["waiting"]:
             await ctx.send(f"Skipped: {current['query']}")
@@ -649,10 +649,14 @@ class Music(commands.Cog):
         strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **new_ffmpeg_opts))
         self.current_audio_stream = strem
 
-        if not ctx.voice_client.is_paused():
+        if ctx.voice_client.is_paused():
+            print(dir(ctx.voice_client))
+            print(dir(ctx.voice_client._player))
+            print(type(ctx.voice_client.source))
+            ctx.voice_client._player.source = strem
+        else:
             ctx.voice_client.stop()
             ctx.voice_client.play(strem, after=after)
-        info["jumped"] = True
         secs = self.seconds(pos)
         self.current_audio_stream.original.read_count = secs*50
         await ctx.send(f"jumped to {pos} = {secs}s = {secs*50} 20ms frames 🐸🐸🐸🐸")
