@@ -177,7 +177,7 @@ class Music(commands.Cog):
             if info["loop"] and info["current"] is not None:
                 queue.append(info["current"])
             # if not info["jumped"]:  # If wasn't jumped, run if False
-            #     info["current"] = None
+            info["current"] = None
 
             # Prioritizing jump over queue message
             # if info["jumped"]:  # Was a jump
@@ -226,7 +226,6 @@ class Music(commands.Cog):
             wrapped["version"] = 3
 
             # New
-            wrapped["jumped"] = False
             wrapped["cur_audio_filter"] = "normal"
             wrapped["cur_speed_filter"] = 1
             wrapped["next_audio_filter"] = "normal"
