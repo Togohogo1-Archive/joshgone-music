@@ -1,4 +1,5 @@
 import discord
+import typing
 from discord.ext import commands
 from discord.ext import tasks
 
@@ -29,7 +30,7 @@ class More(commands.Cog):
         await self.mus._loc(ctx)
 
     @commands.command()
-    async def loop1(self, ctx):
+    async def loop1(self, ctx, loop: typing.Optional[bool] = None):
         await self.mus._loop1(ctx)
     '''
     @commands.command()

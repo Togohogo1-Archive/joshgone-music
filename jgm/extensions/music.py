@@ -174,8 +174,11 @@ class Music(commands.Cog):
                 return
             queue = info["queue"]
             # If we're looping, put the current song at the end of the queue
-            if info["loop"] and info["current"] is not None:
-                queue.append(info["current"])
+            if info["current"] is not None:
+                if info["loop"] == -1:
+                    queue.appendleft(info["current"])
+                elif info["loop"] == 1:
+                    queue.append(info["current"])
             # if not info["jumped"]:  # If wasn't jumped, run if False
             info["current"] = None
 
@@ -223,7 +226,7 @@ class Music(commands.Cog):
             wrapped["queue"] = deque()
             wrapped["current"] = None
             wrapped["waiting"] = False
-            wrapped["loop"] = False
+            wrapped["loop"] = 0
             wrapped["processing"] = False
             wrapped["version"] = 3
 
@@ -441,9 +444,10 @@ class Music(commands.Cog):
     @commands.command(aliases=["q"])
     async def queue(self, ctx):
         """Shows the songs on queue"""
+        looptype = {-1:"(looping current)", 1:"(looping queue)", 0:"", None:""}
         queue = ()
         length = 0
-        looping = False
+        looping = None
         if ctx.voice_client is not None:
             info = self.get_info(ctx)
             queue = info["queue"]
@@ -452,7 +456,7 @@ class Music(commands.Cog):
         if not queue:
             queue = (None,)
         paginator = commands.Paginator()
-        paginator.add_line(f"Queue [{length}]{' (looping)'*looping}:")
+        paginator.add_line(f"Queue [{length}]{ looptype[looping]}:")
         for i, song in enumerate(queue, start=1):
             if song is None:
                 paginator.add_line("None")
@@ -524,14 +528,22 @@ class Music(commands.Cog):
             await ctx.send(f"Skipped: {current['query']}")
 
     @commands.command()
-    async def loop(self, ctx, loop: typing.Optional[bool] = None):
+    async def loop(self, ctx, loop: int=None):
+        '''
+        ;loop q(queue) c(current) n(none) <>
+        -1 = current
+        0 = no loop
+        1 = queue
+        '''
         """Gets or sets queue looping"""
         info = self.get_info(ctx)
         if loop is None:
             await ctx.send(f"Queue {'is' if info['loop'] else 'is not'} looping")
             return
+        if loop not in {-1, 0, 1}:
+            raise commands.CommandError("ayo wrong loop type bruh")
         info["loop"] = loop
-        await ctx.send(f"Queue {'is now' if info['loop'] else 'is now not'} looping")
+        await ctx.send(f"{loop} type loop")
 
     @commands.command()
     @commands.is_owner()
@@ -602,6 +614,10 @@ class Music(commands.Cog):
     # ==================================================
     # Functions referenced by more.py
     # ==================================================
+    @commands.command()
+    async def autoshuffler():
+        await ctx.send("TBA")
+
     # TODO test unloading reloading with filters
     @commands.command()
     async def debug(self, ctx):
@@ -665,7 +681,8 @@ class Music(commands.Cog):
     async def ffmpog(self, ctx):
         await ctx.send(self.ffmpeg_opts)
 
-    async def _loop1(self, ctx):
+    @commands.command()
+    async def _loop1(self, ctx, loop):
         """
         clear the queue or swap it out for a temporary one
         have the variable as true so adding new songs and removing is disabled?

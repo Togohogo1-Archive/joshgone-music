@@ -17,7 +17,7 @@ shuffle
 loop current song
 - continuously play the current song
 
-previous song
+previous song [bump this to future version?]
 - store a queue of previously played songs?
 - size of the queue configurable?
 - or just be able to do one previous song
