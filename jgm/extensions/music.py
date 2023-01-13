@@ -209,6 +209,8 @@ class Music(commands.Cog):
     #  advancement of the queue
     def schedule(self, ctx, error=None, *, force=False):
         info = self.get_info(ctx)
+        self.current_audio_stream = None
+        self.current_audio_link = None
         if force or not info["waiting"]:
             self.advance_queue.put_nowait((ctx, error))
             info["waiting"] = True
@@ -572,13 +574,14 @@ class Music(commands.Cog):
         info["next_speed_filter"] = factor
         await ctx.send(f"speed = x{factor}")
 
-    def apply_filters(self, ctx, opts):
+    def apply_filters(self, ctx, opts, jump=False):
         # Filter name always guaranteed to be valid
         info = self.get_info(ctx)
 
         # Setting current to next, don't reset next (because it means filter is being reset)
-        info["cur_audio_filter"] = info["next_audio_filter"]
-        info["cur_speed_filter"] = info["next_speed_filter"]
+        if not jump:
+            info["cur_audio_filter"] = info["next_audio_filter"]
+            info["cur_speed_filter"] = info["next_speed_filter"]
         current_filter = info["cur_audio_filter"]
         current_speed = info["cur_speed_filter"]
 
@@ -640,7 +643,7 @@ class Music(commands.Cog):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
 
         # Not new song, so can keep current filter settings
-        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
+        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy(), jump=True)
         new_ffmpeg_opts["before_options"] += f" -ss {pos}"
 
         # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
@@ -648,14 +651,7 @@ class Music(commands.Cog):
         strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **new_ffmpeg_opts))
         self.current_audio_stream = strem
 
-        if ctx.voice_client.is_paused():
-            print(dir(ctx.voice_client))
-            print(dir(ctx.voice_client._player))
-            print(type(ctx.voice_client.source))
-            ctx.voice_client._player.source = strem
-        else:
-            ctx.voice_client.stop()
-            ctx.voice_client.play(strem, after=after)
+        ctx.voice_client._player.source = strem
         secs = self.seconds(pos)
         self.current_audio_stream.original.read_count = secs*50
         await ctx.send(f"jumped to {pos} = {secs}s = {secs*50} 20ms frames 🐸🐸🐸🐸")
@@ -667,8 +663,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def ffmpog(self, ctx):
-        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
-        await ctx.send(new_ffmpeg_opts)
+        await ctx.send(self.ffmpeg_opts)
 
     async def _loop1(self, ctx):
         """
