@@ -50,6 +50,8 @@ Filters [working version done]
 append command [working version done]
 - appends at the front of the list instead of the back
 
+- forceskip (not practical, more of a meme command) [working version done]
+
 playlist support [v2.1.0 if i even make it]
 -
 
@@ -65,4 +67,3 @@ features that might not be implemented
 - playback history
 - abrepeat
 - full on customized Equalizer
-- forceskip (not practical, more of a meme command)

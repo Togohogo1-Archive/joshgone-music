@@ -83,6 +83,13 @@ class Music(commands.Cog):
         self.advancer.start()
         self.current_audio_stream = None
         self.current_audio_link = None
+        self.current_metadata = {
+            "is_live": None,
+            "duration": None,
+            "title": None,
+            "id": None,
+            "webpage_url": None
+        }
         # TODO init is not run once when reloaded
 
 
@@ -220,6 +227,10 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         self.current_audio_stream = None
         self.current_audio_link = None
+
+        for k in self.current_metadata:
+            self.current_metadata[k] = None
+
         if info["autoshuffle"]:
             self._shuffle(ctx)
         if force or not info["waiting"]:
@@ -268,17 +279,17 @@ class Music(commands.Cog):
             # take first item from a playlist
             data = data['entries'][0]
 
-        print("--------")
-        print(data.get("is_live"))
-        print(data.get("duration"))
-        print(data.get("title"))
-        print(data.get("id"))
-        print(data.get("webpage_url"))
-        print("--------")
-
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         # print(filename)
         self.current_audio_link = filename
+        # metadata
+        md = self.current_metadata
+        md["is_live"] = data.get("is_live")
+        md["duration"] = data.get("duration")
+        md["title"] = data.get("title")
+        md["id"] = data.get("id")
+        md["webpage_url"] = data.get("webpage_url")
+
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
         audio = patched_player.FFmpegPCMAudio(filename, speed, **new_ffmpeg_opts)
@@ -695,11 +706,11 @@ class Music(commands.Cog):
         await ctx.send(f"autoshuffle set to {auto}")
 
     # TODO test unloading reloading with filters
-    @commands.command()
-    async def debug(self, ctx):
+    @commands.command(aliases = ["i"])
+    async def info(self, ctx):
         info = self.get_info(ctx)
         # print(info)
-        await ctx.send(f"`{info}`")
+        await ctx.send(f"`{info}\n\n{self.current_metadata}`")
 
     async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
