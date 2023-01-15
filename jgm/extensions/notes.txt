@@ -1,23 +1,25 @@
 Ideas for advanced commands
 
-seeking forward and backward
+seeking forward and backward [working version done]
 
-sleep timer (sleep in hh:mm:ss) or just raw seconds
+better local support [v2.1.0]
+
+sleep timer (sleep in hh:mm:ss) or just raw seconds [working version done]
 - remove the sleep timer
 - change the sleep timer
 
-goto
+goto [working version done]
 - go to hh:mm:ss
 - use fast ff and rw if time difference is less than x minutes (set to 10?)
 - seems like vlc android doesn't allow jumping to ms
 
-shuffle
+autoshuffle [working version done]
 - shuffle
 
-loop current song
+loop current song [working version done]
 - continuously play the current song
 
-previous song [bump this to future version?]
+previous song [v2.1.0 if i even make it]
 - store a queue of previously played songs?
 - size of the queue configurable?
 - or just be able to do one previous song
@@ -31,12 +33,12 @@ more detailed song info?
 - codec
 - sample rate
 
-playback speed
+playback speed [working version done]
 - a value between 0.25 to 4
 - ^ if thats too laggy then do 0.5 to 2
 - will be applied on next song
 
-Filters
+Filters [working version done]
 - preset, some examples include:
 - nightcore
 - daycore
@@ -45,15 +47,13 @@ Filters
 - radio
 - will require complete redesign of _DEFAULT_FFMPEG_OPTS
 
-forceskip
-- skips the song and YEETS it from the queue
-
-append command
+append command [working version done]
 - appends at the front of the list instead of the back
 
-playlist support
+playlist support [v2.1.0 if i even make it]
 -
 
+slash commands and migration to api v10 [v3]
 
 features that might not be implemented
 ===============
@@ -64,3 +64,4 @@ features that might not be implemented
 - playback history
 - abrepeat
 - full on customized Equalizer
+- forceskip (not practical, more of a meme command)

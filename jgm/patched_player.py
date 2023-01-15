@@ -71,7 +71,6 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
 
         # Valid data
         self.ms_time += 20*self.speed
-        print(self.ms_time)
         self.buffer.append(ret)
         return ret
 

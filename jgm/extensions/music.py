@@ -84,6 +84,9 @@ class Music(commands.Cog):
         self.current_audio_link = None
         # TODO init is not run once when reloaded
 
+
+        self.task = None
+
     # Cancel just the advancer and the auto-restart tasks
     def cog_unload(self):
         self.advancer.cancel()
@@ -216,6 +219,8 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         self.current_audio_stream = None
         self.current_audio_link = None
+        if info["autoshuffle"]:
+            self._shuffle(ctx)
         if force or not info["waiting"]:
             self.advance_queue.put_nowait((ctx, error))
             info["waiting"] = True
@@ -237,6 +242,7 @@ class Music(commands.Cog):
             wrapped["cur_speed_filter"] = 1
             wrapped["next_audio_filter"] = "normal"
             wrapped["next_speed_filter"] = 1
+            wrapped["autoshuffle"] = False
 
         else:
             wrapped = self.data[guild_id]
@@ -375,9 +381,7 @@ class Music(commands.Cog):
             await self.stream(ctx, url=url)
             await asyncio.sleep(0.1)
 
-    @commands.command()
-    async def shuffle(self, ctx):
-        """Shuffles the queue"""
+    def _shuffle(self, ctx):
         info = self.get_info(ctx)
         queue = info["queue"]
         temp = []
@@ -386,6 +390,11 @@ class Music(commands.Cog):
         random.shuffle(temp)
         while temp:
             queue.appendleft(temp.pop())
+
+    @commands.command()
+    async def shuffle(self, ctx):
+        """Shuffles the queue"""
+        self._shuffle(ctx)
         await ctx.send("Queue shuffled")
 
     @commands.command()
@@ -618,9 +627,30 @@ class Music(commands.Cog):
     # ==================================================
     # Functions referenced by more.py
     # ==================================================
+    async def bruh(self, ctx):
+        await asyncio.sleep(5)
+        await self.leave(ctx)
+
     @commands.command()
-    async def autoshuffler(self, ctx):
-        await ctx.send("TBA")
+    async def leavein(self, ctx):
+        self.task = asyncio.create_task(self.bruh(ctx))
+        await ctx.send(self.task)
+
+    @commands.command()
+    async def cancel(self, ctx):
+        self.task.cancel()
+        await ctx.send(self.task)
+
+
+    @commands.command(aliases=["ashuffle"])
+    async def autoshuffle(self, ctx, auto: typing.Optional[bool] = None):
+        info = self.get_info(ctx)
+        if auto is None:
+            await ctx.send(f"autoshuffler is {'on' if info['autoshuffle'] else 'off'}")
+            return
+
+        info["autoshuffle"] = auto
+        await ctx.send(f"autoshuffle set to {auto}")
 
     # TODO test unloading reloading with filters
     @commands.command()
@@ -634,19 +664,20 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        scaled_frames = 1000 / (20/speed)
-        self.current_audio_stream.original.seek_fw(scaled_frames*sec)
-        await ctx.send(f"Seeked {sec} second(s) forward")
+        scaled_frames = 1000 / (20*speed)
+        self.current_audio_stream.original.seek_fw(round(scaled_frames*sec))
+        await ctx.send(f"Seeked {sec} second(s) forward, scaled = {scaled_frames}")
 
     async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
+
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        scaled_frames = 1000 / (20/speed)
-        self.current_audio_stream.original.seek_bw(scaled_frames*sec)
-        await ctx.send(f"Seeked {sec} second(s) backward")
+        scaled_frames = 1000 / (20*speed)
+        self.current_audio_stream.original.seek_bw(round(scaled_frames*sec))
+        await ctx.send(f"Seeked {sec} second(s) backward scaled = {scaled_frames}")
 
     def regex_time(self, pos):
         # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
@@ -699,14 +730,6 @@ class Music(commands.Cog):
     @commands.command()
     async def ffmpog(self, ctx):
         await ctx.send(self.ffmpeg_opts)
-
-    @commands.command()
-    async def _loop1(self, ctx, loop):
-        """
-        clear the queue or swap it out for a temporary one
-        have the variable as true so adding new songs and removing is disabled?
-        """
-        await ctx.send("TBA")
 
     def seconds(self, hhmmss):
         '''

@@ -18,7 +18,7 @@ class Info(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         # Full traceback
-        # traceback.print_exception(type(error), error, error.__traceback__)
+        traceback.print_exception(type(error), error, error.__traceback__)
 
         # Unpack the error for cleaner error messages
         if isinstance(error, commands.CommandInvokeError):
