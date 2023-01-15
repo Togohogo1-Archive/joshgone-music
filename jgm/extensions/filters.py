@@ -16,13 +16,13 @@ class Filters(commands.Cog):
     async def deepfry(self, ctx):
         await self.mus._set_audio_filter(ctx, "deepfry")
 
-    @commands.command(aliases=["nc"])
-    async def nightcore(self, ctx):
-        await self.mus._set_audio_filter(ctx, "nightcore")
+    # @commands.command(aliases=["nc"])
+    # async def nightcore(self, ctx):
+    #     await self.mus._set_audio_filter(ctx, "nightcore")
 
-    @commands.command(aliases=["dc"])
-    async def daycore(self, ctx):
-        await self.mus._set_audio_filter(ctx, "daycore")
+    # @commands.command(aliases=["dc"])
+    # async def daycore(self, ctx):
+    #     await self.mus._set_audio_filter(ctx, "daycore")
 
     @commands.command(aliases=["no"])
     # rename this to flat?
