@@ -12,6 +12,7 @@ import os
 import sys
 import shlex
 from collections import deque
+from time import time
 
 import discord
 from discord.ext import commands
@@ -243,6 +244,7 @@ class Music(commands.Cog):
             wrapped["next_audio_filter"] = "normal"
             wrapped["next_speed_filter"] = 1
             wrapped["autoshuffle"] = False
+            wrapped["sleep_timer"] = None
 
         else:
             wrapped = self.data[guild_id]
@@ -265,10 +267,15 @@ class Music(commands.Cog):
         if 'entries' in data:
             # take first item from a playlist
             data = data['entries'][0]
-        if "is_live" in data:
-            print(data["is_live"])
-        if "duration" in data:
-            print(data["duration"])
+
+        print("--------")
+        print(data.get("is_live"))
+        print(data.get("duration"))
+        print(data.get("title"))
+        print(data.get("id"))
+        print(data.get("webpage_url"))
+        print("--------")
+
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         # print(filename)
         self.current_audio_link = filename
@@ -438,6 +445,7 @@ class Music(commands.Cog):
     @commands.command()
     async def leave(self, ctx):
         """Disconnects the bot from voice and clears the queue"""
+        self.task = None
         self.pop_info(ctx)
         if ctx.voice_client is None:
             return
@@ -627,18 +635,52 @@ class Music(commands.Cog):
     # ==================================================
     # Functions referenced by more.py
     # ==================================================
-    async def bruh(self, ctx):
-        await asyncio.sleep(5)
+    async def bruh(self, ctx, dur):
+        info = self.get_info(ctx)
+        info["sleep_timer"] = (dur, ctx.message.author, ctx.message.created_at, time())
+        await asyncio.sleep(dur)
         await self.leave(ctx)
+        info["sleep_timer"] = None
+
+    @commands.command(aliases=["fs"])
+    async def forceskip(self, ctx):
+        info = self.get_info(ctx)
+        current = info["current"]
+        # info["jumped"] = False
+        ctx.voice_client.stop()
+        if current is not None and not info["waiting"]:
+            info["current"] = None
+            await ctx.send(f"forceskipped {current}")
+
 
     @commands.command()
-    async def leavein(self, ctx):
-        self.task = asyncio.create_task(self.bruh(ctx))
-        await ctx.send(self.task)
+    async def leavein(self, ctx, dur):
+        # After this is in the form of <int> seconds or [[HH:]MM:]SS
+        if not self.regex_time(dur) and not self.time_match(dur):
+            raise commands.CommandError(f"Position [{dur}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
+
+        # Check for > 99:59:59 exceed
+        if self.time_match(dur) and int(dur) > self.seconds("99:59:59"):
+            raise commands.CommandError(f"time in seconds greater than 99:59:59")
+
+
+        if self.task is None or self.task.done() or self.task.cancelled():
+            self.task = asyncio.create_task(self.bruh(ctx, self.seconds(dur)))
+            await ctx.send(f"{self.seconds(dur)}, {type(self.seconds(dur))}, {self.task}")
+        # There is a task already running
+        else:
+            raise commands.CommandError("there is a task running")
+
 
     @commands.command()
     async def cancel(self, ctx):
+        info = self.get_info(ctx)
+
+        if self.task.done() or self.task.cancelled() or self.task == None:
+            raise commands.CommandError(f"trying to cancel a completed task status {self.task.result()}")
+        info["sleep_timer"] = None
         self.task.cancel()
+
         await ctx.send(self.task)
 
 
@@ -656,7 +698,8 @@ class Music(commands.Cog):
     @commands.command()
     async def debug(self, ctx):
         info = self.get_info(ctx)
-        print(info)
+        # print(info)
+        await ctx.send(f"`{info}`")
 
     async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
@@ -770,6 +813,8 @@ class Music(commands.Cog):
     @skip.before_invoke
     @clear.before_invoke
     @volume.before_invoke
+    @leavein.before_invoke
+    @cancel.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

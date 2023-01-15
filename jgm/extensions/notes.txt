@@ -53,12 +53,13 @@ append command [working version done]
 playlist support [v2.1.0 if i even make it]
 -
 
+soundcloud playlists [v2.1.0]
+
 slash commands and migration to api v10 [v3]
 
 features that might not be implemented
 ===============
 - stop after some track
-- browse parent (does this imply view filesystem)
 - song bookmarking (play this bookmark -> song x at 1:25)
 - the ability to sort tracks?
 - playback history
