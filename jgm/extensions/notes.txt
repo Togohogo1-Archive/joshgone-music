@@ -2,8 +2,6 @@ Ideas for advanced commands
 
 seeking forward and backward [working version done]
 
-better local support [v2.1.0]
-
 sleep timer (sleep in hh:mm:ss) or just raw seconds [working version done]
 - remove the sleep timer
 - change the sleep timer
@@ -19,13 +17,7 @@ autoshuffle [working version done]
 loop current song [working version done]
 - continuously play the current song
 
-previous song [v2.1.0 if i even make it]
-- store a queue of previously played songs?
-- size of the queue configurable?
-- or just be able to do one previous song
-
-more detailed song info?
-[on vlc]
+more detailed song info? [working version done]
 - length
 - file size
 - 0:00/5:00
@@ -52,9 +44,14 @@ append command [working version done]
 
 - forceskip (not practical, more of a meme command) [working version done]
 
-playlist support [v2.1.0 if i even make it]
--
+better local support [v2.1.0]
 
+playlist support [v2.1.0 if i even make it]
+
+previous song [v2.1.0 if i even make it]
+- store a queue of previously played songs?
+- size of the queue configurable?
+- or just be able to do one previous song
 soundcloud playlists [v2.1.0]
 
 slash commands and migration to api v10 [v3]
