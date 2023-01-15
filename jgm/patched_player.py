@@ -25,15 +25,15 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
 
     # Default is 0 for no flags (used to be subprocess.CREATE_NO_WINDOW). See
     # the documentation for discord.FFmpegPCMAudio for more info on kwargs.
-    def __init__(self, source, *, creationflags=0, **kwargs):
+    def __init__(self, source, speed, *, creationflags=0, **kwargs):
         # The superclass's __init__ calls self._spawn_process, so we need to
         # set creation flags before then, meaning this line can't be after the
         # super().__init__ call.
         self.creationflags = creationflags
-        self.read_count = 0
+        self.ms_time = 0
+        self.speed = speed
 
-        # Allow the rewinding of 5 times the maximum rewind time (15 seconds)
-        # _MAX_BUF_SZ is the number of 20ms "packets"
+        # _MAX_BUF_SZ is the number of frames, frames can range from 10ms to 40ms
         # Assume 20ms has an upper bound of 2**12 = 4096 bytes (actually closer to 3840)
         # deque then takes up approx 4096 * (1/20) * 1000 * 15 * 5 = 15360000 bytes = 15MB upper bound
         self._MAX_BUF_SZ = 5 * 15 * 50
@@ -70,18 +70,33 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
                 return b''
 
         # Valid data
-        self.read_count += 1
+        self.ms_time += 20*self.speed
+        print(self.ms_time)
         self.buffer.append(ret)
         return ret
 
-    def seek_bw(self, t_sec):
+    def seekable(self):
+        flag = True
+
+        ret = self._stdout.read(OpusEncoder.FRAME_SIZE)
+
+        if len(ret) != OpusEncoder.FRAME_SIZE:
+            # Would return empty binary, means unseekable
+            flag = False
+        else:
+            # Unread whatever it tried to read
+            self.unread_buffer.appendleft(ret)
+
+        return flag
+
+    def seek_bw(self, frames):
         # Move from buffer to unread_buffer
-        for _ in range(t_sec*50):
+        for _ in range(frames):
             if not self.buffer:
                 break
             self.unread_buffer.appendleft(self.buffer.pop())
-            self.read_count -= 1
+            self.ms_time -= 20*self.speed
 
-    def seek_fw(self, t_sec):
-        for _ in range(t_sec*50):  # t_sec*1000 / 20 = t_sec*50 reads
+    def seek_fw(self, frames):
+        for _ in range(frames):  # t_sec*1000 / 20 = t_sec*50 reads
             self.read()

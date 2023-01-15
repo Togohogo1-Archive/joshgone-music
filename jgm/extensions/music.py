@@ -94,9 +94,11 @@ class Music(commands.Cog):
     # Finds a file using query. Title is query
     async def _play_local(self, ctx, query):
         # Runs when new song
+        info = self.get_info(ctx)
         self.ffmpeg_opts = self._LOCAL_FFMPEG_OPTS
         new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
-        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **new_ffmpeg_opts))
+        speed = info["cur_speed_filter"]
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, speed, **new_ffmpeg_opts))
         self.current_audio_link = query
         return source, query
 
@@ -264,7 +266,9 @@ class Music(commands.Cog):
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         # print(filename)
         self.current_audio_link = filename
-        audio = patched_player.FFmpegPCMAudio(filename, **new_ffmpeg_opts)
+        info = self.get_info(ctx)
+        speed = info["cur_speed_filter"]
+        audio = patched_player.FFmpegPCMAudio(filename, speed, **new_ffmpeg_opts)
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -615,7 +619,7 @@ class Music(commands.Cog):
     # Functions referenced by more.py
     # ==================================================
     @commands.command()
-    async def autoshuffler():
+    async def autoshuffler(self, ctx):
         await ctx.send("TBA")
 
     # TODO test unloading reloading with filters
@@ -628,49 +632,64 @@ class Music(commands.Cog):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
-        self.current_audio_stream.original.seek_fw(sec)
+        info = self.get_info(ctx)
+        speed = info["cur_speed_filter"]
+        scaled_frames = 1000 / (20/speed)
+        self.current_audio_stream.original.seek_fw(scaled_frames*sec)
         await ctx.send(f"Seeked {sec} second(s) forward")
 
     async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
-        self.current_audio_stream.original.seek_bw(sec)
+        info = self.get_info(ctx)
+        speed = info["cur_speed_filter"]
+        scaled_frames = 1000 / (20/speed)
+        self.current_audio_stream.original.seek_bw(scaled_frames*sec)
         await ctx.send(f"Seeked {sec} second(s) backward")
 
-    def valid_pos(self, pos):
+    def regex_time(self, pos):
         # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
         # Match [[HH:]MM:]SS or integer seconds, brackets optional
-
         # First check regex match
         # Regex pattern slightly modified from: https://stackoverflow.com/a/8318367
-        if re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos):
-            return True
-        elif pos.isdigit():
-            return True
+        return re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos)
 
-        return False
+    def time_match(self, pos):
+        return pos.isdigit()
 
     async def _jump(self, ctx, pos):
         # put a cap on how much you can jump
         info = self.get_info(ctx)
 
-        if not self.valid_pos(pos):
+        # After this is in the form of <int> seconds or [[HH:]MM:]SS
+        if not self.regex_time(pos) and not self.time_match(pos):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
+
+        # Check for > 99:59:59 exceed
+        if self.time_match(pos) and int(pos) > self.seconds("99:59:59"):
+                raise commands.CommandError(f"time in seconds greater than 99:59:59")
 
         # Not new song, so can keep current filter settings
         new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy(), jump=True)
         new_ffmpeg_opts["before_options"] += f" -ss {pos}"
 
+        speed = info["cur_speed_filter"]
         # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
-        after = lambda error, ctx=ctx: self.schedule(ctx, error)
-        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, **new_ffmpeg_opts))
+        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, speed, **new_ffmpeg_opts))
+
+        # Seeking past the song
+        if not strem.original.seekable():
+            raise commands.CommandError(f"bruv ur trying to seek beyond the song")
+
         self.current_audio_stream = strem
+
+
 
         ctx.voice_client._player.source = strem
         secs = self.seconds(pos)
-        self.current_audio_stream.original.read_count = secs*50
-        await ctx.send(f"jumped to {pos} = {secs}s = {secs*50} 20ms frames 🐸🐸🐸🐸")
+        self.current_audio_stream.original.ms_time = secs*1000
+        await ctx.send(f"jumped to {pos} = {secs*1000}ms")
         '''
         print(self.get_info(ctx)["waiting"])
 
@@ -703,7 +722,9 @@ class Music(commands.Cog):
         return hour_s + min_s + int(hhmmss_list[-1])
 
     async def _loc(self, ctx):
-        await ctx.send(str(self.current_audio_stream.original.read_count*0.02) + " seconds in")
+        await ctx.send(f"{self.current_audio_stream.original.ms_time/1000}s")
+
+
 
     @local.before_invoke
     @stream.before_invoke
