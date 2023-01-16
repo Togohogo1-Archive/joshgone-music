@@ -114,7 +114,15 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Inconsistency in error quotes (`ExtensionNotFound` vs `CommandNotFound` single & double quotes)
 
 ## Features in v2.0.0
-- [x] test
+[x] test
+- a
+- b
+- c
+
+[x] test2
+- a
+- b
+- c
 
 ## Random cases that might cause the bot to break or unexpected behaviour
 - when ;ff 15 for a long song, then do ;s or other commands
