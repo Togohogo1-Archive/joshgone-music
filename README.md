@@ -148,6 +148,18 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
     - Appends at the front of the list instead of teh back
 - [x] Forceskip (not practical, more of a meme command)
 
+## Features in v2.1.0
+- [x] Better local file support
+- [x] Better playlist support
+- [x] Able to store previous songs
+    - Store a queue of previously played song?
+    - Size of the queue configurable?
+    - Or just be able to do one previous song
+- Soundcloud playlists
+
+## Eventually in a future version
+- [x] Migrate to use Discord api v10 and slash commands
+
 ## Random cases that might cause the bot to break or unexpected behaviour
 - when ;ff 15 for a long song, then do ;s or other commands
 - when ;jump x:xx for a long song, then do other commands
