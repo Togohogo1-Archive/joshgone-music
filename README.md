@@ -113,6 +113,9 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Make volume a permanent setting?
 - Inconsistency in error quotes (`ExtensionNotFound` vs `CommandNotFound` single & double quotes)
 
+## Features in v2.0.0
+- [x] test
+
 ## Random cases that might cause the bot to break or unexpected behaviour
 - when ;ff 15 for a long song, then do ;s or other commands
 - when ;jump x:xx for a long song, then do other commands
