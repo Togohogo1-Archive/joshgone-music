@@ -114,15 +114,39 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Inconsistency in error quotes (`ExtensionNotFound` vs `CommandNotFound` single & double quotes)
 
 ## Features in v2.0.0
-[x] test
-- a
-- b
-- c
-
-[x] test2
-- a
-- b
-- c
+- [x] Seeking forward and backward
+- [x] Sleep timer
+    - Sleep in hh:mm:ss or just raw seconds
+- [x] Goto
+    - Go to hh:mm:ss
+    - ~~Use fast ff and rw if time difference is less than x minutes (set to 10?)~~
+    - Seems like VLC android doesn't allow jumping to ms
+- [x] Autoshuffle
+    - Shuffle
+- [x] Loop current song
+    - Continuous play the current song
+- [x] More detailed song info
+    - length
+    - file size?
+    - 0:00/5:00
+    - codec
+    - sample rate
+    - metadata
+- [x] Playback speed
+    - A value between 0.25 and 4
+    - ^ if that's too laggy then to 0.5 to 2
+    - Will be applied on next song
+- [x] Filters
+    - Present, some examples include:
+    - Nightcore
+    - Daycore
+    - Bass boost
+    - Vaporwave (reverb)
+    - Radio
+    - Will require complete redesign of `_DEFAULT_FFMPEG_OPTS`
+- [x] Append command
+    - Appends at the front of the list instead of teh back
+- [x] Forceskip (not practical, more of a meme command)
 
 ## Random cases that might cause the bot to break or unexpected behaviour
 - when ;ff 15 for a long song, then do ;s or other commands
