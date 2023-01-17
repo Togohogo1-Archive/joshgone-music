@@ -1,8 +1,0 @@
-features that might not be implemented
-===============
-- stop after some track
-- song bookmarking (play this bookmark -> song x at 1:25)
-- the ability to sort tracks?
-- playback history
-- abrepeat
-- full on customized Equalizer
