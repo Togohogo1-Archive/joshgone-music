@@ -186,6 +186,7 @@ class Music(commands.Cog):
                 await self.leave(ctx)
                 return
             queue = info["queue"]
+            history = info["history"]
             # If we're looping, put the current song at the end of the queue
             if info["current"] is not None:
                 if info["loop"] == -1:
@@ -193,6 +194,7 @@ class Music(commands.Cog):
                 elif info["loop"] == 1:
                     queue.append(info["current"])
             # if not info["jumped"]:  # If wasn't jumped, run if False
+                history.append(info["current"])
             info["current"] = None
 
             # Prioritizing jump over queue message
@@ -243,6 +245,7 @@ class Music(commands.Cog):
         if guild_id not in self.data:
             wrapped = self.data[guild_id] = {}
             wrapped["queue"] = deque()
+            wrapped["history"] = deque(maxlen=15)
             wrapped["current"] = None
             wrapped["waiting"] = False
             wrapped["loop"] = 0
@@ -473,6 +476,12 @@ class Music(commands.Cog):
                 query = current["query"]
         await ctx.send(f"Current: {query}")
 
+    @commands.command(aliases=["hist"])
+    # TODO order might be a bit sus (unoptimal)
+    async def playback_history(self, ctx):
+        info = self.get_info(ctx)
+        await ctx.send(f"```{info['history']}```")
+
     @commands.command(aliases=["q"])
     async def queue(self, ctx):
         """Shows the songs on queue"""
@@ -646,6 +655,32 @@ class Music(commands.Cog):
     # ==================================================
     # Functions referenced by more.py
     # ==================================================
+
+    # TODO issue with autoshufle (ignore it?)
+    @commands.command(aliases=["prev"])
+    async def previous(self, ctx):
+        info = self.get_info(ctx)
+        history = info["history"]
+        queue = info["queue"]
+        # url error checking already happens in stream command
+        if history:  # deque has items
+            queue.append(history.pop())
+            await ctx.send("added last item from history to end of queue")
+        else:
+            await ctx.send("no history")
+
+    @commands.command(aliases=["pprev"])
+    async def previous_prepend(self, ctx):
+        info = self.get_info(ctx)
+        history = info["history"]
+        queue = info["queue"]
+        # url error checking already happens in stream command
+        if history:  # deque has items
+            queue.appendleft(history.pop())
+            await ctx.send("added last item from history to beginning of queue")
+        else:
+            await ctx.send("no history")
+
     async def bruh(self, ctx, dur):
         info = self.get_info(ctx)
         info["sleep_timer"] = [dur, ctx.message.author, time()]
@@ -665,7 +700,7 @@ class Music(commands.Cog):
 
 
     @commands.command()
-    async def leavein(self, ctx, dur):
+    async def sleepin(self, ctx, dur):
         # After this is in the form of <int> seconds or [[HH:]MM:]SS
         if not self.regex_time(dur) and not self.time_match(dur):
             raise commands.CommandError(f"Position [{dur}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
@@ -711,6 +746,9 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         # print(info)
         await ctx.send(f"`{info}\n\n{self.current_metadata}`")
+        # ratio = round(self.current_audio_stream.original.ms_time/1000)/round(self.current_metadata["duration"])
+        # norm = int(20*ratio)
+        # await ctx.send(f"`[{'#'*norm}{' '*(20-norm)}]`")
         print(f"{time() - info['sleep_timer'][-1]} seconds have passed")
 
     async def _fast_forward(self, ctx, sec):
@@ -761,7 +799,6 @@ class Music(commands.Cog):
         new_ffmpeg_opts["before_options"] += f" -ss {pos}"
 
         speed = info["cur_speed_filter"]
-        # TODO This one is a lil sus -> make sure it doesn't interfer with anything else or make sure it doesn't miss any modifications (like ['query'] type stuff)
         strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, speed, **new_ffmpeg_opts))
 
         # Seeking past the song
@@ -829,7 +866,7 @@ class Music(commands.Cog):
     @skip.before_invoke
     @clear.before_invoke
     @volume.before_invoke
-    @leavein.before_invoke
+    @sleepin.before_invoke
     @cancel.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:

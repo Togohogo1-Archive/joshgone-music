@@ -147,10 +147,12 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [x] Append command
     - Appends at the front of the list instead of teh back
 - [x] Forceskip (not practical, more of a meme command)
-- [ ] Able to store previous songs
-    - Store a queue of previously played song?
-    - Size of the queue configurable?
-    - Or just be able to do one previous song
+- [ ] A more watered down version of play previous song
+    - Store a queue of previously played song (history command)
+    - `;prev` removes last played song in history and adds to the end of queue
+    - `;pprev` removes last played song in history and adds to the start of queue
+    - Size of history queue capped at some number (I'm thinking 15)
+    - Or only keep previously played and full playback history
 - [ ] Playback history (subset of previous)
 
 ## Features in v2.1.0
