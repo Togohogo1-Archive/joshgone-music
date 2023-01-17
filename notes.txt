@@ -1,15 +1,3 @@
-better local support [v2.1.0]
-
-playlist support [v2.1.0 if i even make it]
-
-previous song [v2.1.0 if i even make it]
-- store a queue of previously played songs?
-- size of the queue configurable?
-- or just be able to do one previous song
-soundcloud playlists [v2.1.0]
-
-slash commands and migration to api v10 [v3]
-
 features that might not be implemented
 ===============
 - stop after some track

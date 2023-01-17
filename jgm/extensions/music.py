@@ -488,7 +488,7 @@ class Music(commands.Cog):
         if not queue:
             queue = (None,)
         paginator = commands.Paginator()
-        paginator.add_line(f"Queue [{length}]{ looptype[looping]}:")
+        paginator.add_line(f"Queue [{length}] {looptype[looping]}:")
         for i, song in enumerate(queue, start=1):
             if song is None:
                 paginator.add_line("None")
@@ -648,7 +648,7 @@ class Music(commands.Cog):
     # ==================================================
     async def bruh(self, ctx, dur):
         info = self.get_info(ctx)
-        info["sleep_timer"] = (dur, ctx.message.author, ctx.message.created_at, time())
+        info["sleep_timer"] = [dur, ctx.message.author, time()]
         await asyncio.sleep(dur)
         await self.leave(ctx)
         info["sleep_timer"] = None
@@ -711,6 +711,7 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         # print(info)
         await ctx.send(f"`{info}\n\n{self.current_metadata}`")
+        print(f"{time() - info['sleep_timer'][-1]} seconds have passed")
 
     async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
@@ -801,6 +802,10 @@ class Music(commands.Cog):
     async def _loc(self, ctx):
         await ctx.send(f"{self.current_audio_stream.original.ms_time/1000}s")
 
+    async def disable_if_live(self, func):
+        async def inner(self, ctx):
+            if self.current_metadata["is_live"]:
+                pass
 
 
     @local.before_invoke

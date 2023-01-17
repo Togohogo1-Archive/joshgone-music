@@ -149,16 +149,24 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [x] Forceskip (not practical, more of a meme command)
 
 ## Features in v2.1.0
-- [x] Better local file support
-- [x] Better playlist support
-- [x] Able to store previous songs
+- [ ] Better local file support
+- [ ] Better playlist support
+- [ ] Able to store previous songs
     - Store a queue of previously played song?
     - Size of the queue configurable?
     - Or just be able to do one previous song
-- Soundcloud playlists
+- [ ] Soundcloud playlists
 
 ## Eventually in a future version
-- [x] Migrate to use Discord api v10 and slash commands
+- [ ] Migrate to use Discord api v10 and slash commands
+
+## VLC features that may not be implemented
+- [ ] Stop after some track
+- [ ] Song bookmarking (bookmark song at 1:25)
+- [ ] The ability to sort tracks (might make an exception for playlists tho)
+- [ ] Playback history
+- [ ] ABrepeat
+- [ ] Full on customized equalizer
 
 ## Random cases that might cause the bot to break or unexpected behaviour
 - when ;ff 15 for a long song, then do ;s or other commands
