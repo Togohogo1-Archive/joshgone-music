@@ -147,14 +147,14 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [x] Append command
     - Appends at the front of the list instead of teh back
 - [x] Forceskip (not practical, more of a meme command)
-
-## Features in v2.1.0
-- [ ] Better local file support
-- [ ] Better playlist support
 - [ ] Able to store previous songs
     - Store a queue of previously played song?
     - Size of the queue configurable?
     - Or just be able to do one previous song
+
+## Features in v2.1.0
+- [ ] Better local file support
+- [ ] Better playlist support
 - [ ] Soundcloud playlists
 
 ## Eventually in a future version
