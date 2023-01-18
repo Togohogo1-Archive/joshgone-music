@@ -36,19 +36,19 @@ class Admin(commands.Cog):
     @commands.is_owner()
     async def load(self, ctx, *, module: str):
         # TODO reload command?
-        self.bot.load_extension(f"jgm.extensions.{module}")
+        await self.bot.load_extension(f"jgm.extensions.{module}")
         await ctx.send("Extension loaded.")
 
     @commands.command(hidden=True)
     @commands.is_owner()
     async def unload(self, ctx, *, module: str):
-        self.bot.unload_extension(f"jgm.extensions.{module}")
+        await self.bot.unload_extension(f"jgm.extensions.{module}")
         await ctx.send("Extension unloaded.")
 
     @commands.command(hidden=True)
     @commands.is_owner()
     async def reload(self, ctx, *, module: str):
-        self.bot.reload_extension(module)
+        await self.bot.reload_extension(module)
         await ctx.send("Extension reloaded.")
 
     @commands.command(name="list", hidden=True)
