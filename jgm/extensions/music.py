@@ -7,12 +7,12 @@ import typing
 import traceback
 import json
 import queue
+import time
 import threading
 import os
 import sys
 import shlex
 from collections import deque
-from time import time
 
 import discord
 from discord.ext import commands
@@ -223,6 +223,14 @@ class Music(commands.Cog):
         finally:
             info["waiting"] = False
             info["processing"] = False
+
+    @commands.command()
+    async def e(self, ctx):
+        info = self.get_info(ctx)
+        channel = ctx.guild.get_channel(info["channel_id"])
+        async with channel.typing():
+            time.sleep(5)
+        await ctx.send("ayo bruh")
 
     #  advancement of the queue
     def schedule(self, ctx, error=None, *, force=False):
@@ -673,7 +681,7 @@ class Music(commands.Cog):
 
     async def bruh(self, ctx, dur):
         info = self.get_info(ctx)
-        info["sleep_timer"] = [dur, ctx.message.author, time()]
+        info["sleep_timer"] = [dur, ctx.message.author, time.time()]
         await asyncio.sleep(dur)
         await self.leave(ctx)
         info["sleep_timer"] = None
@@ -739,7 +747,7 @@ class Music(commands.Cog):
         # ratio = round(self.current_audio_stream.original.ms_time/1000)/round(self.current_metadata["duration"])
         # norm = int(20*ratio)
         # await ctx.send(f"`[{'#'*norm}{' '*(20-norm)}]`")
-        print(f"{time() - info['sleep_timer'][-1]} seconds have passed")
+        print(f"{time.time() - info['sleep_timer'][-1]} seconds have passed")
 
     async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
@@ -833,10 +841,6 @@ class Music(commands.Cog):
     async def _loc(self, ctx):
         await ctx.send(f"{self.current_audio_stream.original.ms_time/1000}s")
 
-    async def disable_if_live(self, func):
-        async def inner(self, ctx):
-            if self.current_metadata["is_live"]:
-                pass
 
 
     @local.before_invoke

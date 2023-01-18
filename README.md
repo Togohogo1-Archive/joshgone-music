@@ -155,6 +155,10 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
     - Or only keep previously played and full playback history
 - [x] Playback history (subset of previous)
 - [x] Migrate to discord.py 2.0 to use apiv10
+- Extra decorations
+    - Typing indicator in channel
+    - Disable is live feature
+    - Command sorting (more vs filters)
 
 ## Features in v2.1.0
 - [ ] Better local file support
@@ -162,6 +166,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [ ] Better playlist support
 - [ ] Figure out database (playlist) importing exporting
 - [ ] Soundcloud playlists
+- [ ] Better reloading and unloading
 
 ## Eventually in a future version
 - [ ] Add slash commands functionality

@@ -32,6 +32,13 @@ class More(commands.Cog):
     @commands.command()
     async def loop1(self, ctx, loop: typing.Optional[bool] = None):
         await self.mus._loop1(ctx)
+
+    @fast_forward.before_invoke
+    async def disable_if_live(self, ctx):
+        if self.mus.current_metadata["is_live"]:
+            raise commands.CommandError("this command doesn't work with the source is live")
+
+
     '''
     @commands.command()
     @commands.is_owner()
