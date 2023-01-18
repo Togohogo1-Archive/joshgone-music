@@ -1,4 +1,6 @@
 import os
+import asyncio
+import inspect
 
 import discord
 from discord.ext import commands
@@ -11,15 +13,27 @@ LOAD_ON_STARTUP = (
 # We need intents to resolve a name to a Member object
 intents = discord.Intents.default()
 intents.members = True
+if hasattr(intents, "message_content"):
+    intents.message_content = True
 
 # Our prefix is % or @joshgone
 command_prefix = commands.when_mentioned_or(";")
 
+# Wrap a non-awaitable value with an awaitable
+def _wrap_async(value):
+    if inspect.isawaitable(value):
+        return value
+    future = asyncio.Future()  # This is awaitable
+    future.set_result(value)
+    return future
+
 # This function exists so that bot is garbage collected after the function
-# ends. The loop's .close method is overridden to do nothing while the bot is
-# running. The loop is returned to be closed by the caller.
-def _run(token, **bot_kwargs):
+# ends.
+async def _run(token, **bot_kwargs):
     bot = commands.Bot(**bot_kwargs)
+
+    # Helper for improving compatibility between discord.py v1.x and v2.x
+    bot.wrap_async = _wrap_async
 
     # Get list of extensions to load
     extensions = list(LOAD_ON_STARTUP)
@@ -28,34 +42,28 @@ def _run(token, **bot_kwargs):
 
     # Load extensions
     for module in extensions:
-        bot.load_extension(f"jgm.extensions.{module}")
+        await bot.load_extension(f"jgm.extensions.{module}")
         print(f"Loaded {module}")
     print(f"All extensions loaded: [{', '.join(extensions)}]")
 
-    # Override the .close method to do nothing
-    close = bot.loop.close
-    bot.loop.close = lambda: None
-
-    bot.run(token)
-
-    # Restore the .close method.
-    bot.loop.close = close
-    return bot.loop
+    try:
+        await bot.start(token)
+    finally:
+        # Force the GC to run before closing the loop so objects that use
+        # loop.call_soon in their .__del__ methods can be garbage collected
+        # without giving an annoying `Exception ignored in <something>
+        # RuntimeError: Event loop is closed`.
+        del bot
+        import gc
+        gc.collect()
 
 def run(token, **bot_kwargs):
     """Runs JoshGone with the provided token and bot options"""
     # The actual bot is run and deleted inside the _run function.
-    loop = _run(token, **bot_kwargs)
-
-    # Waits a little bit before closing the loop so objects that use
-    # loop.call_soon in their .__del__ methods can be garbage collected without
-    # giving an annoying `Exception ignored in <something> RuntimeError: Event
-    # loop is closed`.
     try:
-        loop.call_later(0.1, loop.stop)
-        loop.run_forever()
-    finally:
-        loop.close()
+        asyncio.run(_run(token, **bot_kwargs))
+    except KeyboardInterrupt:
+        pass
 
 def main():
     """Entry point to run JoshGone"""

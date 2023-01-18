@@ -30,4 +30,4 @@ class Info(commands.Cog):
             raise
 
 def setup(bot):
-    bot.add_cog(Info(bot))
+    return bot.add_cog(Info(bot))

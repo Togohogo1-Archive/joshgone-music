@@ -873,11 +873,12 @@ class Music(commands.Cog):
             raise commands.CommandError("Not connected to a voice channel")
 
 def setup(bot):
-    bot.add_cog(Music(bot))
-
     # Suppress noise about console usage from errors
     bot._music_old_ytdl_bug_report_message = youtube_dl.utils.bug_reports_message
     youtube_dl.utils.bug_reports_message = lambda: ''
 
+    return bot.add_cog(Music(bot))
+
 def teardown(bot):
     youtube_dl.utils.bug_reports_message = bot._music_old_ytdl_bug_report_message
+    return bot.wrap_async(None)

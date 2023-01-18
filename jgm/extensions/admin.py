@@ -76,4 +76,4 @@ class Admin(commands.Cog):
             backend.apply_migrations(backend.to_apply(migrations))
 
 def setup(bot):
-    bot.add_cog(Admin(bot))
+    return bot.add_cog(Admin(bot))

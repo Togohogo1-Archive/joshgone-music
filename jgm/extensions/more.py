@@ -55,4 +55,4 @@ class More(commands.Cog):
     '''
 
 def setup(bot):
-    bot.add_cog(More(bot))
+    return bot.add_cog(More(bot))

@@ -404,4 +404,4 @@ class Chant(commands.Cog):
         await self._chant(ctx, name, 1, delay)
 
 def setup(bot):
-    bot.add_cog(Chant(bot))
+    return bot.add_cog(Chant(bot))

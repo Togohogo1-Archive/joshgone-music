@@ -57,4 +57,4 @@ class Database(commands.Cog):
                 print(f'Error notifying cron cog: {e!r}')
 
 def setup(bot):
-    bot.add_cog(Database(bot))
+    return bot.add_cog(Database(bot))

@@ -39,4 +39,4 @@ class Filters(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Filters(bot))
+    return bot.add_cog(Filters(bot))
