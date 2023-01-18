@@ -341,11 +341,17 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
+        history = info["history"]
         ty = "local" if url == "coco.mp4" else "stream"
-        queue.append({"ty": ty, "query": url})
+        if url == "prev":
+            if not history:
+                raise commands.CommandError("no previous song")
+            queue.append(history[-1])
+        else:
+            queue.append({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Added to queue: {ty} {url}")
+        await ctx.send(f"Added to queue: {ty if url != 'prev' else history[-1]['ty']} {url if url != 'prev' else history[-1]['query']}{' (previous song)'*(url=='prev')}")
 
     @commands.command(aliases=["prepend","pplay", "pp"])
     async def stream_prepend(self, ctx, *, url):
@@ -357,11 +363,17 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
+        history = info["history"]
         ty = "local" if url == "coco.mp4" else "stream"
-        queue.appendleft({"ty": ty, "query": url})
+        if url == "prev":
+            if not history:
+                raise commands.CommandError("no previous song")
+            queue.appendleft(history[-1])
+        else:
+            queue.appendleft({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Added to queue: {ty} {url}")
+        await ctx.send(f"Prepended to queue: {ty if url != 'prev' else history[-1]['ty']} {url if url != 'prev' else history[-1]['query']}{' (previous song)'*(url=='prev')}")
 
     @commands.command()
     async def _add_playlist(self, ctx, *, url):
@@ -480,7 +492,10 @@ class Music(commands.Cog):
     # TODO order might be a bit sus (unoptimal)
     async def playback_history(self, ctx):
         info = self.get_info(ctx)
-        await ctx.send(f"```{info['history']}```")
+        a = ""
+        for v in info["history"]:
+            a += f"{v}\n"
+        await ctx.send(f"```{a}```")
 
     @commands.command(aliases=["q"])
     async def queue(self, ctx):
@@ -656,31 +671,6 @@ class Music(commands.Cog):
     # Functions referenced by more.py
     # ==================================================
 
-    # TODO issue with autoshufle (ignore it?)
-    @commands.command(aliases=["prev"])
-    async def previous(self, ctx):
-        info = self.get_info(ctx)
-        history = info["history"]
-        queue = info["queue"]
-        # url error checking already happens in stream command
-        if history:  # deque has items
-            queue.append(history.pop())
-            await ctx.send("added last item from history to end of queue")
-        else:
-            await ctx.send("no history")
-
-    @commands.command(aliases=["pprev"])
-    async def previous_prepend(self, ctx):
-        info = self.get_info(ctx)
-        history = info["history"]
-        queue = info["queue"]
-        # url error checking already happens in stream command
-        if history:  # deque has items
-            queue.appendleft(history.pop())
-            await ctx.send("added last item from history to beginning of queue")
-        else:
-            await ctx.send("no history")
-
     async def bruh(self, ctx, dur):
         info = self.get_info(ctx)
         info["sleep_timer"] = [dur, ctx.message.author, time()]
@@ -754,6 +744,10 @@ class Music(commands.Cog):
     async def _fast_forward(self, ctx, sec):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
+
+        # more often raised when try to seek during pause
+        if not self.current_audio_stream.original.seekable():
+            raise commands.CommandError("can't jump forward no more")
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]

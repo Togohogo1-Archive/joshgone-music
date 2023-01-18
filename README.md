@@ -147,21 +147,24 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [x] Append command
     - Appends at the front of the list instead of teh back
 - [x] Forceskip (not practical, more of a meme command)
-- [ ] A more watered down version of play previous song
+- [x] A more watered down version of play previous song
     - Store a queue of previously played song (history command)
     - `;prev` removes last played song in history and adds to the end of queue
     - `;pprev` removes last played song in history and adds to the start of queue
     - Size of history queue capped at some number (I'm thinking 15)
     - Or only keep previously played and full playback history
-- [ ] Playback history (subset of previous)
+- [x] Playback history (subset of previous)
+- [x] Migrate to discord.py 2.0 to use apiv10
 
 ## Features in v2.1.0
 - [ ] Better local file support
+    - Cap on file directory size
 - [ ] Better playlist support
+- [ ] Figure out database (playlist) importing exporting
 - [ ] Soundcloud playlists
 
 ## Eventually in a future version
-- [ ] Migrate to use Discord api v10 and slash commands
+- [ ] Add slash commands functionality
 
 ## VLC features that may not be implemented
 - Stop after some track
