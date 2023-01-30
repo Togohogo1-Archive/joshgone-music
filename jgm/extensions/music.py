@@ -756,7 +756,11 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        scaled_frames = 1000 / (20*speed)
+        filter = info["cur_audio_filter"]
+        if filter in {"daycore", "nightcore"}:
+            scaled_frames = 1000 / (20*0.75 if filter == "daycore" else 20*1.25)
+        else:
+            scaled_frames = 1000 / (20*speed)
         self.current_audio_stream.original.seek_fw(round(scaled_frames*sec))
         await ctx.send(f"Seeked {sec} second(s) forward, scaled = {scaled_frames}")
 
@@ -767,9 +771,15 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        scaled_frames = 1000 / (20*speed)
+        filter = info["cur_audio_filter"]
+        if filter in {"daycore", "nightcore"}:
+            scaled_frames = 1000 / (20*0.75 if filter == "daycore" else 20*1.25)
+        else:
+            scaled_frames = 1000 / (20*speed)
+
         self.current_audio_stream.original.seek_bw(round(scaled_frames*sec))
         await ctx.send(f"Seeked {sec} second(s) backward scaled = {scaled_frames}")
+
 
     def regex_time(self, pos):
         # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
