@@ -54,7 +54,8 @@ class Music(commands.Cog):
         "bassboost": "bass=g=20",
         "deepfry": "'acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1'",  # Source: https://www.vacing.com/ffmpeg_audio_filters/index.html
         "nightcore": "asetrate=48000*1.25,aresample=48000",
-        "daycore": "asetrate=48000*0.75,aresample=48000"
+        "daycore": "asetrate=48000*0.75,aresample=48000",
+        "amogus": "asetrate=48000*0.75,aresample=48000,atempo=1/0.75"
     }
 
 # -filter_complex "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1"
@@ -109,7 +110,8 @@ class Music(commands.Cog):
         self.ffmpeg_opts = self._LOCAL_FFMPEG_OPTS
         new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
         speed = info["cur_speed_filter"]
-        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, speed, **new_ffmpeg_opts))
+        filter = info["cur_audio_filter"]
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, speed, filter=filter, **new_ffmpeg_opts))
         self.current_audio_link = query
         return source, query
 
@@ -303,7 +305,8 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        audio = patched_player.FFmpegPCMAudio(filename, speed, **new_ffmpeg_opts)
+        filter = info["cur_audio_filter"]
+        audio = patched_player.FFmpegPCMAudio(filename, speed, filter=filter, **new_ffmpeg_opts)
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -620,21 +623,6 @@ class Music(commands.Cog):
     # Functions referenced by filters.py
     # ==================================================
 
-    def ffmpeg_sets_copy(self, filter_complex=False):
-        # Filter name always guaranteed to be valid
-        filter_li = []
-        prefix = "-filter_complex" if filter_complex else "-af"
-
-        if self.current_filter != "normal":
-            filter_li.append(self._FILTERS[self.current_filter])
-        if self.current_speed != 1:
-            filter_li.append(f"atempo={self.current_speed}")
-
-        if filter_li:
-            temp_ffmpeg = self._DEFAULT_FFMPEG_OPTS.copy()
-            add_options = f" {prefix} {','.join(filter_li)}"
-            temp_ffmpeg["options"] += add_options
-
     async def _set_audio_filter(self, ctx, afilter):
         info = self.get_info(ctx)
         info["next_audio_filter"] = afilter
@@ -647,7 +635,13 @@ class Music(commands.Cog):
             raise commands.CommandError(f"Speed factor [{factor}] outside of factor range from 0.5 to 2 inclusive")
 
         info = self.get_info(ctx)
+
+        if info["next_audio_filter"] in {"daycore", "nightcore"}:
+            raise commands.CommandError("in order to use this command, turn off daycore or nightcore")
+
         info["next_speed_filter"] = factor
+
+
         await ctx.send(f"speed = x{factor}")
 
     def apply_filters(self, ctx, opts, jump=False):
@@ -666,13 +660,16 @@ class Music(commands.Cog):
         if current_filter != "normal":
             filter_li.append(self._FILTERS[current_filter])
         if current_speed != 1:
-            filter_li.append(f"atempo={current_speed}")
+            # astrate speeds it up already
+            if current_filter not in {"daycore", "nightcore"}:
+                filter_li.append(f"atempo={current_speed}")
 
         if filter_li:
             add_options = f" -filter_complex {','.join(filter_li)}"
             opts["options"] += add_options
         # If nothing in list then it means its default options
 
+        print(opts)
         return opts
 
     # ==================================================
@@ -801,7 +798,8 @@ class Music(commands.Cog):
         new_ffmpeg_opts["before_options"] += f" -ss {pos}"
 
         speed = info["cur_speed_filter"]
-        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, speed, **new_ffmpeg_opts))
+        filter = info["cur_audio_filter"]
+        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, speed, filter=filter, **new_ffmpeg_opts))
 
         # Seeking past the song
         if not strem.original.seekable():

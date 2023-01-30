@@ -16,13 +16,13 @@ class Filters(commands.Cog):
     async def deepfry(self, ctx):
         await self.mus._set_audio_filter(ctx, "deepfry")
 
-    # @commands.command(aliases=["nc"])
-    # async def nightcore(self, ctx):
-    #     await self.mus._set_audio_filter(ctx, "nightcore")
+    @commands.command(aliases=["nc"])
+    async def nightcore(self, ctx):
+        await self.mus._set_audio_filter(ctx, "nightcore")
 
-    # @commands.command(aliases=["dc"])
-    # async def daycore(self, ctx):
-    #     await self.mus._set_audio_filter(ctx, "daycore")
+    @commands.command(aliases=["dc"])
+    async def daycore(self, ctx):
+        await self.mus._set_audio_filter(ctx, "daycore")
 
     @commands.command(aliases=["no"])
     # rename this to flat?
@@ -35,6 +35,7 @@ class Filters(commands.Cog):
 
     @commands.command(aliases=["sp"])
     async def speed(self, ctx, factor: float):
+        # just make nightcore and daycore special - don't allow the user to set speed
         await self.mus._set_speed_filter(ctx, factor)
 
 
