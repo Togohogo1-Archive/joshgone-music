@@ -49,14 +49,20 @@ class Music(commands.Cog):
         "options": "-vn",  # Filter out video
         "before_options": ""
     }
+
     # Filters
+    _SPECIAL_FILTER_SPEED = {
+        "daycore": 0.75,
+        "nightcore": 1.25
+    }
+
     _FILTERS = {
         "bassboost": "bass=g=20",
         "deepfry": "'acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1'",  # Source: https://www.vacing.com/ffmpeg_audio_filters/index.html
-        "nightcore": "asetrate=48000*1.25,aresample=48000",
-        "daycore": "asetrate=48000*0.75,aresample=48000",
-        "amogus": "asetrate=48000*0.75,aresample=48000,atempo=1/0.75"
+        "nightcore": f"asetrate=48000*{_SPECIAL_FILTER_SPEED['nightcore']},aresample=48000",
+        "daycore": f"asetrate=48000*{_SPECIAL_FILTER_SPEED['daycore']},aresample=48000",
     }
+
 
 # -filter_complex "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1"
 
@@ -93,8 +99,8 @@ class Music(commands.Cog):
         }
         # TODO init is not run once when reloaded
 
-
         self.task = None
+
 
     # Cancel just the advancer and the auto-restart tasks
     def cog_unload(self):
@@ -110,8 +116,12 @@ class Music(commands.Cog):
         self.ffmpeg_opts = self._LOCAL_FFMPEG_OPTS
         new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
         speed = info["cur_speed_filter"]
-        filter = info["cur_audio_filter"]
-        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, speed, filter=filter, **new_ffmpeg_opts))
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(
+            query,
+            speed,
+            self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"]),
+            **new_ffmpeg_opts
+        ))
         self.current_audio_link = query
         return source, query
 
@@ -305,8 +315,13 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        filter = info["cur_audio_filter"]
-        audio = patched_player.FFmpegPCMAudio(filename, speed, filter=filter, **new_ffmpeg_opts)
+        audio = patched_player.FFmpegPCMAudio(
+            self.current_audio_link,
+            speed,
+            self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"]),
+            **new_ffmpeg_opts
+        )
+
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -756,11 +771,9 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        filter = info["cur_audio_filter"]
-        if filter in {"daycore", "nightcore"}:
-            scaled_frames = 1000 / (20*0.75 if filter == "daycore" else 20*1.25)
-        else:
-            scaled_frames = 1000 / (20*speed)
+        filter_speed = self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"])
+        scaled_frames = 1000/(20*speed) if not filter_speed else 1000/(20*filter_speed)
+
         self.current_audio_stream.original.seek_fw(round(scaled_frames*sec))
         await ctx.send(f"Seeked {sec} second(s) forward, scaled = {scaled_frames}")
 
@@ -771,11 +784,8 @@ class Music(commands.Cog):
 
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
-        filter = info["cur_audio_filter"]
-        if filter in {"daycore", "nightcore"}:
-            scaled_frames = 1000 / (20*0.75 if filter == "daycore" else 20*1.25)
-        else:
-            scaled_frames = 1000 / (20*speed)
+        filter_speed = self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"])
+        scaled_frames = 1000/(20*speed) if not filter_speed else 1000/(20*filter_speed)
 
         self.current_audio_stream.original.seek_bw(round(scaled_frames*sec))
         await ctx.send(f"Seeked {sec} second(s) backward scaled = {scaled_frames}")
@@ -808,8 +818,12 @@ class Music(commands.Cog):
         new_ffmpeg_opts["before_options"] += f" -ss {pos}"
 
         speed = info["cur_speed_filter"]
-        filter = info["cur_audio_filter"]
-        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(self.current_audio_link, speed, filter=filter, **new_ffmpeg_opts))
+        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(
+            self.current_audio_link,
+            speed,
+            self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"]),
+            **new_ffmpeg_opts
+        ))
 
         # Seeking past the song
         if not strem.original.seekable():

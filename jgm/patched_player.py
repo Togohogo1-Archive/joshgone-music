@@ -25,7 +25,7 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
 
     # Default is 0 for no flags (used to be subprocess.CREATE_NO_WINDOW). See
     # the documentation for discord.FFmpegPCMAudio for more info on kwargs.
-    def __init__(self, source, speed, filter=None, *, creationflags=0, **kwargs):
+    def __init__(self, source, speed, filter_speed, *, creationflags=0, **kwargs):
         # The superclass's __init__ calls self._spawn_process, so we need to
         # set creation flags before then, meaning this line can't be after the
         # super().__init__ call.
@@ -33,8 +33,8 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         self.ms_time = 0
         self.speed = speed
 
-        if filter in {"daycore", "nightcore"}:
-            self.speed = 0.75 if filter == "daycore" else 1.25
+        if filter_speed is not None:
+            self.speed = filter_speed
 
         # _MAX_BUF_SZ is the number of frames, frames can range from 10ms to 40ms
         # Assume 20ms has an upper bound of 2**12 = 4096 bytes (actually closer to 3840)
