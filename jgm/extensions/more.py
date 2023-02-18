@@ -24,42 +24,10 @@ class More(commands.Cog):
     async def jump(self, ctx, pos):
         await self.mus._jump(ctx, pos)
 
-    @commands.command()
-    async def loc(self, ctx):
-        # rename this to smth better later
-        await self.mus._loc(ctx)
-
-    @commands.command()
-    async def loop1(self, ctx, loop: typing.Optional[bool] = None):
-        await self.mus._loop1(ctx)
-
     @fast_forward.before_invoke
     async def disable_if_live(self, ctx):
         if self.mus.current_metadata["is_live"]:
             raise commands.CommandError("this command doesn't work with the source is live")
-
-
-    '''
-    @commands.command()
-    @commands.is_owner()
-    async def tim(self, ctx, *, _time):
-        _FFMPEG_3 = {
-            'options': '-vn',
-            # Source: https://stackoverflow.com/questions/66070749/
-            "before_options": f"-ss {_time} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
-        }
-        import time
-        a = time.time()
-        new_audio = pp.FFmpegPCMAudio(self.mus.current_audio_link, **_FFMPEG_3)
-        await self.mus.skip(ctx)
-
-        after = lambda error, ctx=ctx: self.mus.schedule(ctx, error)
-        # ctx.voice_client.stop()
-        ctx.voice_client.play(new_audio, after=after)
-        # self.mus.ffmpeg_opts = _FFMPEG_3
-        b = time.time() - a
-        await ctx.send(b)
-    '''
 
 def setup(bot):
     return bot.add_cog(More(bot))

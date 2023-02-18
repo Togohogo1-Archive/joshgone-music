@@ -236,7 +236,7 @@ class Music(commands.Cog):
             info["waiting"] = False
             info["processing"] = False
 
-    @commands.command()
+    # @commands.command()
     async def e(self, ctx):
         info = self.get_info(ctx)
         channel = ctx.guild.get_channel(info["channel_id"])
@@ -700,13 +700,16 @@ class Music(commands.Cog):
 
     @commands.command(aliases=["fs"])
     async def forceskip(self, ctx):
+        # TODO small bug when try forceskipping when paused -> just resumes the song
+        # TODO big bug -> not adding to playback history
         info = self.get_info(ctx)
         current = info["current"]
         # info["jumped"] = False
         ctx.voice_client.stop()
-        if current is not None and not info["waiting"]:
-            info["current"] = None
-            await ctx.send(f"forceskipped {current}")
+        # if current is not None and not info["waiting"]:
+        #     info["current"] = None
+        #     await ctx.send(f"forceskipped {current}")
+        await ctx.send("test")
 
 
     @commands.command()
@@ -755,7 +758,7 @@ class Music(commands.Cog):
     async def info(self, ctx):
         info = self.get_info(ctx)
         # print(info)
-        await ctx.send(f"`{info}\n\n{self.current_metadata}`")
+        await ctx.send(f"`{info}\n\n{self.current_metadata}`\n{self.current_audio_stream.original.ms_time/1000}s")
         # ratio = round(self.current_audio_stream.original.ms_time/1000)/round(self.current_metadata["duration"])
         # norm = int(20*ratio)
         # await ctx.send(f"`[{'#'*norm}{' '*(20-norm)}]`")
@@ -843,9 +846,6 @@ class Music(commands.Cog):
         await ctx.send("valid pos")
         '''
 
-    @commands.command()
-    async def ffmpog(self, ctx):
-        await ctx.send(self.ffmpeg_opts)
 
     def seconds(self, hhmmss):
         '''
