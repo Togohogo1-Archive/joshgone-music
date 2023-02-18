@@ -36,7 +36,7 @@ dependencies = [
 	"simpleeval==0.9.10",
 	"soundit==0.2.1",
 	"yoyo-migrations==7.3.2",
-	"yt-dlp==2021.9.2",
+	"yt-dlp==2023.02.17",
 	# Pinned sub-dependencies
 	"aiosignal==1.3.1",
 	"anyio==3.5.0",
