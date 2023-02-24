@@ -201,12 +201,15 @@ class Music(commands.Cog):
             history = info["history"]
             # If we're looping, put the current song at the end of the queue
             if info["current"] is not None:
-                if info["loop"] == -1:
-                    queue.appendleft(info["current"])
-                elif info["loop"] == 1:
-                    queue.append(info["current"])
-            # if not info["jumped"]:  # If wasn't jumped, run if False
                 history.append(info["current"])
+                if not info["forceskipped"]:
+                    if info["loop"] == -1:
+                        queue.appendleft(info["current"])
+                    elif info["loop"] == 1:
+                        queue.append(info["current"])
+                else:
+                    info["forceskipped"] = False
+            # if not info["jumped"]:  # If wasn't jumped, run if False
             info["current"] = None
 
             # Prioritizing jump over queue message
@@ -279,6 +282,7 @@ class Music(commands.Cog):
             wrapped["next_speed_filter"] = 1
             wrapped["autoshuffle"] = False
             wrapped["sleep_timer"] = None
+            wrapped["forceskipped"] = False
 
         else:
             wrapped = self.data[guild_id]
@@ -605,9 +609,9 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         current = info["current"]
         # info["jumped"] = False
-        ctx.voice_client.stop()
         if current is not None and not info["waiting"]:
             await ctx.send(f"Skipped: {current['query']}")
+        ctx.voice_client.stop()
 
     @commands.command()
     async def loop(self, ctx, loop: int=None):
@@ -704,12 +708,12 @@ class Music(commands.Cog):
         # TODO big bug -> not adding to playback history
         info = self.get_info(ctx)
         current = info["current"]
+        info["forceskipped"] = True
         # info["jumped"] = False
+        if current is not None and not info["waiting"]:
+            await ctx.send(f"forceskipped {current}")
+
         ctx.voice_client.stop()
-        # if current is not None and not info["waiting"]:
-        #     info["current"] = None
-        #     await ctx.send(f"forceskipped {current}")
-        await ctx.send("test")
 
 
     @commands.command()
