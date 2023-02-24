@@ -63,9 +63,6 @@ class Music(commands.Cog):
         "daycore": f"asetrate=48000*{_SPECIAL_FILTER_SPEED['daycore']},aresample=48000",
     }
 
-
-# -filter_complex "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1"
-
     def __init__(
         self,
         bot,
@@ -78,16 +75,13 @@ class Music(commands.Cog):
         self.ytdl_opts = ytdl_opts
         self.ffmpeg_opts = ffmpeg_opts
 
-        # Data is persistent between extension reloads
-        if not hasattr(bot, "_music_data"):
-            bot._music_data = {}
-        if not hasattr(bot, "_music_advance_queue"):
-            bot._music_advance_queue = asyncio.Queue()
-        self.data = bot._music_data
-        self.advance_queue = bot._music_advance_queue
+        self.data = {}
+        self.advance_queue = asyncio.Queue()
+
         # Start the advancer's auto-restart task
         self.advance_task = None
         self.advancer.start()
+
         self.current_audio_stream = None
         self.current_audio_link = None
         self.current_metadata = {
@@ -97,14 +91,8 @@ class Music(commands.Cog):
             "id": None,
             "webpage_url": None
         }
-        # TODO init is not run once when reloaded
 
         self.task = None
-
-
-    # Cancel just the advancer and the auto-restart tasks
-    def cog_unload(self):
-        self.advancer.cancel()
 
     # - Song players
     # Returns a source object and the title of the song
@@ -209,12 +197,9 @@ class Music(commands.Cog):
                         queue.append(info["current"])
                 else:
                     info["forceskipped"] = False
-            # if not info["jumped"]:  # If wasn't jumped, run if False
+
             info["current"] = None
 
-            # Prioritizing jump over queue message
-            # if info["jumped"]:  # Was a jump
-            #     info["jumped"] = False
             if queue:
                 # Get the next song
                 current = queue.popleft()
@@ -223,7 +208,6 @@ class Music(commands.Cog):
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
                     source, title = await getattr(self, f"_play_{current['ty']}")(ctx, current['query'])
-                    # print(source, title)
                     self.current_audio_stream = source
                     ctx.voice_client.play(source, after=after)
                 await channel.send(f"Now playing: {title}")
@@ -239,13 +223,6 @@ class Music(commands.Cog):
             info["waiting"] = False
             info["processing"] = False
 
-    # @commands.command()
-    async def e(self, ctx):
-        info = self.get_info(ctx)
-        channel = ctx.guild.get_channel(info["channel_id"])
-        async with channel.typing():
-            time.sleep(5)
-        await ctx.send("ayo bruh")
 
     #  advancement of the queue
     def schedule(self, ctx, error=None, *, force=False):
@@ -838,36 +815,23 @@ class Music(commands.Cog):
 
         self.current_audio_stream = strem
 
-
-
         ctx.voice_client._player.source = strem
         secs = self.seconds(pos)
         self.current_audio_stream.original.ms_time = secs*1000
         await ctx.send(f"jumped to {pos} = {secs*1000}ms")
-        '''
-        print(self.get_info(ctx)["waiting"])
-
-        await ctx.send("valid pos")
-        '''
-
 
     def seconds(self, hhmmss):
-        '''
+        """
         if len 1 -> ss
         if len 2 -> mm:ss
         if len 3 -> hh:mm:ss
 
         never hh:ss
-        '''
+        """
         hhmmss_list = hhmmss.split(":")
         hour_s = int(hhmmss_list[-3])*3600 if len(hhmmss_list) >= 3 else 0
         min_s = int(hhmmss_list[-2])*60 if len(hhmmss_list) >= 2 else 0
         return hour_s + min_s + int(hhmmss_list[-1])
-
-    async def _loc(self, ctx):
-        await ctx.send(f"{self.current_audio_stream.original.ms_time/1000}s")
-
-
 
     @local.before_invoke
     @stream.before_invoke
@@ -906,3 +870,13 @@ def setup(bot):
 def teardown(bot):
     youtube_dl.utils.bug_reports_message = bot._music_old_ytdl_bug_report_message
     return bot.wrap_async(None)
+
+'''
+# @commands.command()
+async def e(self, ctx):
+    info = self.get_info(ctx)
+    channel = ctx.guild.get_channel(info["channel_id"])
+    async with channel.typing():
+        time.sleep(5)
+    await ctx.send("ayo bruh")
+'''
