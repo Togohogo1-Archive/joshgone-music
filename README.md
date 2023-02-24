@@ -204,8 +204,6 @@ Filters:
 More:
   fast_forward
   jump
-  loc
-  loop1
   rewind
 Music:
   _add_playlist    Adds all songs in a playlist to the queue
@@ -214,8 +212,6 @@ Music:
   cancel
   clear            Clears all songs on queue
   current          Shows the current song
-  e
-  ffmpog
   forceskip
   info
   join             Joins a voice channel

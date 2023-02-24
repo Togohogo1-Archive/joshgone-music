@@ -94,9 +94,12 @@ class Music(commands.Cog):
 
         self.task = None
 
+    # ======================================================================
+    # Essential music playing functions (not commands)
+    # ======================================================================
+
     # - Song players
     # Returns a source object and the title of the song
-
     # Finds a file using query. Title is query
     async def _play_local(self, ctx, query):
         # Runs when new song
@@ -306,9 +309,9 @@ class Music(commands.Cog):
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
-    # ==================================================
-    # Original music.py functions
-    # ==================================================
+    # ======================================================================
+    # Commands used in basic mode
+    # ======================================================================
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
@@ -703,7 +706,6 @@ class Music(commands.Cog):
         if self.time_match(dur) and int(dur) > self.seconds("99:59:59"):
             raise commands.CommandError(f"time in seconds greater than 99:59:59")
 
-
         if self.task is None or self.task.done() or self.task.cancelled():
             self.task = asyncio.create_task(self.bruh(ctx, self.seconds(dur)))
             await ctx.send(f"{self.seconds(dur)}, {type(self.seconds(dur))}, {self.task}")
@@ -722,7 +724,6 @@ class Music(commands.Cog):
         self.task.cancel()
 
         await ctx.send(self.task)
-
 
     @commands.command(aliases=["ashuffle"])
     async def autoshuffle(self, ctx, auto: typing.Optional[bool] = None):
