@@ -185,6 +185,16 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - when ;batch_add a bunch of songs, do a ;jump x:xx when a current one is playing
 - when ;jump x:xx causes a large delay, change the ffmpeg settings
 
+## Short term todo
+- Reorgainze commands based on simple/advanced/filter usage
+- Continue making the bot unreloadable by hardcoding unload/load functions in `admin.py`
+- Write a basic first-level help description for each command
+- Move some instance variables into `self.data` so running the bot in 2 servers at a time doesn't cause issues
+
+## Longer term goals
+- More organized error messages
+- Know where to use before/after_invoke decorators
+
 ```
 Chant:
   chant            Repeat a chant multiple times
