@@ -151,7 +151,6 @@ class Music(commands.Cog):
     # (such as when the cog is getting unloaded)
     @advancer.after_loop
     async def on_advancer_cancel(self):
-        print("after the coro is run ")
         if self.advancer.is_being_cancelled():
             if self.advance_task is not None:
                 self.advance_task.cancel()
@@ -159,13 +158,9 @@ class Music(commands.Cog):
 
     # The advancer task loop
     async def handle_advances(self):
-        i = 0
         while True:
             item = await self.advance_queue.get()
-            print("__iteration " + str(i))
             asyncio.create_task(self.handle_advance(item))
-            print("iteration " + str(i))
-            i += 1
 
     # The actual music advancing logic
     async def handle_advance(self, item):
@@ -225,7 +220,6 @@ class Music(commands.Cog):
         finally:
             info["waiting"] = False
             info["processing"] = False
-
 
     #  advancement of the queue
     def schedule(self, ctx, error=None, *, force=False):
@@ -357,6 +351,10 @@ class Music(commands.Cog):
             if not history:
                 raise commands.CommandError("no previous song")
             queue.append(history[-1])
+        elif url == "cur":
+            if info["current"] is None:
+                raise commands.CommandError("no current song")
+            queue.append(info["current"])
         else:
             queue.append({"ty": ty, "query": url})
         if info["current"] is None:
@@ -379,6 +377,10 @@ class Music(commands.Cog):
             if not history:
                 raise commands.CommandError("no previous song")
             queue.appendleft(history[-1])
+        elif url == "cur":
+            if info["current"] is None:
+                raise commands.CommandError("no current song")
+            queue.appendleft(info["current"])
         else:
             queue.appendleft({"ty": ty, "query": url})
         if info["current"] is None:
@@ -470,12 +472,6 @@ class Music(commands.Cog):
     @commands.command(aliases=["start"])
     async def resume(self, ctx):
         """Resumes playing"""
-        # after = lambda error, ctx=ctx: self.schedule(ctx, error)
-        # info = self.get_info(ctx)
-        # if info["jumped"]:
-        #     info["jumped"] = False
-        #     ctx.voice_client.play(self.current_audio_stream, after=after)
-        #     print("jump moment")
         ctx.voice_client.resume()
 
     @commands.command()
@@ -668,7 +664,6 @@ class Music(commands.Cog):
             opts["options"] += add_options
         # If nothing in list then it means its default options
 
-        print(opts)
         return opts
 
     # ==================================================
@@ -750,17 +745,18 @@ class Music(commands.Cog):
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
 
-        # more often raised when try to seek during pause
-        if not self.current_audio_stream.original.seekable():
-            raise commands.CommandError("can't jump forward no more")
-
         info = self.get_info(ctx)
         speed = info["cur_speed_filter"]
+
         filter_speed = self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"])
         scaled_frames = 1000/(20*speed) if not filter_speed else 1000/(20*filter_speed)
+        total_frames = round(scaled_frames*sec)
 
-        self.current_audio_stream.original.seek_fw(round(scaled_frames*sec))
-        await ctx.send(f"Seeked {sec} second(s) forward, scaled = {scaled_frames}")
+
+        # more often raised when try to seek during pause
+        if not self.current_audio_stream.original.seek_fw_v2(total_frames):
+            raise commands.CommandError("can't jump that far mf!!!")
+        await ctx.send(f"Seeked {sec} second(s) forward, scaled = {total_frames}")
 
     async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):
@@ -811,7 +807,7 @@ class Music(commands.Cog):
         ))
 
         # Seeking past the song
-        if not strem.original.seekable():
+        if not strem.original.seek_fw_v2(test_seekable=True):
             raise commands.CommandError(f"bruv ur trying to seek beyond the song")
 
         self.current_audio_stream = strem

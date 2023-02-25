@@ -202,32 +202,32 @@ Filters:
   normal
   speed
 More:
+  _add_playlist    Adds all songs in a playlist to the queue
+  cancel
   fast_forward
+  forceskip
   jump
   rewind
+  local            Plays a file from the local filesystem
+  reschedule       Reschedules the current guild onto the advancer task
+  sleepin
 Music:
-  _add_playlist    Adds all songs in a playlist to the queue
   autoshuffle
   batch_add        Plays from multiple urls split by lines
-  cancel
   clear            Clears all songs on queue
   current          Shows the current song
-  forceskip
   info
   join             Joins a voice channel
   leave            Disconnects the bot from voice and clears the queue
-  local            Plays a file from the local filesystem
   loop             ;loop q(queue) c(current) n(none) <>
   move             Moves a song on queue
   pause            Pauses playing
   playback_history
   queue            Shows the songs on queue
   remove           Removes a song on queue
-  reschedule       Reschedules the current guild onto the advancer task
   resume           Resumes playing
   shuffle          Shuffles the queue
   skip             Skips current song
-  sleepin
   stream           Plays from a url (almost anything youtube_dl supports)
   stream_prepend   Plays from a url (almost anything youtube_dl supports)
   volume           Gets or changes the player's volume
@@ -237,3 +237,8 @@ Music:
 Type ;help command for more info on a command.
 You can also type ;help category for more info on a category.
 ```
+
+## Issues to be addressed
+- Having the bot in multiple servers (instance variables not guild specific
+)
+- Spamming `;ff` or `;s` causes the bot to freeze if advancer isn't forced

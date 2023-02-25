@@ -62,7 +62,6 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
             message = f"Popen failed: {type(exc).__name__}: {exc}"
             raise discord.ClientException(message) from exc
 
-    # bug when unloading/reloading (ff doesn't work)
     def read(self) -> bytes:
         # data in unread_buf guaranteed to be valid:
         if self.unread_buffer:  # Evaluates to true if unread_buffer has contents
@@ -77,19 +76,30 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         self.buffer.append(ret)
         return ret
 
-    def seekable(self):
-        flag = True
+    def seek_fw_v2(self, frames=1, test_seekable=False):
+        # if able to seek, seek. If not able to seek, return the seeked frames back to the buffer. Also tells you if its seekable or not
 
-        ret = self._stdout.read(OpusEncoder.FRAME_SIZE)
+        return_back = False
+        li_frames = []
 
-        if len(ret) != OpusEncoder.FRAME_SIZE:
-            # Would return empty binary, means unseekable
-            flag = False
-        else:
-            # Unread whatever it tried to read
-            self.unread_buffer.appendleft(ret)
+        for _ in range(frames):
+            # Take from unread_buffer if there exists some frames in there, otherwise read normally
+            ret = self.unread_buffer.popleft() if self.unread_buffer else self._stdout.read(OpusEncoder.FRAME_SIZE)
 
-        return flag
+            # Seeked distance beyond song length
+            if len(ret) != OpusEncoder.FRAME_SIZE:
+                return_back = True
+                break
+            else:
+                # If reached here, guarnateed to be valid frame
+                li_frames.append(ret)
+
+        if return_back or test_seekable:
+            while li_frames:
+                self.unread_buffer.appendleft(li_frames.pop())
+
+        return not return_back
+
 
     def seek_bw(self, frames):
         # Move from buffer to unread_buffer
