@@ -754,9 +754,13 @@ class Music(commands.Cog):
 
 
         # more often raised when try to seek during pause
-        if not self.current_audio_stream.original.seek_fw_v2(total_frames):
-            raise commands.CommandError("can't jump that far mf!!!")
-        await ctx.send(f"Seeked {sec} second(s) forward, scaled = {total_frames}")
+        actual_frames = self.current_audio_stream.original.seek_fw(total_frames)
+        if actual_frames != total_frames:
+            await ctx.send(f"Warning: only seeked {actual_frames} frames when {total_frames} specified")
+        else:
+        # if not self.current_audio_stream.original.seek_fw_v2(total_frames):
+        #     raise commands.CommandError("can't jump that far mf!!!")
+            await ctx.send(f"Seeked {sec} second(s) forward, scaled = {total_frames}")
 
     async def _rewind(self, ctx, sec):
         if not (1 <= sec <= 15):

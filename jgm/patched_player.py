@@ -92,11 +92,13 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
                 break
             else:
                 # If reached here, guarnateed to be valid frame
+                self.ms_time += 20*self.speed
                 li_frames.append(ret)
 
         if return_back or test_seekable:
             while li_frames:
                 self.unread_buffer.appendleft(li_frames.pop())
+                self.ms_time -= 20*self.speed
 
         return not return_back
 
@@ -110,5 +112,8 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
             self.ms_time -= 20*self.speed
 
     def seek_fw(self, frames):
+        actual_frames = 0
         for _ in range(frames):  # t_sec*1000 / 20 = t_sec*50 reads
-            self.read()
+            if self.read() != b'':
+                actual_frames += 1
+        return actual_frames
