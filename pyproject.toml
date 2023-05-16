@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "joshgone-music"
 description = "JoshGone's Discord vc music playing features"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 authors = [
   { name = "Kevin Wang", email = "59260907+Togohogo1@users.noreply.github.com" },
@@ -32,8 +32,8 @@ dependencies = [
 	"httpx==0.22.0",
 	"pure-protobuf==2.1.0",
 	"python-dateutil==2.8.2",
-	"setuptools==57.1.0",  # yoyo-migrations needs it but didn't declare it :/
-	"simpleeval==0.9.10",
+	"setuptools==58.0.0",  # yoyo-migrations needs it but didn't declare it :/
+	"simpleeval==0.9.11",
 	"soundit==0.2.1",
 	"yoyo-migrations==7.3.2",
 	"yt-dlp==2023.02.17",
