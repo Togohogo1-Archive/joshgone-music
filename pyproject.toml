@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "joshgone-music"
 description = "JoshGone's Discord vc music playing features"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = "3.9"
 license = "MIT"
 authors = [
   { name = "Kevin Wang", email = "59260907+Togohogo1@users.noreply.github.com" },
@@ -22,6 +22,7 @@ Source = "https://github.com/unknown/joshgone-music"
 path = "jgm/__about__.py"
 
 [tool.hatch.envs.default]
+python = "3.10"
 skip-install = true
 dependencies = [
 	"aiohttp==3.8.3",
@@ -59,7 +60,7 @@ dependencies = [
 	"six==1.15.0",
 	"sniffio==1.2.0",
 	"sqlparse==0.4.1",
-	"tabulate==0.8.7",
+	"tabulate==0.9.0",  # Address ImportError: cannot import name 'Iterable' from 'collections'
 	"typing-extensions==4.0.0",
 	"websockets==9.1",
 	"yarl==1.6.3",
