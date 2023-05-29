@@ -2,12 +2,10 @@
 
 import asyncio
 import random
-import re
 import typing
 import traceback
 import json
 import queue
-import time
 import threading
 import os
 import sys
@@ -22,6 +20,13 @@ import yt_dlp as youtube_dl
 
 import jgm.patched_player as patched_player
 import soundit as s
+
+try:
+    import online_sequencer_get_note_infos as os_note_infos
+except ImportError:
+    has_os = False
+else:
+    has_os = True
 
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
@@ -40,89 +45,79 @@ class Music(commands.Cog):
         'source_address': '0.0.0.0', # bind to ipv4 since ipv6 addresses cause issues sometimes
     }
     # Options passed to FFmpeg
-    _STREAM_FFMPEG_OPTS = {
+    _DEFAULT_FFMPEG_OPTS = {
         'options': '-vn',
         # Source: https://stackoverflow.com/questions/66070749/
         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     }
-    _LOCAL_FFMPEG_OPTS = {
-        "options": "-vn",  # Filter out video
-        "before_options": ""
-    }
 
-    # Filters
-    _SPECIAL_FILTER_SPEED = {
-        "daycore": 0.75,
-        "nightcore": 1.25
-    }
-
-    _FILTERS = {
-        "bassboost": "bass=g=20",
-        "deepfry": "'acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1'",  # Source: https://www.vacing.com/ffmpeg_audio_filters/index.html
-        "nightcore": f"asetrate=48000*{_SPECIAL_FILTER_SPEED['nightcore']},aresample=48000",
-        "daycore": f"asetrate=48000*{_SPECIAL_FILTER_SPEED['daycore']},aresample=48000",
-    }
+    ONLINE_SEQUENCER_URL_PREFIX = "https://onlinesequencer.net/"
 
     def __init__(
         self,
         bot,
         *,
         ytdl_opts=_DEFAULT_YTDL_OPTS,
-        ffmpeg_opts=_STREAM_FFMPEG_OPTS,
+        ffmpeg_opts=_DEFAULT_FFMPEG_OPTS,
+        os_python_executable=None,
+        os_directory=None,
     ):
         self.bot = bot
         # Options are stores on the instance in case they need to be changed
         self.ytdl_opts = ytdl_opts
         self.ffmpeg_opts = ffmpeg_opts
-
-        self.data = {}
-        self.advance_queue = asyncio.Queue()
-
+        # Data is persistent between extension reloads
+        if not hasattr(bot, "_music_data"):
+            bot._music_data = {}
+        if not hasattr(bot, "_music_advance_queue"):
+            bot._music_advance_queue = asyncio.Queue()
+        self.data = bot._music_data
+        self.advance_queue = bot._music_advance_queue
         # Start the advancer's auto-restart task
         self.advance_task = None
         self.advancer.start()
+        # The name of the Python executable we should use for Online Sequencer
+        if os_python_executable is None:
+            os_python_executable = os.environ.get(
+                "JOSHGONE_OS_PY_EXE",
+                sys.executable,  # We default to using the current Python
+            )
+        self.os_python_executable = os_python_executable
+        # The directory with the Online Sequencer instrument settings and audio
+        if os_directory is None:
+            os_directory = os.environ.get(
+                "JOSHGONE_OS_DIRECTORY",
+                "oscollection",
+            )
+        self.os_directory = os_directory
 
-        self.current_audio_stream = None
-        self.current_audio_link = None
-        self.current_metadata = {
-            "is_live": None,
-            "duration": None,
-            "title": None,
-            "id": None,
-            "webpage_url": None
-        }
-
-        self.task = None
-
-    # ======================================================================
-    # Essential music playing functions (not commands)
-    # ======================================================================
+    # Cancel just the advancer and the auto-restart tasks
+    def cog_unload(self):
+        self.advancer.cancel()
 
     # - Song players
     # Returns a source object and the title of the song
+
     # Finds a file using query. Title is query
-    async def _play_local(self, ctx, query):
-        # Runs when new song
-        info = self.get_info(ctx)
-        self.ffmpeg_opts = self._LOCAL_FFMPEG_OPTS
-        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
-        speed = info["cur_speed_filter"]
-        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(
-            query,
-            speed,
-            self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"]),
-            **new_ffmpeg_opts
-        ))
-        self.current_audio_link = query
+    async def _play_local(self, query):
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
-    async def _play_stream(self, ctx, url):
+    async def _play_stream(self, url):
         original_url = url
         if url[0] == "<" and url[-1] == ">":
             url = url[1:-1]
-        player, data = await self.player_from_url(ctx, url, stream=True)
+        player, data = await self.player_from_url(url, stream=True)
         return player, data.get("title", original_url)
+
+    # Converts an Online Sequencer sequence into a sound. Title is url
+    async def _play_os(self, url):
+        original_url = url
+        if url[0] == "<" and url[-1] == ">":
+            url = url[1:-1]
+        source = await self._create_os_source(url)
+        return source, original_url
 
     # Returns the raw source (calling the function if possible)
     async def _play_raw(self, source):
@@ -184,20 +179,10 @@ class Music(commands.Cog):
                 await self.leave(ctx)
                 return
             queue = info["queue"]
-            history = info["history"]
             # If we're looping, put the current song at the end of the queue
-            if info["current"] is not None:
-                history.append(info["current"])
-                if not info["forceskipped"]:
-                    if info["loop"] == -1:
-                        queue.appendleft(info["current"])
-                    elif info["loop"] == 1:
-                        queue.append(info["current"])
-                else:
-                    info["forceskipped"] = False
-
+            if info["loop"] and info["current"] is not None:
+                queue.append(info["current"])
             info["current"] = None
-
             if queue:
                 # Get the next song
                 current = queue.popleft()
@@ -205,14 +190,12 @@ class Music(commands.Cog):
                 # Get an audio source and play it
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
-                    source, title = await getattr(self, f"_play_{current['ty']}")(ctx, current['query'])
-                    self.current_audio_stream = source
+                    source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
                     ctx.voice_client.play(source, after=after)
                 await channel.send(f"Now playing: {title}")
             else:
                 await channel.send(f"Queue empty")
         except Exception as e:
-            traceback.print_exception(type(e), e, e.__traceback__)
             await channel.send(f"Internal Error: {e!r}")
             info["waiting"] = False
             await self.skip(ctx)
@@ -221,17 +204,9 @@ class Music(commands.Cog):
             info["waiting"] = False
             info["processing"] = False
 
-    #  advancement of the queue
+    # Schedules advancement of the queue
     def schedule(self, ctx, error=None, *, force=False):
         info = self.get_info(ctx)
-        self.current_audio_stream = None
-        self.current_audio_link = None
-
-        for k in self.current_metadata:
-            self.current_metadata[k] = None
-
-        if info["autoshuffle"]:
-            self._shuffle(ctx)
         if force or not info["waiting"]:
             self.advance_queue.put_nowait((ctx, error))
             info["waiting"] = True
@@ -242,22 +217,11 @@ class Music(commands.Cog):
         if guild_id not in self.data:
             wrapped = self.data[guild_id] = {}
             wrapped["queue"] = deque()
-            wrapped["history"] = deque(maxlen=15)
             wrapped["current"] = None
             wrapped["waiting"] = False
-            wrapped["loop"] = 0
+            wrapped["loop"] = False
             wrapped["processing"] = False
             wrapped["version"] = 3
-
-            # New
-            wrapped["cur_audio_filter"] = "normal"
-            wrapped["cur_speed_filter"] = 1
-            wrapped["next_audio_filter"] = "normal"
-            wrapped["next_speed_filter"] = 1
-            wrapped["autoshuffle"] = False
-            wrapped["sleep_timer"] = None
-            wrapped["forceskipped"] = False
-
         else:
             wrapped = self.data[guild_id]
         if wrapped["version"] == 3:
@@ -270,42 +234,131 @@ class Music(commands.Cog):
         return self.data.pop(ctx.guild.id, None)
 
     # Creates an audio source from a url
-    async def player_from_url(self, ctx, url, *, loop=None, stream=False):
-        self.ffmpeg_opts = self._STREAM_FFMPEG_OPTS  # Needed so dont have to do casework when jumping
-        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy())
+    async def player_from_url(self, url, *, loop=None, stream=False):
         ytdl = youtube_dl.YoutubeDL(self.ytdl_opts)
         loop = loop or asyncio.get_running_loop()
         data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
         if 'entries' in data:
             # take first item from a playlist
             data = data['entries'][0]
-
         filename = data['url'] if stream else ytdl.prepare_filename(data)
-        # print(filename)
-        self.current_audio_link = filename
-        # metadata
-        md = self.current_metadata
-        md["is_live"] = data.get("is_live")
-        md["duration"] = data.get("duration")
-        md["title"] = data.get("title")
-        md["id"] = data.get("id")
-        md["webpage_url"] = data.get("webpage_url")
-
-        info = self.get_info(ctx)
-        speed = info["cur_speed_filter"]
-        audio = patched_player.FFmpegPCMAudio(
-            self.current_audio_link,
-            speed,
-            self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"]),
-            **new_ffmpeg_opts
-        )
-
+        audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
-    # ======================================================================
-    # Commands used in basic mode
-    # ======================================================================
+    # Creates an audio source from an Online Sequencer url
+    async def _create_os_source(self, url):
+        # Verify that the url is valid
+        if url.startswith(self.ONLINE_SEQUENCER_URL_PREFIX):
+            id_ = int(url[len(self.ONLINE_SEQUENCER_URL_PREFIX):])
+        else:
+            id_ = int(url)
+        # Create the url and get note infos
+        url = f"{self.ONLINE_SEQUENCER_URL_PREFIX}{id_}"
+        note_infos = await os_note_infos.get_note_infos(url)
+        # Start another process to convert these into a sound
+        executable, *args = shlex.split(self.os_python_executable)
+        process = await asyncio.to_thread(
+            lambda: s.create_ffmpeg_process(
+                *args,
+                "online_sequencer_make_chunks.py",
+                "--settings", f"{self.os_directory}/settings.json",
+                "--template", f"{self.os_directory}/<>.ogg",
+                executable=executable,
+                pipe_stdin=True,
+                pipe_stdout=True,
+            )
+        )
+        # Start a background task to send in note infos through stdin
+        asyncio.create_task(asyncio.to_thread(
+            lambda: (
+                process.stdin.write(json.dumps(note_infos).encode()),
+                process.stdin.close(),
+            )
+        ))
+        # Make a small buffer to make audio more consistent
+        chunks_queue = queue.Queue(maxsize=64)
+        stop = False  # Flag for producer to stop
+        producer_event = threading.Event()  # Notifies producer to continue
+        # The sound producer / loader (moves sound from process to the queue)
+        def producer():
+            try:
+                # Loop over chunks of the process's stdout
+                for chunk in s.equal_chunk_stream(
+                    s.chunked_ffmpeg_process(process),
+                    3840,
+                ):
+                    chunk = bytes(chunk)
+                    while True:
+                        # Check if we need to stop
+                        if stop:
+                            return
+                        # Clear the event before we try getting an item just in
+                        # case of bad timing (event gets cleared just after we
+                        # try putting an item).
+                        producer_event.clear()
+                        try:
+                            # Try putting the chunk
+                            chunks_queue.put(chunk, block=False)
+                        except queue.Full:
+                            # Wait for the event to be set
+                            cleared = producer_event.wait(timeout=5)
+                            # If the event isn't set after 5 seconds...
+                            if not cleared:
+                                # Assume our audio player is too slow and error
+                                raise RuntimeError("Sound player too slow")
+                        else:
+                            # If all went well, go process the next chunk
+                            break
+            except BaseException as e:
+                # Let the consumer know we errored
+                chunks_queue.put(e, timeout=5)
+            finally:
+                # Let the consumer know we ended
+                chunks_queue.put(None, timeout=5)
+        # Make a thread for the producer
+        task = asyncio.create_task(asyncio.to_thread(lambda: producer()))
+        # Ignore exceptions (kinda like a daemon task)
+        task.add_done_callback(lambda task: task.exception())
+        # The sound consumer / player (yields from queue to the audio source)
+        def consumer():
+            try:
+                # Loop until we have no more chunks to process
+                while True:
+                    try:
+                        # Try getting an item
+                        item = chunks_queue.get(timeout=5)
+                    except queue.Empty:
+                        # If we needed to wait more than 5 seconds, assume the
+                        # loader is too slow and tell it to stop
+                        raise RuntimeError("Sound loader too slow")
+                    else:
+                        # Tell the producer it can put more items
+                        producer_event.set()
+                    # If the producer has ended, we should end too
+                    if item is None:
+                        return
+                    # If the producer errored, reraise it here
+                    if isinstance(item, BaseException):
+                        raise item
+                    # Otherwise, it's just a normal chunk of audio. Yield it
+                    yield item
+            finally:
+                # Tell the producer to stop if it's still running
+                nonlocal stop
+                stop = True
+                producer_event.set()
+                # Terminate the process
+                process.stdout.close()
+                process.stdin.close()
+                process.terminate()
+                process.wait()
+        # Wrap the sound player chunk iterator with an audio source
+        source = s.wrap_discord_source(consumer())
+        # Wait a lil bit to get the chunk queue prefilled
+        await asyncio.sleep(2)
+        # Return the audio source
+        return source
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
@@ -335,7 +388,7 @@ class Music(commands.Cog):
             self.schedule(ctx)
         await ctx.send(f"Added to queue: local {query}")
 
-    @commands.command(aliases=["play", "p"])
+    @commands.command(aliases=["yt", "play", "p"])
     async def stream(self, ctx, *, url):
         """Plays from a url (almost anything youtube_dl supports)"""
         if len(url) > 100:
@@ -345,47 +398,40 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
-        history = info["history"]
         ty = "local" if url == "coco.mp4" else "stream"
-        if url == "prev":
-            if not history:
-                raise commands.CommandError("no previous song")
-            queue.append(history[-1])
-        elif url == "cur":
-            if info["current"] is None:
-                raise commands.CommandError("no current song")
-            queue.append(info["current"])
-        else:
-            queue.append({"ty": ty, "query": url})
+        queue.append({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Added to queue: {ty if url != 'prev' else history[-1]['ty']} {url if url != 'prev' else history[-1]['query']}{' (previous song)'*(url=='prev')}")
+        await ctx.send(f"Added to queue: {ty} {url}")
 
-    @commands.command(aliases=["prepend","pplay", "pp"])
-    async def stream_prepend(self, ctx, *, url):
-        """Plays from a url (almost anything youtube_dl supports)"""
-        if len(url) > 100:
-            raise ValueError("url too long (length over 100)")
-        if not url.isprintable():
-            raise ValueError(f"url not printable: {url!r}")
-        print(ctx.message.author.name, "queued", repr(url))
+    if has_os:
+        @commands.command(name="_play_os")
+        async def play_os(self, ctx, *, url):
+            """Plays an Online Sequencer sequence"""
+            if len(url) > 100:
+                raise ValueError("url too long (length over 100)")
+            if not url.isprintable():
+                raise ValueError(f"url not printable: {url!r}")
+            print(ctx.message.author.name, "queued", repr(url))
+            info = self.get_info(ctx)
+            queue = info["queue"]
+            queue.append({"ty": "os", "query": url})
+            if info["current"] is None:
+                self.schedule(ctx)
+            await ctx.send(f"Added to queue: os {url}")
+
+    async def add_to_queue(self, ctx, source):
+        """Plays the specified source"""
+        if ctx.voice_client is None:
+            if ctx.author.voice:
+                await ctx.author.voice.channel.connect()
+            else:
+                raise RuntimeError("Author not connected to a voice channel")
         info = self.get_info(ctx)
         queue = info["queue"]
-        history = info["history"]
-        ty = "local" if url == "coco.mp4" else "stream"
-        if url == "prev":
-            if not history:
-                raise commands.CommandError("no previous song")
-            queue.appendleft(history[-1])
-        elif url == "cur":
-            if info["current"] is None:
-                raise commands.CommandError("no current song")
-            queue.appendleft(info["current"])
-        else:
-            queue.appendleft({"ty": ty, "query": url})
+        queue.append({"ty": "raw", "query": source})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Prepended to queue: {ty if url != 'prev' else history[-1]['ty']} {url if url != 'prev' else history[-1]['query']}{' (previous song)'*(url=='prev')}")
 
     @commands.command()
     async def _add_playlist(self, ctx, *, url):
@@ -426,7 +472,9 @@ class Music(commands.Cog):
             await self.stream(ctx, url=url)
             await asyncio.sleep(0.1)
 
-    def _shuffle(self, ctx):
+    @commands.command()
+    async def shuffle(self, ctx):
+        """Shuffles the queue"""
         info = self.get_info(ctx)
         queue = info["queue"]
         temp = []
@@ -435,11 +483,6 @@ class Music(commands.Cog):
         random.shuffle(temp)
         while temp:
             queue.appendleft(temp.pop())
-
-    @commands.command()
-    async def shuffle(self, ctx):
-        """Shuffles the queue"""
-        self._shuffle(ctx)
         await ctx.send("Queue shuffled")
 
     @commands.command()
@@ -477,7 +520,6 @@ class Music(commands.Cog):
     @commands.command()
     async def leave(self, ctx):
         """Disconnects the bot from voice and clears the queue"""
-        self.task = None
         self.pop_info(ctx)
         if ctx.voice_client is None:
             return
@@ -494,22 +536,12 @@ class Music(commands.Cog):
                 query = current["query"]
         await ctx.send(f"Current: {query}")
 
-    @commands.command(aliases=["hist"])
-    # TODO order might be a bit sus (unoptimal)
-    async def playback_history(self, ctx):
-        info = self.get_info(ctx)
-        a = ""
-        for v in info["history"]:
-            a += f"{v}\n"
-        await ctx.send(f"```{a}```")
-
     @commands.command(aliases=["q"])
     async def queue(self, ctx):
         """Shows the songs on queue"""
-        looptype = {-1:"(looping current)", 1:"(looping queue)", 0:"", None:""}
         queue = ()
         length = 0
-        looping = None
+        looping = False
         if ctx.voice_client is not None:
             info = self.get_info(ctx)
             queue = info["queue"]
@@ -518,7 +550,7 @@ class Music(commands.Cog):
         if not queue:
             queue = (None,)
         paginator = commands.Paginator()
-        paginator.add_line(f"Queue [{length}] {looptype[looping]}:")
+        paginator.add_line(f"Queue [{length}]{' (looping)'*looping}:")
         for i, song in enumerate(queue, start=1):
             if song is None:
                 paginator.add_line("None")
@@ -584,28 +616,19 @@ class Music(commands.Cog):
         """Skips current song"""
         info = self.get_info(ctx)
         current = info["current"]
-        # info["jumped"] = False
+        ctx.voice_client.stop()
         if current is not None and not info["waiting"]:
             await ctx.send(f"Skipped: {current['query']}")
-        ctx.voice_client.stop()
 
     @commands.command()
-    async def loop(self, ctx, loop: int=None):
-        '''
-        ;loop q(queue) c(current) n(none) <>
-        -1 = current
-        0 = no loop
-        1 = queue
-        '''
+    async def loop(self, ctx, loop: typing.Optional[bool] = None):
         """Gets or sets queue looping"""
         info = self.get_info(ctx)
         if loop is None:
             await ctx.send(f"Queue {'is' if info['loop'] else 'is not'} looping")
             return
-        if loop not in {-1, 0, 1}:
-            raise commands.CommandError("ayo wrong loop type bruh")
         info["loop"] = loop
-        await ctx.send(f"{loop} type loop")
+        await ctx.send(f"Queue {'is now' if info['loop'] else 'is now not'} looping")
 
     @commands.command()
     @commands.is_owner()
@@ -613,226 +636,6 @@ class Music(commands.Cog):
         """Reschedules the current guild onto the advancer task"""
         self.schedule(ctx, force=True)
         await ctx.send("Rescheduled")
-
-    # ==================================================
-    # Functions referenced by filters.py
-    # ==================================================
-
-    async def _set_audio_filter(self, ctx, afilter):
-        info = self.get_info(ctx)
-        info["next_audio_filter"] = afilter
-        await ctx.send(f"filter = `{afilter}`")
-
-
-    async def _set_speed_filter(self, ctx, factor):
-        # TODO floating poin precision deal with
-        if not (0.5 <= factor <= 2):
-            raise commands.CommandError(f"Speed factor [{factor}] outside of factor range from 0.5 to 2 inclusive")
-
-        info = self.get_info(ctx)
-
-        if info["next_audio_filter"] in {"daycore", "nightcore"}:
-            raise commands.CommandError("in order to use this command, turn off daycore or nightcore")
-
-        info["next_speed_filter"] = factor
-
-
-        await ctx.send(f"speed = x{factor}")
-
-    def apply_filters(self, ctx, opts, jump=False):
-        # Filter name always guaranteed to be valid
-        info = self.get_info(ctx)
-
-        # Setting current to next, don't reset next (because it means filter is being reset)
-        if not jump:
-            info["cur_audio_filter"] = info["next_audio_filter"]
-            info["cur_speed_filter"] = info["next_speed_filter"]
-        current_filter = info["cur_audio_filter"]
-        current_speed = info["cur_speed_filter"]
-
-        filter_li = []
-
-        if current_filter != "normal":
-            filter_li.append(self._FILTERS[current_filter])
-        if current_speed != 1:
-            # astrate speeds it up already
-            if current_filter not in {"daycore", "nightcore"}:
-                filter_li.append(f"atempo={current_speed}")
-
-        if filter_li:
-            add_options = f" -filter_complex {','.join(filter_li)}"
-            opts["options"] += add_options
-        # If nothing in list then it means its default options
-
-        return opts
-
-    # ==================================================
-    # Functions referenced by more.py
-    # ==================================================
-
-    async def bruh(self, ctx, dur):
-        info = self.get_info(ctx)
-        info["sleep_timer"] = [dur, ctx.message.author, time.time()]
-        await asyncio.sleep(dur)
-        await self.leave(ctx)
-        info["sleep_timer"] = None
-
-    @commands.command(aliases=["fs"])
-    async def forceskip(self, ctx):
-        # TODO small bug when try forceskipping when paused -> just resumes the song
-        # TODO big bug -> not adding to playback history
-        info = self.get_info(ctx)
-        current = info["current"]
-        info["forceskipped"] = True
-        # info["jumped"] = False
-        if current is not None and not info["waiting"]:
-            await ctx.send(f"forceskipped {current}")
-
-        ctx.voice_client.stop()
-
-
-    @commands.command()
-    async def sleepin(self, ctx, dur):
-        # After this is in the form of <int> seconds or [[HH:]MM:]SS
-        if not self.regex_time(dur) and not self.time_match(dur):
-            raise commands.CommandError(f"Position [{dur}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
-
-        # Check for > 99:59:59 exceed
-        if self.time_match(dur) and int(dur) > self.seconds("99:59:59"):
-            raise commands.CommandError(f"time in seconds greater than 99:59:59")
-
-        if self.task is None or self.task.done() or self.task.cancelled():
-            self.task = asyncio.create_task(self.bruh(ctx, self.seconds(dur)))
-            await ctx.send(f"{self.seconds(dur)}, {type(self.seconds(dur))}, {self.task}")
-        # There is a task already running
-        else:
-            raise commands.CommandError("there is a task running")
-
-
-    @commands.command()
-    async def cancel(self, ctx):
-        info = self.get_info(ctx)
-
-        if self.task.done() or self.task.cancelled() or self.task == None:
-            raise commands.CommandError(f"trying to cancel a completed task status {self.task.result()}")
-        info["sleep_timer"] = None
-        self.task.cancel()
-
-        await ctx.send(self.task)
-
-    @commands.command(aliases=["ashuffle"])
-    async def autoshuffle(self, ctx, auto: typing.Optional[bool] = None):
-        info = self.get_info(ctx)
-        if auto is None:
-            await ctx.send(f"autoshuffler is {'on' if info['autoshuffle'] else 'off'}")
-            return
-
-        info["autoshuffle"] = auto
-        await ctx.send(f"autoshuffle set to {auto}")
-
-    # TODO test unloading reloading with filters
-    @commands.command(aliases = ["i"])
-    async def info(self, ctx):
-        info = self.get_info(ctx)
-        # print(info)
-        await ctx.send(f"`{info}\n\n{self.current_metadata}`\n{self.current_audio_stream.original.ms_time/1000}s")
-        # ratio = round(self.current_audio_stream.original.ms_time/1000)/round(self.current_metadata["duration"])
-        # norm = int(20*ratio)
-        # await ctx.send(f"`[{'#'*norm}{' '*(20-norm)}]`")
-        print(f"{time.time() - info['sleep_timer'][-1]} seconds have passed")
-
-    async def _fast_forward(self, ctx, sec):
-        if not (1 <= sec <= 15):
-            raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
-
-        info = self.get_info(ctx)
-        speed = info["cur_speed_filter"]
-
-        filter_speed = self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"])
-        scaled_frames = 1000/(20*speed) if not filter_speed else 1000/(20*filter_speed)
-        total_frames = round(scaled_frames*sec)
-
-
-        # more often raised when try to seek during pause
-        actual_frames = self.current_audio_stream.original.seek_fw(total_frames)
-        if actual_frames != total_frames:
-            await ctx.send(f"Warning: only seeked {actual_frames} frames when {total_frames} specified")
-        else:
-        # if not self.current_audio_stream.original.seek_fw_v2(total_frames):
-        #     raise commands.CommandError("can't jump that far mf!!!")
-            await ctx.send(f"Seeked {sec} second(s) forward, scaled = {total_frames}")
-
-    async def _rewind(self, ctx, sec):
-        if not (1 <= sec <= 15):
-            raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive")
-
-
-        info = self.get_info(ctx)
-        speed = info["cur_speed_filter"]
-        filter_speed = self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"])
-        scaled_frames = 1000/(20*speed) if not filter_speed else 1000/(20*filter_speed)
-
-        self.current_audio_stream.original.seek_bw(round(scaled_frames*sec))
-        await ctx.send(f"Seeked {sec} second(s) backward scaled = {scaled_frames}")
-
-
-    def regex_time(self, pos):
-        # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
-        # Match [[HH:]MM:]SS or integer seconds, brackets optional
-        # First check regex match
-        # Regex pattern slightly modified from: https://stackoverflow.com/a/8318367
-        return re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos)
-
-    def time_match(self, pos):
-        return pos.isdigit()
-
-    async def _jump(self, ctx, pos):
-        # put a cap on how much you can jump
-        info = self.get_info(ctx)
-
-        # After this is in the form of <int> seconds or [[HH:]MM:]SS
-        if not self.regex_time(pos) and not self.time_match(pos):
-            raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds")
-
-        # Check for > 99:59:59 exceed
-        if self.time_match(pos) and int(pos) > self.seconds("99:59:59"):
-                raise commands.CommandError(f"time in seconds greater than 99:59:59")
-
-        # Not new song, so can keep current filter settings
-        new_ffmpeg_opts = self.apply_filters(ctx, self.ffmpeg_opts.copy(), jump=True)
-        new_ffmpeg_opts["before_options"] += f" -ss {pos}"
-
-        speed = info["cur_speed_filter"]
-        strem = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(
-            self.current_audio_link,
-            speed,
-            self._SPECIAL_FILTER_SPEED.get(info["cur_audio_filter"]),
-            **new_ffmpeg_opts
-        ))
-
-        # Seeking past the song
-        if not strem.original.seek_fw_v2(test_seekable=True):
-            raise commands.CommandError(f"bruv ur trying to seek beyond the song")
-
-        self.current_audio_stream = strem
-
-        ctx.voice_client._player.source = strem
-        secs = self.seconds(pos)
-        self.current_audio_stream.original.ms_time = secs*1000
-        await ctx.send(f"jumped to {pos} = {secs*1000}ms")
-
-    def seconds(self, hhmmss):
-        """
-        if len 1 -> ss
-        if len 2 -> mm:ss
-        if len 3 -> hh:mm:ss
-
-        never hh:ss
-        """
-        hhmmss_list = hhmmss.split(":")
-        hour_s = int(hhmmss_list[-3])*3600 if len(hhmmss_list) >= 3 else 0
-        min_s = int(hhmmss_list[-2])*60 if len(hhmmss_list) >= 2 else 0
-        return hour_s + min_s + int(hhmmss_list[-1])
 
     @local.before_invoke
     @stream.before_invoke
@@ -855,8 +658,6 @@ class Music(commands.Cog):
     @skip.before_invoke
     @clear.before_invoke
     @volume.before_invoke
-    @sleepin.before_invoke
-    @cancel.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
@@ -871,13 +672,3 @@ def setup(bot):
 def teardown(bot):
     youtube_dl.utils.bug_reports_message = bot._music_old_ytdl_bug_report_message
     return bot.wrap_async(None)
-
-'''
-# @commands.command()
-async def e(self, ctx):
-    info = self.get_info(ctx)
-    channel = ctx.guild.get_channel(info["channel_id"])
-    async with channel.typing():
-        time.sleep(5)
-    await ctx.send("ayo bruh")
-'''

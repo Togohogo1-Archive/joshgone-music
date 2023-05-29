@@ -1,7 +1,6 @@
 """Manages general listeners like on_ready or on_command_error"""
 
 import aiosqlite
-import traceback
 
 from discord.ext import commands
 
@@ -17,9 +16,6 @@ class Info(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        # Full traceback
-        # traceback.print_exception(type(error), error, error.__traceback__)
-
         # Unpack the error for cleaner error messages
         if isinstance(error, commands.CommandInvokeError):
             error = error.__cause__ or error

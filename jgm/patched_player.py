@@ -14,10 +14,8 @@ Source code is adapted from discord/player.py.
 """
 import sys
 import subprocess
-from collections import deque
 
 import discord
-from discord.opus import Encoder as OpusEncoder
 
 __all__ = ("FFmpegPCMAudio",)
 
@@ -25,24 +23,11 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
 
     # Default is 0 for no flags (used to be subprocess.CREATE_NO_WINDOW). See
     # the documentation for discord.FFmpegPCMAudio for more info on kwargs.
-    def __init__(self, source, speed, filter_speed, *, creationflags=0, **kwargs):
+    def __init__(self, source, *, creationflags=0, **kwargs):
         # The superclass's __init__ calls self._spawn_process, so we need to
         # set creation flags before then, meaning this line can't be after the
         # super().__init__ call.
         self.creationflags = creationflags
-        self.ms_time = 0
-        self.speed = speed
-
-        if filter_speed is not None:
-            self.speed = filter_speed
-
-        # _MAX_BUF_SZ is the number of frames, frames can range from 10ms to 40ms
-        # Assume 20ms has an upper bound of 2**12 = 4096 bytes (actually closer to 3840)
-        # deque then takes up approx 4096 * (1/20) * 1000 * 15 * 5 = 15360000 bytes = 15MB upper bound
-        self._MAX_BUF_SZ = 5 * 15 * 50
-
-        self.buffer = deque(maxlen=self._MAX_BUF_SZ)
-        self.unread_buffer = deque(maxlen=self._MAX_BUF_SZ)
         super().__init__(source, **kwargs)
 
     def _spawn_process(self, args, **subprocess_kwargs):
@@ -61,59 +46,3 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         except subprocess.SubprocessError as exc:
             message = f"Popen failed: {type(exc).__name__}: {exc}"
             raise discord.ClientException(message) from exc
-
-    def read(self) -> bytes:
-        # data in unread_buf guaranteed to be valid:
-        if self.unread_buffer:  # Evaluates to true if unread_buffer has contents
-            ret = self.unread_buffer.popleft()  # First inserted bytestring
-        else:
-            ret = self._stdout.read(OpusEncoder.FRAME_SIZE)
-            if len(ret) != OpusEncoder.FRAME_SIZE:
-                return b''
-
-        # Valid data
-        self.ms_time += 20*self.speed
-        self.buffer.append(ret)
-        return ret
-
-    def seek_fw_v2(self, frames=1, test_seekable=False):
-        # if able to seek, seek. If not able to seek, return the seeked frames back to the buffer. Also tells you if its seekable or not
-
-        return_back = False
-        li_frames = []
-
-        for _ in range(frames):
-            # Take from unread_buffer if there exists some frames in there, otherwise read normally
-            ret = self.unread_buffer.popleft() if self.unread_buffer else self._stdout.read(OpusEncoder.FRAME_SIZE)
-
-            # Seeked distance beyond song length
-            if len(ret) != OpusEncoder.FRAME_SIZE:
-                return_back = True
-                break
-            else:
-                # If reached here, guarnateed to be valid frame
-                self.ms_time += 20*self.speed
-                li_frames.append(ret)
-
-        if return_back or test_seekable:
-            while li_frames:
-                self.unread_buffer.appendleft(li_frames.pop())
-                self.ms_time -= 20*self.speed
-
-        return not return_back
-
-
-    def seek_bw(self, frames):
-        # Move from buffer to unread_buffer
-        for _ in range(frames):
-            if not self.buffer:
-                break
-            self.unread_buffer.appendleft(self.buffer.pop())
-            self.ms_time -= 20*self.speed
-
-    def seek_fw(self, frames):
-        actual_frames = 0
-        for _ in range(frames):  # t_sec*1000 / 20 = t_sec*50 reads
-            if self.read() != b'':
-                actual_frames += 1
-        return actual_frames

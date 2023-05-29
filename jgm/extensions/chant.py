@@ -163,7 +163,7 @@ class Chant(commands.Cog):
                 names = [row[0] async for row in cursor]
         removed = []
         for name in names:
-            if len(remove) == max_amount:
+            if len(removed) == max_amount:
                 break
             if not re.search(regex, name):
                 continue
