@@ -21,13 +21,6 @@ import yt_dlp as youtube_dl
 import jgm.patched_player as patched_player
 import soundit as s
 
-try:
-    import online_sequencer_get_note_infos as os_note_infos
-except ImportError:
-    has_os = False
-else:
-    has_os = True
-
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
     _DEFAULT_YTDL_OPTS = {
@@ -51,16 +44,12 @@ class Music(commands.Cog):
         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     }
 
-    ONLINE_SEQUENCER_URL_PREFIX = "https://onlinesequencer.net/"
-
     def __init__(
         self,
         bot,
         *,
         ytdl_opts=_DEFAULT_YTDL_OPTS,
         ffmpeg_opts=_DEFAULT_FFMPEG_OPTS,
-        os_python_executable=None,
-        os_directory=None,
     ):
         self.bot = bot
         # Options are stores on the instance in case they need to be changed
@@ -76,20 +65,6 @@ class Music(commands.Cog):
         # Start the advancer's auto-restart task
         self.advance_task = None
         self.advancer.start()
-        # The name of the Python executable we should use for Online Sequencer
-        if os_python_executable is None:
-            os_python_executable = os.environ.get(
-                "JOSHGONE_OS_PY_EXE",
-                sys.executable,  # We default to using the current Python
-            )
-        self.os_python_executable = os_python_executable
-        # The directory with the Online Sequencer instrument settings and audio
-        if os_directory is None:
-            os_directory = os.environ.get(
-                "JOSHGONE_OS_DIRECTORY",
-                "oscollection",
-            )
-        self.os_directory = os_directory
 
     # Cancel just the advancer and the auto-restart tasks
     def cog_unload(self):
@@ -110,14 +85,6 @@ class Music(commands.Cog):
             url = url[1:-1]
         player, data = await self.player_from_url(url, stream=True)
         return player, data.get("title", original_url)
-
-    # Converts an Online Sequencer sequence into a sound. Title is url
-    async def _play_os(self, url):
-        original_url = url
-        if url[0] == "<" and url[-1] == ">":
-            url = url[1:-1]
-        source = await self._create_os_source(url)
-        return source, original_url
 
     # Returns the raw source (calling the function if possible)
     async def _play_raw(self, source):
@@ -246,120 +213,6 @@ class Music(commands.Cog):
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
-    # Creates an audio source from an Online Sequencer url
-    async def _create_os_source(self, url):
-        # Verify that the url is valid
-        if url.startswith(self.ONLINE_SEQUENCER_URL_PREFIX):
-            id_ = int(url[len(self.ONLINE_SEQUENCER_URL_PREFIX):])
-        else:
-            id_ = int(url)
-        # Create the url and get note infos
-        url = f"{self.ONLINE_SEQUENCER_URL_PREFIX}{id_}"
-        note_infos = await os_note_infos.get_note_infos(url)
-        # Start another process to convert these into a sound
-        executable, *args = shlex.split(self.os_python_executable)
-        process = await asyncio.to_thread(
-            lambda: s.create_ffmpeg_process(
-                *args,
-                "online_sequencer_make_chunks.py",
-                "--settings", f"{self.os_directory}/settings.json",
-                "--template", f"{self.os_directory}/<>.ogg",
-                executable=executable,
-                pipe_stdin=True,
-                pipe_stdout=True,
-            )
-        )
-        # Start a background task to send in note infos through stdin
-        asyncio.create_task(asyncio.to_thread(
-            lambda: (
-                process.stdin.write(json.dumps(note_infos).encode()),
-                process.stdin.close(),
-            )
-        ))
-        # Make a small buffer to make audio more consistent
-        chunks_queue = queue.Queue(maxsize=64)
-        stop = False  # Flag for producer to stop
-        producer_event = threading.Event()  # Notifies producer to continue
-        # The sound producer / loader (moves sound from process to the queue)
-        def producer():
-            try:
-                # Loop over chunks of the process's stdout
-                for chunk in s.equal_chunk_stream(
-                    s.chunked_ffmpeg_process(process),
-                    3840,
-                ):
-                    chunk = bytes(chunk)
-                    while True:
-                        # Check if we need to stop
-                        if stop:
-                            return
-                        # Clear the event before we try getting an item just in
-                        # case of bad timing (event gets cleared just after we
-                        # try putting an item).
-                        producer_event.clear()
-                        try:
-                            # Try putting the chunk
-                            chunks_queue.put(chunk, block=False)
-                        except queue.Full:
-                            # Wait for the event to be set
-                            cleared = producer_event.wait(timeout=5)
-                            # If the event isn't set after 5 seconds...
-                            if not cleared:
-                                # Assume our audio player is too slow and error
-                                raise RuntimeError("Sound player too slow")
-                        else:
-                            # If all went well, go process the next chunk
-                            break
-            except BaseException as e:
-                # Let the consumer know we errored
-                chunks_queue.put(e, timeout=5)
-            finally:
-                # Let the consumer know we ended
-                chunks_queue.put(None, timeout=5)
-        # Make a thread for the producer
-        task = asyncio.create_task(asyncio.to_thread(lambda: producer()))
-        # Ignore exceptions (kinda like a daemon task)
-        task.add_done_callback(lambda task: task.exception())
-        # The sound consumer / player (yields from queue to the audio source)
-        def consumer():
-            try:
-                # Loop until we have no more chunks to process
-                while True:
-                    try:
-                        # Try getting an item
-                        item = chunks_queue.get(timeout=5)
-                    except queue.Empty:
-                        # If we needed to wait more than 5 seconds, assume the
-                        # loader is too slow and tell it to stop
-                        raise RuntimeError("Sound loader too slow")
-                    else:
-                        # Tell the producer it can put more items
-                        producer_event.set()
-                    # If the producer has ended, we should end too
-                    if item is None:
-                        return
-                    # If the producer errored, reraise it here
-                    if isinstance(item, BaseException):
-                        raise item
-                    # Otherwise, it's just a normal chunk of audio. Yield it
-                    yield item
-            finally:
-                # Tell the producer to stop if it's still running
-                nonlocal stop
-                stop = True
-                producer_event.set()
-                # Terminate the process
-                process.stdout.close()
-                process.stdin.close()
-                process.terminate()
-                process.wait()
-        # Wrap the sound player chunk iterator with an audio source
-        source = s.wrap_discord_source(consumer())
-        # Wait a lil bit to get the chunk queue prefilled
-        await asyncio.sleep(2)
-        # Return the audio source
-        return source
-
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel
@@ -403,22 +256,6 @@ class Music(commands.Cog):
         if info["current"] is None:
             self.schedule(ctx)
         await ctx.send(f"Added to queue: {ty} {url}")
-
-    if has_os:
-        @commands.command(name="_play_os")
-        async def play_os(self, ctx, *, url):
-            """Plays an Online Sequencer sequence"""
-            if len(url) > 100:
-                raise ValueError("url too long (length over 100)")
-            if not url.isprintable():
-                raise ValueError(f"url not printable: {url!r}")
-            print(ctx.message.author.name, "queued", repr(url))
-            info = self.get_info(ctx)
-            queue = info["queue"]
-            queue.append({"ty": "os", "query": url})
-            if info["current"] is None:
-                self.schedule(ctx)
-            await ctx.send(f"Added to queue: os {url}")
 
     async def add_to_queue(self, ctx, source):
         """Plays the specified source"""
