@@ -123,7 +123,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Go to hh:mm:ss
   - ~~Use fast ff and rw if time difference is less than x minutes (set to 10?)~~
   - Seems like VLC android doesn't allow jumping to ms
-- [_] Autoshuffle
+- [x] Autoshuffle
   - Shuffle
 - [_] Loop current song
   - Continuous play the current song

@@ -341,13 +341,7 @@ class Music(commands.Cog):
     async def shuffle(self, ctx):
         """Shuffles the queue"""
         info = self.get_info(ctx)
-        queue = info["queue"]
-        temp = []
-        while queue:
-            temp.append(queue.popleft())
-        random.shuffle(temp)
-        while temp:
-            queue.appendleft(temp.pop())
+        random.shuffle(info["queue"])
         await ctx.send("Queue shuffled")
 
     async def autoshuffler(self, queue_ref):
