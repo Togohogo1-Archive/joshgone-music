@@ -241,6 +241,17 @@ class Music(commands.Cog):
             self.schedule(ctx)
         await ctx.send(f"Added to queue: local {query}")
 
+    @commands.command()
+    @commands.is_owner()
+    async def local_prepend(self, ctx, *, query):
+        """Plays a file from the local filesystem"""
+        info = self.get_info(ctx)
+        queue = info["queue"]
+        queue.appendleft({"ty": "local", "query": query})
+        if info["current"] is None:
+            self.schedule(ctx)
+        await ctx.send(f"Prepended to queue: local {query}")
+
     @commands.command(aliases=["yt", "play", "p"])
     async def stream(self, ctx, *, url):
         """Plays from a url (almost anything youtube_dl supports)"""
@@ -255,7 +266,23 @@ class Music(commands.Cog):
         queue.append({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Added to queue: {ty} {url}")
+        await ctx.send(f"Prepend to queue: {ty} {url}")
+
+    @commands.command(aliases=["prepend", "pplay", "pp"])
+    async def stream_prepend(self, ctx, *, url):
+        """Plays from a url (almost anything youtube_dl supports)"""
+        if len(url) > 100:
+            raise ValueError("url too long (length over 100)")
+        if not url.isprintable():
+            raise ValueError(f"url not printable: {url!r}")
+        print(ctx.message.author.name, "queued", repr(url))
+        info = self.get_info(ctx)
+        queue = info["queue"]
+        ty = "local" if url == "coco.mp4" else "stream"
+        queue.appendleft({"ty": ty, "query": url})
+        if info["current"] is None:
+            self.schedule(ctx)
+        await ctx.send(f"Prepended to queue: {ty} {url}")
 
     async def add_to_queue(self, ctx, source):
         """Plays the specified source"""
