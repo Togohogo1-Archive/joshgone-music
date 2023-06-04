@@ -188,6 +188,7 @@ class Music(commands.Cog):
             wrapped["waiting"] = False
             wrapped["loop"] = False
             wrapped["processing"] = False
+            wrapped["autoshuffle_task"] = None
             wrapped["version"] = 3
         else:
             wrapped = self.data[guild_id]
@@ -348,6 +349,40 @@ class Music(commands.Cog):
         while temp:
             queue.appendleft(temp.pop())
         await ctx.send("Queue shuffled")
+
+    async def autoshuffler(self, queue_ref):
+        while True:
+            random.shuffle(queue_ref)
+            await asyncio.sleep(5)
+
+    @commands.command(aliases=["ashuffle"])
+    async def autoshuffle(self, ctx, to_ashuffle: typing.Optional[bool] = None):
+        info = self.get_info(ctx)
+        queue = info["queue"]
+
+        if to_ashuffle is None:
+            # None if no task, the acutal task if exists task
+            await ctx.send(f"{info['autoshuffle_task']}")
+            return
+
+        if to_ashuffle:
+            # Overwriting if task already exist
+            # Create a new one if task doesn't exist
+            await ctx.send("Enabling queue autoshuffle.")
+            task = asyncio.create_task(self.autoshuffler(queue))
+            info["autoshuffle_task"] = task
+            await task
+        else:
+            await ctx.send("Disabling queue autoshuffle.")
+            # For safe measure, turn info["autoshuffle"] to None first
+            task = info["autoshuffle_task"]
+
+            # So doesn't raise AttributeError for NoneType
+            if task is None:
+                return
+
+            info["autoshuffle_task"] = None
+            task.cancel()
 
     @commands.command()
     async def volume(self, ctx, volume: float = None):
