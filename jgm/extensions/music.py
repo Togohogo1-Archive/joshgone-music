@@ -338,16 +338,24 @@ class Music(commands.Cog):
             await self.stream(ctx, url=url)
             await asyncio.sleep(0.1)
 
+    def shuffle_helper(self, queue_ref):
+        temp = []
+        while queue_ref:
+            temp.append(queue_ref.popleft())
+        random.shuffle(temp)
+        while temp:
+            queue_ref.appendleft(temp.pop())
+
     @commands.command()
     async def shuffle(self, ctx):
         """Shuffles the queue"""
         info = self.get_info(ctx)
-        random.shuffle(info["queue"])
+        self.shuffle_helper(info["queue"])
         await ctx.send("Queue shuffled")
 
     async def autoshuffler(self, queue_ref):
         while True:
-            random.shuffle(queue_ref)
+            self.shuffle_helper(queue_ref)
             await asyncio.sleep(5)
 
     @commands.command(aliases=["ashuffle"])
@@ -357,7 +365,7 @@ class Music(commands.Cog):
 
         if to_ashuffle is None:
             # None if no task, the acutal task if exists task
-            await ctx.send(f"{info['autoshuffle_task']}")
+            await ctx.send(f"Autoshuffler is {'off' if info['autoshuffle_task'] is None else 'on'}.")
             return
 
         if to_ashuffle:
