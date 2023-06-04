@@ -502,7 +502,9 @@ class Music(commands.Cog):
         await ctx.send("Rescheduled")
 
     @local.before_invoke
+    @local_prepend.before_invoke
     @stream.before_invoke
+    @stream_prepend.before_invoke
     async def ensure_connected(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice:
