@@ -146,7 +146,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Vaporwave (reverb)
   - Radio
   - Will require complete redesign of `_DEFAULT_FFMPEG_OPTS`
-- [_] Append command
+- [x] Prepend command
   - Appends at the front of the list instead of teh back
 - [_] Forceskip (not practical, more of a meme command)
 - [_] A more watered down version of play previous song
