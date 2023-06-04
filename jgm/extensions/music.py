@@ -245,7 +245,7 @@ class Music(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def local_prepend(self, ctx, *, query):
-        """Plays a file from the local filesystem"""
+        # """Plays a file from the local filesystem"""
         info = self.get_info(ctx)
         queue = info["queue"]
         queue.appendleft({"ty": "local", "query": query})
@@ -271,7 +271,7 @@ class Music(commands.Cog):
 
     @commands.command(aliases=["prepend", "pplay", "pp"])
     async def stream_prepend(self, ctx, *, url):
-        """Plays from a url (almost anything youtube_dl supports)"""
+        # """Plays from a url (almost anything youtube_dl supports)"""
         if len(url) > 100:
             raise ValueError("url too long (length over 100)")
         if not url.isprintable():
