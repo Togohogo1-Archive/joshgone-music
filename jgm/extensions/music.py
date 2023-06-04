@@ -443,16 +443,18 @@ class Music(commands.Cog):
         """Shows the songs on queue"""
         queue = ()
         length = 0
-        looping = False
+        loop_messages = {1: "loop all", 0: "no loop", -1: "loop one"}
+        looping = None
         if ctx.voice_client is not None:
             info = self.get_info(ctx)
             queue = info["queue"]
             length = len(queue)
-            looping = info["loop"]
+            looping = loop_messages[info["loop"]]
         if not queue:
             queue = (None,)
         paginator = commands.Paginator()
-        paginator.add_line(f"Queue [{length}]{' (looping)'*looping}:")
+        # Looping default None, if it is then dont print the status to make it look nicer when the bot isn't joined in a VC
+        paginator.add_line(f"Queue [{length}]{f' ({looping})' if looping is not None else ''}:")
         for i, song in enumerate(queue, start=1):
             if song is None:
                 paginator.add_line("None")
@@ -526,17 +528,13 @@ class Music(commands.Cog):
     async def loop(self, ctx, loop: typing.Optional[int] = None):
         """Gets or sets queue looping"""
         sign = loop//abs(loop) if loop else 0
-        loop_messages = {
-            1: "loop all",
-            0: "no loop",
-            -1: "loop one"
-        }
+        loop_messages = {1: "loop all", 0: "no loop", -1: "loop one"}
         info = self.get_info(ctx)
         if loop is None:
-            await ctx.send(f"Queue status: {info['loop']} [{loop_messages[info['loop']]}]")
+            await ctx.send(f"Queue status: {info['loop']} ({loop_messages[info['loop']]})")
             return
         info["loop"] = sign
-        await ctx.send(f"Set queue status to {info['loop']} [{loop_messages[info['loop']]}]")
+        await ctx.send(f"Set queue status to {info['loop']} ({loop_messages[info['loop']]})")
 
     @commands.command()
     @commands.is_owner()
