@@ -156,7 +156,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Size of history queue capped at some number (I'm thinking 15)
   - Or only keep previously played and full playback history
 - [_] Playback history (subset of previous)
-- [_] Migrate to discord.py 2.0 to use apiv10
+- [x] Migrate to discord.py 2.0 to use apiv10
 - Extra decorations
   - Typing indicator in channel
   - Disable is live feature
