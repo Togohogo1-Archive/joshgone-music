@@ -171,10 +171,6 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [ ] Soundcloud playlists
 - [ ] Better reloading and unloading
 
-## Eventually in a future version
-
-- [ ] Add slash commands functionality
-
 ## VLC features that may not be implemented
 
 - Stop after some track
