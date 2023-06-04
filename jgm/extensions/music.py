@@ -147,8 +147,11 @@ class Music(commands.Cog):
                 return
             queue = info["queue"]
             # If we're looping, put the current song at the end of the queue
-            if info["loop"] and info["current"] is not None:
+            if info["loop"] > 0 and info["current"] is not None:
                 queue.append(info["current"])
+            # Previous will not intefere cuz number can't be >0 and <0 at the same time
+            if info["loop"] < 0 and info["current"] is not None:
+                queue.appendleft(info["current"])
             info["current"] = None
             if queue:
                 # Get the next song
@@ -263,11 +266,10 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
-        ty = "local" if url == "coco.mp4" else "stream"
-        queue.append({"ty": ty, "query": url})
+        queue.append({"ty": "stream", "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Appended to queue: {ty} {url}")
+        await ctx.send(f"Appended to queue: stream {url}")
 
     @commands.command(aliases=["prepend", "pplay", "pp"])
     async def stream_prepend(self, ctx, *, url):
@@ -279,11 +281,10 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
-        ty = "local" if url == "coco.mp4" else "stream"
-        queue.appendleft({"ty": ty, "query": url})
+        queue.appendleft({"ty": "stream", "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Prepended to queue: {ty} {url}")
+        await ctx.send(f"Prepended to queue: stream {url}")
 
     async def add_to_queue(self, ctx, source):
         """Plays the specified source"""
@@ -514,14 +515,20 @@ class Music(commands.Cog):
             await ctx.send(f"Skipped: {current['query']}")
 
     @commands.command()
-    async def loop(self, ctx, loop: typing.Optional[bool] = None):
+    async def loop(self, ctx, loop: typing.Optional[int] = None):
         """Gets or sets queue looping"""
+        sign = loop//abs(loop) if loop else 0
+        loop_messages = {
+            1: "loop all",
+            0: "no loop",
+            -1: "loop one"
+        }
         info = self.get_info(ctx)
         if loop is None:
-            await ctx.send(f"Queue {'is' if info['loop'] else 'is not'} looping")
+            await ctx.send(f"Queue status: {info['loop']} [{loop_messages[info['loop']]}]")
             return
-        info["loop"] = loop
-        await ctx.send(f"Queue {'is now' if info['loop'] else 'is now not'} looping")
+        info["loop"] = sign
+        await ctx.send(f"Set queue status to {info['loop']} [{loop_messages[info['loop']]}]")
 
     @commands.command()
     @commands.is_owner()
