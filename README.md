@@ -114,29 +114,29 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Inconsistency in error quotes (`ExtensionNotFound` vs `CommandNotFound` single & double quotes)
 
 ## Features in v2.0.0
-- [x] Seeking forward and backward
-- [x] Sleep timer
+- [_] Seeking forward and backward
+- [_] Sleep timer
     - Sleep in hh:mm:ss or just raw seconds
-- [x] Goto
+- [_] Goto
     - Go to hh:mm:ss
     - ~~Use fast ff and rw if time difference is less than x minutes (set to 10?)~~
     - Seems like VLC android doesn't allow jumping to ms
-- [x] Autoshuffle
+- [_] Autoshuffle
     - Shuffle
-- [x] Loop current song
+- [_] Loop current song
     - Continuous play the current song
-- [x] More detailed song info
+- [_] More detailed song info
     - length
     - file size?
     - 0:00/5:00
     - codec
     - sample rate
     - metadata
-- [x] Playback speed
+- [_] Playback speed
     - A value between 0.25 and 4
     - ^ if that's too laggy then to 0.5 to 2
     - Will be applied on next song
-- [x] Filters
+- [_] Filters
     - Present, some examples include:
     - Nightcore
     - Daycore
@@ -144,17 +144,17 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
     - Vaporwave (reverb)
     - Radio
     - Will require complete redesign of `_DEFAULT_FFMPEG_OPTS`
-- [x] Append command
+- [_] Append command
     - Appends at the front of the list instead of teh back
-- [x] Forceskip (not practical, more of a meme command)
-- [x] A more watered down version of play previous song
+- [_] Forceskip (not practical, more of a meme command)
+- [_] A more watered down version of play previous song
     - Store a queue of previously played song (history command)
     - `;prev` removes last played song in history and adds to the end of queue
     - `;pprev` removes last played song in history and adds to the start of queue
     - Size of history queue capped at some number (I'm thinking 15)
     - Or only keep previously played and full playback history
-- [x] Playback history (subset of previous)
-- [x] Migrate to discord.py 2.0 to use apiv10
+- [_] Playback history (subset of previous)
+- [_] Migrate to discord.py 2.0 to use apiv10
 - Extra decorations
     - Typing indicator in channel
     - Disable is live feature
