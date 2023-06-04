@@ -239,7 +239,7 @@ class Music(commands.Cog):
         queue.append({"ty": "local", "query": query})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Added to queue: local {query}")
+        await ctx.send(f"Appended to queue: local {query}")
 
     @commands.command()
     @commands.is_owner()
@@ -266,7 +266,7 @@ class Music(commands.Cog):
         queue.append({"ty": ty, "query": url})
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Prepend to queue: {ty} {url}")
+        await ctx.send(f"Appended to queue: {ty} {url}")
 
     @commands.command(aliases=["prepend", "pplay", "pp"])
     async def stream_prepend(self, ctx, *, url):
