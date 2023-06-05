@@ -578,7 +578,7 @@ class Music(commands.Cog):
     async def sleep_task(self, ctx, dur):
         await asyncio.sleep(dur)
         info = self.get_info(ctx)
-        info["sleep_timer_task"] = None  # Easier to ju do it in here rather than have some other function needing to detect when the task is done
+        info["sleep_timer_task"] = None  # Easier to just do it in here rather than have some other function needing to detect when the task is done
 
         # Doesn't seem to throw any exception when not in voice channel
         await self.leave(ctx)
