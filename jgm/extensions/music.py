@@ -206,6 +206,15 @@ class Music(commands.Cog):
 
     # Helper function to remove the info for a guild
     def pop_info(self, ctx):
+        # Do some cleanup first, cancel any tasks in the thin wrapper
+        data = self.get_info(ctx)
+
+        if data["autoshuffle_task"] is not None:
+            data["autoshuffle_task"].cancel()
+        if data["sleep_timer_task"] is not None:
+            _, _, task = data["sleep_timer_task"]  # More formal way than [-1]
+            task.cancel()
+
         return self.data.pop(ctx.guild.id, None)
 
     # Creates an audio source from a url
