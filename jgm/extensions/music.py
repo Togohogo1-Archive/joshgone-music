@@ -10,6 +10,9 @@ import threading
 import os
 import sys
 import shlex
+import re
+import time
+import datetime
 from collections import deque
 
 import discord
@@ -192,6 +195,7 @@ class Music(commands.Cog):
             wrapped["loop"] = False
             wrapped["processing"] = False
             wrapped["autoshuffle_task"] = None
+            wrapped["sleep_timer_task"] = None
             wrapped["version"] = 3
         else:
             wrapped = self.data[guild_id]
@@ -536,6 +540,89 @@ class Music(commands.Cog):
         info["loop"] = sign
         await ctx.send(f"Set queue status to {info['loop']} ({loop_messages[info['loop']]})")
 
+    def match_hhmmss_type(self, pos):
+        # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
+        # Match [[HH:]MM:]SS or integer seconds, brackets optional
+        # First check regex match
+        # Regex pattern slightly modified from: https://stackoverflow.com/a/8318367
+        return re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos)
+
+    def match_any_seconds(self, pos):
+        # Returns false for negative numbers too
+        # Sufficient to check if `pos` is a positive integer in string form
+        return pos.isdigit()
+
+    def hhmmss_to_seconds(self, hhmmss):
+        """
+        Assumes already in valid [[HH]:MM:]SS regex format
+        if len 1 -> ss
+        if len 2 -> mm:ss
+        if len 3 -> hh:mm:ss
+
+        never hh:ss
+        """
+        hhmmss_list = hhmmss.split(":")
+        hour_s = int(hhmmss_list[-3])*3600 if len(hhmmss_list) >= 3 else 0
+        min_s = int(hhmmss_list[-2])*60 if len(hhmmss_list) >= 2 else 0
+        return hour_s + min_s + int(hhmmss_list[-1])
+
+    async def sleep_task(self, ctx, dur):
+        await asyncio.sleep(dur)
+        info = self.get_info(ctx)
+        info["sleep_timer_task"] = None  # Easier to ju do it in here rather than have some other function needing to detect when the task is done
+
+        # Doesn't seem to throw any exception when not in voice channel
+        await self.leave(ctx)
+
+    @commands.command(aliases=["leavein", "sleepin"])
+    async def sleep_in(self, ctx, dur: typing.Optional[str] = None):
+        info = self.get_info(ctx)
+        task_tuple = info["sleep_timer_task"]
+
+        if dur is None:
+            if task_tuple is None:
+                await ctx.send("No sleep timer set.")
+            else:
+                task_start, task_duration, _ = task_tuple
+                elapsed = int(time.time()-task_start)
+                hhmmss = datetime.timedelta(seconds=task_duration-elapsed)
+                await ctx.send(f"Disconnecting in approximately {hhmmss}")
+            return
+
+        # After this is in the form of <int> seconds or [[HH:]MM:]SS
+        if not self.match_hhmmss_type(dur) and not self.match_any_seconds(dur):
+            raise commands.CommandError(f"Position [{dur}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds.")
+
+        # If the form is <int> seconds, check for > 99:59:59 exceed
+        if self.match_any_seconds(dur) and int(dur) > self.hhmmss_to_seconds("99:59:59"):
+            raise commands.CommandError(f"Time in seconds greater than 99:59:59.")
+
+        # Now we have a valid form
+        dur_seconds = self.hhmmss_to_seconds(dur)
+
+        if task_tuple is None:
+            await ctx.send(f"Sleep timer created, bot will disconnect in {datetime.timedelta(seconds=dur_seconds)}")
+            task = asyncio.create_task(self.sleep_task(ctx, dur_seconds))
+            info["sleep_timer_task"] = (time.time(), dur_seconds, task)
+            await task
+        else:
+            await ctx.send("Please cancel the currently running sleep timer first.")
+
+    @commands.command()
+    async def cancel(self, ctx):
+        info = self.get_info(ctx)
+        task_tuple = info["sleep_timer_task"]
+
+        if task_tuple is None:
+            raise commands.CommandError(f"No sleep timer task to be cancelled.")
+        # Before to prevent the case where the timing is just right where
+        # info["sleep_timer_task"] is not none yet the task is cancelled
+        # which could be the case if the statement below was put after the tuple unpacking
+        info["sleep_timer_task"] = None
+        _, _, task = task_tuple
+        task.cancel()
+        await ctx.send("Cancelled the current sleep timer.")
+
     @commands.command()
     @commands.is_owner()
     async def reschedule(self, ctx):
@@ -566,6 +653,7 @@ class Music(commands.Cog):
     @skip.before_invoke
     @clear.before_invoke
     @volume.before_invoke
+    @sleep_in.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
