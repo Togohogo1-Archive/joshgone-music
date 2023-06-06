@@ -537,6 +537,17 @@ class Music(commands.Cog):
         if current is not None and not info["waiting"]:
             await ctx.send(f"Skipped: {current['query']}")
 
+    @commands.command(aliases=["fs"])
+    async def forceskip(self, ctx):
+        info = self.get_info(ctx)
+        current = info["current"]
+        if info["waiting"] or current is None:
+            raise commands.CommandError("Inappropriate time to use this command. Likely nonexistent AudioSource or handling queue advance.")
+        ctx.voice_client.pause()
+        info["current"] = None
+        self.schedule(ctx, force=True)
+        await ctx.send(f"Forceskipped: {current['query']}")
+
     @commands.command()
     async def loop(self, ctx, loop: typing.Optional[int] = None):
         """Gets or sets queue looping"""
@@ -653,6 +664,8 @@ class Music(commands.Cog):
     @pause.before_invoke
     @resume.before_invoke
     async def check_playing(self, ctx):
+        # Can't have forceskip before_invoke here because smth like ;local <nonexistent file>
+        # Returns None, so we will have this error and not be able to forceskip
         await self.check_connected(ctx)
         if ctx.voice_client.source is None:
             raise commands.CommandError("Not playing anything right now")
@@ -663,6 +676,7 @@ class Music(commands.Cog):
     @clear.before_invoke
     @volume.before_invoke
     @sleep_in.before_invoke
+    @forceskip.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
