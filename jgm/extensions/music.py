@@ -156,6 +156,9 @@ class Music(commands.Cog):
             if info["loop"] < 0 and info["current"] is not None:
                 queue.appendleft(info["current"])
             info["current"] = None
+
+            if ctx.voice_client.is_playing():
+                ctx.voice_client.pause()
             if queue:
                 # Get the next song
                 current = queue.popleft()
