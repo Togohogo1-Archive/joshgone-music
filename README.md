@@ -161,6 +161,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Typing indicator in channel
   - Disable is live feature
   - Command sorting (more vs filters)
+- [ ] Cooldown for commands prone to error when spamming
 
 ## Features in v2.1.0
 
@@ -186,6 +187,10 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - when ;batch_add a bunch of songs, do a ;ff when a current one is playing
 - when ;batch_add a bunch of songs, do a ;jump x:xx when a current one is playing
 - when ;jump x:xx causes a large delay, change the ffmpeg settings
+- spamming ;reschedule
+- ;fs and then ;s outputs 2 queue empty, then stops outputting
+- ;reschedule command when there is only one song
+- if a long local file path, then paginator breaks
 
 ## Short term todo
 
