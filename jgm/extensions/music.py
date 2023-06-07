@@ -155,6 +155,11 @@ class Music(commands.Cog):
             # Previous will not intefere cuz number can't be >0 and <0 at the same time
             if info["loop"] < 0 and info["current"] is not None:
                 queue.appendleft(info["current"])
+
+            # Before setting it to none, we add it to the history, provided it is not None itself
+            if info["current"] is not None:
+                info["history"].append(info["current"])
+
             info["current"] = None
 
             if ctx.voice_client.is_playing():
@@ -193,6 +198,7 @@ class Music(commands.Cog):
         if guild_id not in self.data:
             wrapped = self.data[guild_id] = {}
             wrapped["queue"] = deque()
+            wrapped["history"] = deque(maxlen=20)
             wrapped["current"] = None
             wrapped["waiting"] = False
             wrapped["loop"] = False
@@ -479,6 +485,23 @@ class Music(commands.Cog):
         for page in paginator.pages:
             await ctx.send(page)
 
+    @commands.command(aliases=["history", "hist"])
+    async def playback_history(self, ctx):
+        info = self.get_info(ctx)
+        history = info["history"]
+
+        if not history:
+            await ctx.send("No playback history")
+            return
+
+        paginator = commands.Paginator()
+        paginator.add_line(f"Playback history [{len(history)}]:")
+        for i, song in enumerate(reversed(history), start=1):
+            paginator.add_line(f"{i}: {song['query']} ({song['ty']})")
+
+        for page in paginator.pages:
+            await ctx.send(page)
+
     def normalize_index(self, ctx, position, length):
         index = position
         if index > 0:
@@ -544,10 +567,13 @@ class Music(commands.Cog):
     async def forceskip(self, ctx):
         info = self.get_info(ctx)
         current = info["current"]
+        # The only exception to history command (because it was)
+        history = info["history"]
         if info["waiting"] or current is None:
             raise commands.CommandError("Inappropriate time to use this command. Likely nonexistent AudioSource or handling queue advance.")
         ctx.voice_client.pause()
         info["current"] = None
+        history.append(current)
         self.schedule(ctx, force=True)
         await ctx.send(f"Forceskipped: {current['query']}")
 
