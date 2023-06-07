@@ -68,6 +68,13 @@ class Admin(commands.Cog):
         await asyncio.to_thread(self.apply_outstanding)
         await ctx.send("Migrations applied.")
 
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def add_ctx(self, ctx):
+        if not hasattr(self.bot, "_ctx"):
+            self.bot._ctx = ctx
+            await ctx.send("[DEBUG PURPOSES] Added a `ctx` instance to the bot.")
+
     def apply_outstanding(self):
         backend = yoyo.get_backend(f"sqlite:///{os.environ['JOSHGONE_DB']}")
         migrations = yoyo.read_migrations("./migrations")
