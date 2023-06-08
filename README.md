@@ -191,6 +191,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - ;fs and then ;s outputs 2 queue empty, then stops outputting
 - ;reschedule command when there is only one song
 - if a long local file path, then paginator breaks
+- ;reschedule when there is only one song left in the queue and it is not looping in any way
 
 ## Short term todo
 
