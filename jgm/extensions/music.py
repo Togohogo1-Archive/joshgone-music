@@ -163,8 +163,6 @@ class Music(commands.Cog):
 
             info["current"] = None
 
-            if ctx.voice_client.is_playing():
-                ctx.voice_client.pause()
             if queue:
                 # Get the next song
                 current = queue.popleft()
@@ -173,6 +171,11 @@ class Music(commands.Cog):
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
                     source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
+                    # Pausing just in case ctx.voice_client is still playing audio
+                    # Moved this line after the await ... because that was a blocking operation
+                    # Was there previously and that somehow allowed ;reschedule to sneak its way through
+                    # Raising the Internal Error: ClientException('Already playing audio.')
+                    ctx.voice_client.pause()
                     ctx.voice_client.play(source, after=after)
                 await channel.send(f"Now playing: {title}")
             else:
@@ -681,7 +684,7 @@ class Music(commands.Cog):
     async def reschedule(self, ctx):
         """Reschedules the current guild onto the advancer task"""
         self.schedule(ctx, force=True)
-        await ctx.send("Rescheduled")
+        await ctx.send("Rescheduling...")
 
     @local.before_invoke
     @local_prepend.before_invoke
