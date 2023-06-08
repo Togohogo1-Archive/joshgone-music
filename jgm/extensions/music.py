@@ -159,6 +159,7 @@ class Music(commands.Cog):
             # Before setting it to none, we add it to the history, provided it is not None itself
             if info["current"] is not None:
                 info["history"].append(info["current"])
+                info["songs_played"] += 1
 
             info["current"] = None
 
@@ -198,7 +199,8 @@ class Music(commands.Cog):
         if guild_id not in self.data:
             wrapped = self.data[guild_id] = {}
             wrapped["queue"] = deque()
-            wrapped["history"] = deque(maxlen=20)
+            wrapped["history"] = deque(maxlen=15)
+            wrapped["songs_played"] = 0
             wrapped["current"] = None
             wrapped["waiting"] = False
             wrapped["loop"] = False
@@ -489,13 +491,14 @@ class Music(commands.Cog):
     async def playback_history(self, ctx):
         info = self.get_info(ctx)
         history = info["history"]
+        played = info["songs_played"]
 
         if not history:
             await ctx.send("No playback history")
             return
 
         paginator = commands.Paginator()
-        paginator.add_line(f"Playback history [{len(history)}]:")
+        paginator.add_line(f"Playback history ({played} played total) (showing last {len(history)} played):")
         for i, song in enumerate(reversed(history), start=1):
             paginator.add_line(f"{i}: {song['query']} ({song['ty']})")
 
@@ -574,6 +577,7 @@ class Music(commands.Cog):
         ctx.voice_client.pause()
         info["current"] = None
         history.append(current)
+        info["songs_played"] += 1
         self.schedule(ctx, force=True)
         await ctx.send(f"Forceskipped: {current['query']}")
 
