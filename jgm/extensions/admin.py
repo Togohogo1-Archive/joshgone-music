@@ -70,7 +70,7 @@ class Admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def add_ctx(self, ctx):
+    async def _ctx(self, ctx):
         if not hasattr(self.bot, "_ctx"):
             self.bot._ctx = ctx
             await ctx.send("[DEBUG PURPOSES] Added a `ctx` instance to the bot.")
