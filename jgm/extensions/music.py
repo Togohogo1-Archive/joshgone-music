@@ -24,6 +24,11 @@ import yt_dlp as youtube_dl
 import jgm.patched_player as patched_player
 import soundit as s
 
+class Audio():
+    def __init__(self, ty, query):
+        self.ty = ty
+        self.query = query
+
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
     _DEFAULT_YTDL_OPTS = {
@@ -170,7 +175,7 @@ class Music(commands.Cog):
                 # Get an audio source and play it
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
-                    source, title = await getattr(self, f"_play_{current['ty']}")(current['query'])
+                    source, title = await getattr(self, f"_play_{current.ty}")(current.query)
                     # Pausing just in case ctx.voice_client is still playing audio
                     # Moved this line after the await ... because that was a blocking operation
                     # Was there previously and that somehow allowed ;reschedule to sneak its way through
@@ -267,10 +272,11 @@ class Music(commands.Cog):
         """Plays a file from the local filesystem"""
         info = self.get_info(ctx)
         queue = info["queue"]
-        queue.append({"ty": "local", "query": query})
+        audio = Audio(ty="local", query=query)
+        queue.append(audio)
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Appended to queue: local {query}")
+        await ctx.send(f"Appended to queue: local {audio.query}")
 
     @commands.command()
     @commands.is_owner()
@@ -278,10 +284,11 @@ class Music(commands.Cog):
         # """Plays a file from the local filesystem"""
         info = self.get_info(ctx)
         queue = info["queue"]
-        queue.appendleft({"ty": "local", "query": query})
+        audio = Audio(ty="local", query=query)
+        queue.appendleft(audio)
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Prepended to queue: local {query}")
+        await ctx.send(f"Prepended to queue: local {audio.query}")
 
     @commands.command(aliases=["yt", "play", "p"])
     async def stream(self, ctx, *, url):
@@ -293,10 +300,11 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
-        queue.append({"ty": "stream", "query": url})
+        audio = Audio(ty="stream", query=url)
+        queue.append(audio)
         if info["current"] is None:
             self.schedule(ctx)
-        await ctx.send(f"Appended to queue: stream {url}")
+        await ctx.send(f"Appended to queue: stream {audio.query}")
 
     @commands.command(aliases=["prepend", "pplay", "pp"])
     async def stream_prepend(self, ctx, *, url):
@@ -307,8 +315,11 @@ class Music(commands.Cog):
             raise ValueError(f"url not printable: {url!r}")
         info = self.get_info(ctx)
         queue = info["queue"]
+        audio = Audio(ty="stream", query=url)
+        queue.appendleft(audio)
         if info["current"] is None:
             self.schedule(ctx)
+        await ctx.send(f"Prepended to queue: stream {audio.query}")
 
     @commands.command()
     async def _add_playlist(self, ctx, *, url):
@@ -334,10 +345,11 @@ class Music(commands.Cog):
             raise ValueError("cannot find entries of playlist")
         entries = data['entries']
         for entry in entries:
-            url = entry['url']
+            playlist_url = entry['url']
             if bracketed:
-                url = f"<{url}>"
-            queue.append({"ty": "stream", "query": url})
+                playlist_url = f"<{playlist_url}>"
+            audio = Audio(ty="stream", query=playlist_url)
+            queue.append(audio)
         if info["current"] is None:
             self.schedule(ctx)
         await ctx.send(f"Added playlist to queue: {url}")
@@ -446,7 +458,7 @@ class Music(commands.Cog):
             info = self.get_info(ctx)
             current = info["current"]
             if current is not None and not info["waiting"]:
-                query = current["query"]
+                query = current.query
         await ctx.send(f"Current: {query}")
 
     @commands.command(aliases=["q"])
@@ -470,7 +482,7 @@ class Music(commands.Cog):
             if song is None:
                 paginator.add_line("None")
             else:
-                paginator.add_line(f"{i}: {song['query']}")
+                paginator.add_line(f"{i}: {song.query}")
         for page in paginator.pages:
             await ctx.send(page)
 
@@ -487,7 +499,7 @@ class Music(commands.Cog):
         paginator = commands.Paginator()
         paginator.add_line(f"Playback history ({played} played total) (showing last {len(history)} played):")
         for i, song in enumerate(reversed(history), start=1):
-            paginator.add_line(f"{i}: {song['query']} ({song['ty']})")
+            paginator.add_line(f"{i}: {song.query} ({song.ty})")
 
         for page in paginator.pages:
             await ctx.send(page)
@@ -534,7 +546,7 @@ class Music(commands.Cog):
         queue.rotate(origin_index - target_index)
         queue.appendleft(song)
         queue.rotate(target_index)
-        await ctx.send(f"Moved song [{origin} -> {target}]: {song['query']}")
+        await ctx.send(f"Moved song [{origin} -> {target}]: {song.query}")
 
     @commands.command()
     async def clear(self, ctx):
@@ -551,7 +563,7 @@ class Music(commands.Cog):
         current = info["current"]
         ctx.voice_client.stop()
         if current is not None and not info["waiting"]:
-            await ctx.send(f"Skipped: {current['query']}")
+            await ctx.send(f"Skipped: {current.query}")
 
     @commands.command(aliases=["fs"])
     async def forceskip(self, ctx):
@@ -566,7 +578,7 @@ class Music(commands.Cog):
         history.append(current)
         info["songs_played"] += 1
         self.schedule(ctx, force=True)
-        await ctx.send(f"Forceskipped: {current['query']}")
+        await ctx.send(f"Forceskipped: {current.query}")
 
     @commands.command()
     async def loop(self, ctx, loop: typing.Optional[int] = None):
