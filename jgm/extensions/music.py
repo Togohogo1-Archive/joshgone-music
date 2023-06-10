@@ -307,21 +307,6 @@ class Music(commands.Cog):
             raise ValueError(f"url not printable: {url!r}")
         info = self.get_info(ctx)
         queue = info["queue"]
-        queue.appendleft({"ty": "stream", "query": url})
-        if info["current"] is None:
-            self.schedule(ctx)
-        await ctx.send(f"Prepended to queue: stream {url}")
-
-    async def add_to_queue(self, ctx, source):
-        """Plays the specified source"""
-        if ctx.voice_client is None:
-            if ctx.author.voice:
-                await ctx.author.voice.channel.connect()
-            else:
-                raise RuntimeError("Author not connected to a voice channel")
-        info = self.get_info(ctx)
-        queue = info["queue"]
-        queue.append({"ty": "raw", "query": source})
         if info["current"] is None:
             self.schedule(ctx)
 
