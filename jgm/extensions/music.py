@@ -305,7 +305,6 @@ class Music(commands.Cog):
             raise ValueError("url too long (length over 100)")
         if not url.isprintable():
             raise ValueError(f"url not printable: {url!r}")
-        print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
         queue.appendleft({"ty": "stream", "query": url})
