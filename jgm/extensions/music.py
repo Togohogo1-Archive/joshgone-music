@@ -334,7 +334,7 @@ class Music(commands.Cog):
             raise ValueError("cannot find entries of playlist")
         entries = data['entries']
         for entry in entries:
-            url = f"https://www.youtube.com/watch?v={entry['url']}"
+            url = entry['url']
             if bracketed:
                 url = f"<{url}>"
             queue.append({"ty": "stream", "query": url})
