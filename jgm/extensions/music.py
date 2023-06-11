@@ -242,6 +242,7 @@ class Music(commands.Cog):
             wrapped["version"] = 3
         else:
             wrapped = self.data[guild_id]
+        # Smth about for reloading
         if wrapped["version"] == 3:
             wrapped["channel_id"] = ctx.channel.id
             wrapped["version"] = 4
