@@ -13,6 +13,7 @@ import shlex
 import re
 import time
 import datetime
+import mutagen  # Alphabetize later
 from collections import deque
 
 import discord
@@ -28,7 +29,7 @@ class Audio:
     def __init__(self, ty, query):
         self.ty = ty
         self.query = query
-        self.metadata_fields = [
+        self.metadata_fields_stream = [
             "id",
             "title",
             "uploader",
@@ -38,15 +39,25 @@ class Audio:
             "webpage_url_domain",
             "duration_string"
         ]
+        self.metadata_funcs_local = {
+            "length": lambda mi: mi.length,
+            "contents": lambda mi: mi.pprint()
+        }
         self.metadata = {}
 
     def filter_metadata(self, data):
-        self.metadata = {field:data.get(field) for field in self.metadata_fields}
+        if self.ty == "stream":
+            self.metadata = {field:data.get(field) for field in self.metadata_fields_stream}
+        else:
+            self.metadata = {k:v(data) for k, v in self.metadata_funcs_local.items()}
+
 
     def __str__(self):
-        contents = "\n".join(f'{k}\t{v}' for k, v in self.metadata.items()).expandtabs(19) \
-            if self.metadata else "Info currently unavailable."
-        return "```" + contents + "```"
+        return f"```{str(self.metadata)}\n\n{self.ty}\n\n{self.query}```"
+        # if self.ty == "stream"
+        # contents = "\n".join(f'{k}\t{v}' for k, v in self.metadata.items()).expandtabs(19) \
+        #     if self.metadata else "Info currently unavailable."
+        # return "```" + contents + "```"
 
 
 class Music(commands.Cog):
@@ -104,6 +115,11 @@ class Music(commands.Cog):
     # Finds a file using query. Title is query
     async def _play_local(self, ctx, query):
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        data = mutagen.File(query).info
+        info = self.get_info(ctx)
+        info["current"].filter_metadata(data)
+        self.bot._datuh = data
+
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
@@ -760,6 +776,7 @@ class Music(commands.Cog):
     @volume.before_invoke
     @sleep_in.before_invoke
     @forceskip.before_invoke
+    @info.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
