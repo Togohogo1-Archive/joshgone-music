@@ -127,7 +127,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Shuffle
 - [x] Loop current song
   - Continuous play the current song
-- [_] More detailed song info
+- [x] More detailed song info
   - length
   - file size?
   - 0:00/5:00
