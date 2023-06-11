@@ -24,10 +24,30 @@ import yt_dlp as youtube_dl
 import jgm.patched_player as patched_player
 import soundit as s
 
-class Audio():
+class Audio:
     def __init__(self, ty, query):
         self.ty = ty
         self.query = query
+        self.metadata_fields = [
+            "id",
+            "title",
+            "uploader",
+            "duration",
+            "webpage_url",
+            "live_status",
+            "webpage_url_domain",
+            "duration_string"
+        ]
+        self.metadata = {}
+
+    def filter_metadata(self, data):
+        self.metadata = {field:data.get(field) for field in self.metadata_fields}
+
+    def __str__(self):
+        contents = "\n".join(f'{k}\t{v}' for k, v in self.metadata.items()).expandtabs(19) \
+            if self.metadata else "Info currently unavailable."
+        return "```" + contents + "```"
+
 
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
@@ -82,16 +102,20 @@ class Music(commands.Cog):
     # Returns a source object and the title of the song
 
     # Finds a file using query. Title is query
-    async def _play_local(self, query):
+    async def _play_local(self, ctx, query):
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
-    async def _play_stream(self, url):
+    async def _play_stream(self, ctx, url):
         original_url = url
         if url[0] == "<" and url[-1] == ">":
             url = url[1:-1]
         player, data = await self.player_from_url(url, stream=True)
+        info = self.get_info(ctx)
+        info["current"].filter_metadata(data)
+        self.bot._datuh = data
+        print(data.keys())
         return player, data.get("title", original_url)
 
     # Returns the raw source (calling the function if possible)
@@ -175,7 +199,7 @@ class Music(commands.Cog):
                 # Get an audio source and play it
                 after = lambda error, ctx=ctx: self.schedule(ctx, error)
                 async with channel.typing():
-                    source, title = await getattr(self, f"_play_{current.ty}")(current.query)
+                    source, title = await getattr(self, f"_play_{current.ty}")(ctx, current.query)
                     # Pausing just in case ctx.voice_client is still playing audio
                     # Moved this line after the await ... because that was a blocking operation
                     # Was there previously and that somehow allowed ;reschedule to sneak its way through
@@ -692,6 +716,14 @@ class Music(commands.Cog):
         _, _, task = task_tuple
         task.cancel()
         await ctx.send("Cancelled the current sleep timer.")
+
+    @commands.command(aliases = ["i"])
+    async def info(self, ctx):
+        info = self.get_info(ctx)
+        current = info["current"]
+        await ctx.send("Nothing currently playing." if current is None else current)
+
+    # async def status
 
     @commands.command()
     @commands.is_owner()
