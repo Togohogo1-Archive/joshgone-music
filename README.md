@@ -200,6 +200,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Write a basic first-level help description for each command
 - Move some instance variables into `self.data` so running the bot in 2 servers at a time doesn't cause issues
 - ytdl logs in a log file instead of terminal
+- should queue and playback history require before_invoke?
 
 ## Longer term goals
 
