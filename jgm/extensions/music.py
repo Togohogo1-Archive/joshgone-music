@@ -207,7 +207,7 @@ class Music(commands.Cog):
         if guild_id not in self.data:
             wrapped = self.data[guild_id] = {}
             wrapped["queue"] = deque()
-            wrapped["history"] = deque(maxlen=15)
+            wrapped["history"] = deque(maxlen=100)
             wrapped["songs_played"] = 0
             wrapped["current"] = None
             wrapped["waiting"] = False
@@ -487,7 +487,7 @@ class Music(commands.Cog):
             await ctx.send(page)
 
     @commands.command(aliases=["history", "hist"])
-    async def playback_history(self, ctx):
+    async def playback_history(self, ctx, display_last: int = 5):
         info = self.get_info(ctx)
         history = info["history"]
         played = info["songs_played"]
@@ -497,12 +497,30 @@ class Music(commands.Cog):
             return
 
         paginator = commands.Paginator()
-        paginator.add_line(f"Playback history ({played} played total) (showing last {len(history)} played):")
+
+        # Cap it at the limit
+        if display_last <= 0:
+            raise commands.CommandError(f"Cannot display last {display_last} songs")
+
+        paginator.add_line(f"Playback history{'' if min(display_last, history.maxlen) >= played else f' (showing last {min(display_last, history.maxlen)}/{played} played)'}:") #({ 15/{played} played total) (showing last {len(history)} played):")
         for i, song in enumerate(reversed(history), start=1):
-            paginator.add_line(f"{i}: {song.query} ({song.ty})")
+            if i > display_last:
+                break
+            paginator.add_line(f"{i}: {song.query} {f'({song.ty})' if song.ty == 'local' else ''}")
+
+        if display_last > history.maxlen:
+            paginator.add_line(f"\n[WARNING] History size capped at {history.maxlen} items")
 
         for page in paginator.pages:
             await ctx.send(page)
+
+    @commands.command(aliases=["hclear"])
+    async def playback_history_clear(self, ctx):
+        info = self.get_info(ctx)
+        info["history"].clear()
+        info["songs_played"] = 0
+
+        await ctx.send("Successfully cleared payback history.")
 
     def normalize_index(self, ctx, position, length):
         index = position
@@ -526,7 +544,7 @@ class Music(commands.Cog):
         queue.rotate(-index)
         song = queue.popleft()
         queue.rotate(index)
-        await ctx.send(f"Removed song [{position}]: {song['query']}")
+        await ctx.send(f"Removed song [{position}]: {song.query}")
 
     @commands.command()
     async def move(self, ctx, origin: int, target: int):
