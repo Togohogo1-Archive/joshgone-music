@@ -45,11 +45,35 @@ class Audio:
         }
         self.metadata = {}
 
+        self.display_speed = 1
+        self.display_pitch = 1
+        self.speed = 1
+        self.pitch = 1
+
     def filter_metadata(self, data):
         if self.ty == "stream":
             self.metadata = {field:data.get(field) for field in self.metadata_fields_stream}
         else:
             self.metadata = {k:v(data) for k, v in self.metadata_funcs_local.items()}
+
+    def ffmpeg_opts(self):
+        ffmpeg_other_filters = ""
+
+        ffmpeg_pitch = "" if self.pitch == 1 else f"pitch={self.pitch}"
+        ffmpeg_speed = "" if self.speed == 1 else f"speed={self.speed}"
+        ffmpeg_rubberband = "" \
+            if ffmpeg_pitch == ffmpeg_speed == "" \
+            else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_speed])}"
+
+        ffmpeg_filter_opt = "" \
+            if ffmpeg_other_filters == ffmpeg_rubberband == "" \
+            else f"-filter_complex {ffmpeg_rubberband} {ffmpeg_rubberband}".strip()
+
+        return {
+            'options': '-vn',
+            # Source: https://stackoverflow.com/questions/66070749/
+            "before_options": f"{ffmpeg_filter_opt} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+        }
 
 
     def __str__(self):
