@@ -25,6 +25,38 @@ import yt_dlp as youtube_dl
 import jgm.patched_player as patched_player
 import soundit as s
 
+
+class FilterData:
+    def __init__(self):
+        self.speed = 1
+        self.pitch = 1
+        self.filter_name = "default"
+
+    def to_ffmpeg_opts(self, filter_dict):
+        # Passing in _FFMPEG_FILTER_DICT
+
+        # Non-speed filter
+        ffmpeg_other_filters = filter_dict[self.filter_name]
+
+        # Speed and tempo
+        ffmpeg_pitch = "" if self.pitch == 1 else f"pitch={self.pitch}"
+        ffmpeg_speed = "" if self.speed == 1 else f"speed={self.speed}"
+        ffmpeg_rubberband = "" \
+            if ffmpeg_pitch == ffmpeg_speed == "" \
+            else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_speed])}"
+
+        # Combining the 2
+        ffmpeg_filter_opt = "" \
+            if ffmpeg_other_filters == ffmpeg_rubberband == "" \
+            else f"-filter_complex {ffmpeg_rubberband} {ffmpeg_rubberband}".strip()
+
+        return {
+            'options': '-vn',
+            # Source: https://stackoverflow.com/questions/66070749/
+            "before_options": f"{ffmpeg_filter_opt} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+        }
+
+
 class Audio:
     def __init__(self, ty, query):
         self.ty = ty
@@ -44,36 +76,13 @@ class Audio:
             "contents": lambda mi: mi.pprint()
         }
         self.metadata = {}
-
-        self.display_speed = 1
-        self.display_pitch = 1
-        self.speed = 1
-        self.pitch = 1
+        self.filter_data = FilterData()
 
     def filter_metadata(self, data):
         if self.ty == "stream":
             self.metadata = {field:data.get(field) for field in self.metadata_fields_stream}
         else:
             self.metadata = {k:v(data) for k, v in self.metadata_funcs_local.items()}
-
-    def ffmpeg_opts(self):
-        ffmpeg_other_filters = ""
-
-        ffmpeg_pitch = "" if self.pitch == 1 else f"pitch={self.pitch}"
-        ffmpeg_speed = "" if self.speed == 1 else f"speed={self.speed}"
-        ffmpeg_rubberband = "" \
-            if ffmpeg_pitch == ffmpeg_speed == "" \
-            else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_speed])}"
-
-        ffmpeg_filter_opt = "" \
-            if ffmpeg_other_filters == ffmpeg_rubberband == "" \
-            else f"-filter_complex {ffmpeg_rubberband} {ffmpeg_rubberband}".strip()
-
-        return {
-            'options': '-vn',
-            # Source: https://stackoverflow.com/questions/66070749/
-            "before_options": f"{ffmpeg_filter_opt} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-        }
 
 
     def __str__(self):
@@ -100,6 +109,12 @@ class Music(commands.Cog):
         'default_search': 'auto',
         'source_address': '0.0.0.0', # bind to ipv4 since ipv6 addresses cause issues sometimes
     }
+
+    _FFMPEG_FILTER_DICT = {
+        "default": "",
+        "deepfry": "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1",
+    }
+
     # Options passed to FFmpeg
     _DEFAULT_FFMPEG_OPTS = {
         'options': '-vn',
@@ -151,7 +166,7 @@ class Music(commands.Cog):
         original_url = url
         if url[0] == "<" and url[-1] == ">":
             url = url[1:-1]
-        player, data = await self.player_from_url(url, stream=True)
+        player, data = await self.player_from_url(ctx, url, stream=True)
         info = self.get_info(ctx)
         info["current"].filter_metadata(data)
         self.bot._datuh = data
@@ -272,6 +287,7 @@ class Music(commands.Cog):
             wrapped = self.data[guild_id] = {}
             wrapped["queue"] = deque()
             wrapped["history"] = deque(maxlen=100)
+            wrapped["filter_data"] = FilterData()
             wrapped["songs_played"] = 0
             wrapped["current"] = None
             wrapped["waiting"] = False
@@ -302,7 +318,7 @@ class Music(commands.Cog):
         return self.data.pop(ctx.guild.id, None)
 
     # Creates an audio source from a url
-    async def player_from_url(self, url, *, loop=None, stream=False):
+    async def player_from_url(self, ctx, url, *, loop=None, stream=False):
         ytdl = youtube_dl.YoutubeDL(self.ytdl_opts)
         loop = loop or asyncio.get_running_loop()
         data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
