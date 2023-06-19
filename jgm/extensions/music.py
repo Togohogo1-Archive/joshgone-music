@@ -40,7 +40,7 @@ class FilterData:
 
         # Speed and tempo
         ffmpeg_pitch = "" if self.pitch == 1 else f"pitch={self.pitch}"
-        ffmpeg_speed = "" if self.speed == 1 else f"speed={self.speed}"
+        ffmpeg_speed = "" if self.speed == 1 else f"tempo={self.speed}"
         ffmpeg_rubberband = "" \
             if ffmpeg_pitch == ffmpeg_speed == "" \
             else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_speed])}"
@@ -48,13 +48,15 @@ class FilterData:
         # Combining the 2
         ffmpeg_filter_opt = "" \
             if ffmpeg_other_filters == ffmpeg_rubberband == "" \
-            else f"-filter_complex {ffmpeg_rubberband} {ffmpeg_rubberband}".strip()
+            else f"-filter_complex {ffmpeg_rubberband} {ffmpeg_other_filters}"
 
-        return {
+        ret = {
             'options': '-vn',
             # Source: https://stackoverflow.com/questions/66070749/
             "before_options": f"{ffmpeg_filter_opt} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
         }
+        print(ret)
+        return ret
 
 
 class Audio:
@@ -86,7 +88,7 @@ class Audio:
 
 
     def __str__(self):
-        return f"```{str(self.metadata)}\n\n{self.ty}\n\n{self.query}```"
+        return f"```{str(self.metadata)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}```"
         # if self.ty == "stream"
         # contents = "\n".join(f'{k}\t{v}' for k, v in self.metadata.items()).expandtabs(19) \
         #     if self.metadata else "Info currently unavailable."
@@ -115,24 +117,17 @@ class Music(commands.Cog):
         "deepfry": "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1",
     }
 
-    # Options passed to FFmpeg
-    _DEFAULT_FFMPEG_OPTS = {
-        'options': '-vn',
-        # Source: https://stackoverflow.com/questions/66070749/
-        "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-    }
-
     def __init__(
         self,
         bot,
         *,
         ytdl_opts=_DEFAULT_YTDL_OPTS,
-        ffmpeg_opts=_DEFAULT_FFMPEG_OPTS,
+        filter_dict=_FFMPEG_FILTER_DICT
     ):
         self.bot = bot
         # Options are stores on the instance in case they need to be changed
         self.ytdl_opts = ytdl_opts
-        self.ffmpeg_opts = ffmpeg_opts
+        self.filter_dict = filter_dict
         # Data is persistent between extension reloads
         if not hasattr(bot, "_music_data"):
             bot._music_data = {}
@@ -170,7 +165,6 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         info["current"].filter_metadata(data)
         self.bot._datuh = data
-        print(data.keys())
         return player, data.get("title", original_url)
 
     # Returns the raw source (calling the function if possible)
@@ -326,9 +320,25 @@ class Music(commands.Cog):
             # take first item from a playlist
             data = data['entries'][0]
         filename = data['url'] if stream else ytdl.prepare_filename(data)
-        audio = patched_player.FFmpegPCMAudio(filename, **self.ffmpeg_opts)
+        # Generate ffmpeg_opts from the function
+        info = self.get_info(ctx)
+        current = info["current"]  # Also need to get current
+        filter_data = info["filter_data"]
+        current.filter_data = filter_data  # Before playing current, override its filterdata
+        audio = patched_player.FFmpegPCMAudio(filename, **filter_data.to_ffmpeg_opts(self.filter_dict))
         player = discord.PCMVolumeTransformer(audio)
         return player, data
+
+    @commands.command()
+    async def test_nc(self, ctx):
+        info = self.get_info(ctx)
+        filter_data = info["filter_data"]
+        filter_data.speed = 1.2
+        filter_data.pitch = 1.2
+
+        await ctx.send("applying nightcore effect for next song")
+        return ctx
+
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
