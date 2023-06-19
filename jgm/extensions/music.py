@@ -58,6 +58,9 @@ class FilterData:
         print(ret)
         return ret
 
+    def copy_from(self, other):
+        self.__dict__.update(other.__dict__)
+
 
 class Audio:
     def __init__(self, ty, query):
@@ -324,7 +327,7 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         current = info["current"]  # Also need to get current
         filter_data = info["filter_data"]
-        current.filter_data = filter_data  # Before playing current, override its filterdata
+        current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
         audio = patched_player.FFmpegPCMAudio(filename, **filter_data.to_ffmpeg_opts(self.filter_dict))
         player = discord.PCMVolumeTransformer(audio)
         return player, data
@@ -337,7 +340,6 @@ class Music(commands.Cog):
         filter_data.pitch = 1.2
 
         await ctx.send("applying nightcore effect for next song")
-        return ctx
 
 
     @commands.command()
