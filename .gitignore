@@ -1,4 +1,4 @@
 __pycache__
 joshgone.db
-oscollection
-.random
+*.mp3
+tests.md
