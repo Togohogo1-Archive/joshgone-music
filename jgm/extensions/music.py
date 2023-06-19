@@ -778,7 +778,11 @@ class Music(commands.Cog):
     async def info(self, ctx):
         info = self.get_info(ctx)
         current = info["current"]
-        await ctx.send("Nothing currently playing." if current is None else current)
+
+        if current is None or info["waiting"]:
+            await ctx.send("Nothing currently playing.")
+        else:
+            await ctx.send(current)
 
     # async def status
 
