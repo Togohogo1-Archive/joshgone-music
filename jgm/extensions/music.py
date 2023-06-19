@@ -28,22 +28,22 @@ import soundit as s
 
 class FilterData:
     def __init__(self):
-        self.speed = 1
+        self.tempo = 1
         self.pitch = 1
         self.filter_name = "default"
 
     def to_ffmpeg_opts(self, filter_dict):
         # Passing in _FFMPEG_FILTER_DICT
 
-        # Non-speed filter
+        # Non-tempo filter
         ffmpeg_other_filters = filter_dict[self.filter_name]
 
-        # Speed and tempo
+        # Pitch and tempo
         ffmpeg_pitch = "" if self.pitch == 1 else f"pitch={self.pitch}"
-        ffmpeg_speed = "" if self.speed == 1 else f"tempo={self.speed}"
+        ffmpeg_tempo = "" if self.tempo == 1 else f"tempo={self.tempo}"
         ffmpeg_rubberband = "" \
-            if ffmpeg_pitch == ffmpeg_speed == "" \
-            else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_speed])}"
+            if ffmpeg_pitch == ffmpeg_tempo == "" \
+            else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_tempo])}"
 
         # Combining the 2
         ffmpeg_filter_opt = "" \
@@ -332,14 +332,30 @@ class Music(commands.Cog):
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
-    @commands.command()
-    async def test_nc(self, ctx):
+    @commands.command(aliases=["nc"])
+    async def nightcore(self, ctx):
         info = self.get_info(ctx)
         filter_data = info["filter_data"]
-        filter_data.speed = 1.2
+        filter_data.tempo = 1.2
         filter_data.pitch = 1.2
+        await ctx.send("Applying nightcore (1.2x tempo and pitch) effect for next song")
 
-        await ctx.send("applying nightcore effect for next song")
+    @commands.command(aliases=["dc"])
+    async def daycore(self, ctx):
+        info = self.get_info(ctx)
+        filter_data = info["filter_data"]
+        # A little bit less than 0.8333 (1/1.2) because I like more daycore
+        filter_data.tempo = 0.8
+        filter_data.pitch = 0.8
+        await ctx.send("Applying daycore (0.8x tempo and pitch) effect for next song")
+
+    @commands.command(aliases=["no"])
+    async def normal(self, ctx):
+        info = self.get_info(ctx)
+        filter_data = info["filter_data"]
+        filter_data.tempo = 1
+        filter_data.pitch = 1
+        await ctx.send("Restoring default tempo and pitch for next song.")
 
 
     @commands.command()
