@@ -43,12 +43,12 @@ class FilterData:
         ffmpeg_tempo = "" if self.tempo == 1 else f"tempo={self.tempo}"
         ffmpeg_rubberband = "" \
             if ffmpeg_pitch == ffmpeg_tempo == "" \
-            else f"rubberband={':'.join([ffmpeg_pitch, ffmpeg_tempo])}"
+            else f"rubberband={':'.join(filter(None, [ffmpeg_pitch, ffmpeg_tempo]))}" # Deal with empty string to avoid a ",e" case
 
         # Combining the 2
         ffmpeg_filter_opt = "" \
             if ffmpeg_other_filters == ffmpeg_rubberband == "" \
-            else f"-filter_complex {ffmpeg_rubberband} {ffmpeg_other_filters}"
+            else f"-filter_complex {','.join(filter(None, [ffmpeg_rubberband, ffmpeg_other_filters]))}" # Deal with empty string to avoid a ",e" case
 
         ret = {
             'options': '-vn',
@@ -357,6 +357,15 @@ class Music(commands.Cog):
         filter_data.pitch = 1
         await ctx.send("Restoring default tempo and pitch for next song.")
 
+    @commands.command(aliases=["f"])
+    async def filter(self, ctx, filter_name):
+        if filter_name not in self.filter_dict.keys():
+            raise commands.CommandError(f"Filter '{filter_name}' not in list of available filters.")
+        else:
+            info = self.get_info(ctx)
+            filter_data = info["filter_data"]
+            filter_data.filter_name = filter_name
+            await ctx.send(f"Applying filter '{filter_name}' to the next song.")
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
