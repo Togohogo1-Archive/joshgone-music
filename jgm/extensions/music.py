@@ -367,6 +367,26 @@ class Music(commands.Cog):
             filter_data.filter_name = filter_name
             await ctx.send(f"Applying filter '{filter_name}' to the next song.")
 
+    @commands.command(aliases=["sp"])
+    async def speed(self, ctx, factor: float = None):
+        if not (0.25 <= factor <= 4):
+            raise commands.CommandError(f"Speed factor = {factor}x outside of range from 0.25 to 4 inclusive.")
+
+        info = self.get_info(ctx)
+        filter_data = info["filter_data"]
+        filter_data.tempo = factor
+        await ctx.send(f"Setting speed factor = {factor}x for next song.")
+
+    @commands.command(aliases=["pi"])
+    async def pitch(self, ctx, factor: float = None):
+        if not (0.25 <= factor <= 4):
+            raise commands.CommandError(f"Pitch factor = {factor}x outside of range from 0.25 to 4 inclusive.")
+
+        info = self.get_info(ctx)
+        filter_data = info["filter_data"]
+        filter_data.pitch = factor
+        await ctx.send(f"Setting pitch factor = {factor}x for next song.")
+
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel

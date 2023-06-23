@@ -134,7 +134,6 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - codec
   - sample rate
   - metadata
-- [_] Playback speed
 - [x] Playback speed
   - A value between 0.25 and 4
   - ^ if that's too laggy then to 0.5 to 2
