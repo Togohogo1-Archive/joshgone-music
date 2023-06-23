@@ -89,7 +89,6 @@ class Audio:
         else:
             self.metadata = {k:v(data) for k, v in self.metadata_funcs_local.items()}
 
-
     def __str__(self):
         return f"```{str(self.metadata)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}```"
         # if self.ty == "stream"
@@ -355,10 +354,11 @@ class Music(commands.Cog):
         filter_data = info["filter_data"]
         filter_data.tempo = 1
         filter_data.pitch = 1
-        await ctx.send("Restoring default tempo and pitch for next song.")
+        filter_data.filter_name = "default"
+        await ctx.send("Restoring default tempo, pitch, and filter for next song.")
 
     @commands.command(aliases=["f"])
-    async def filter(self, ctx, filter_name):
+    async def apply_filter(self, ctx, filter_name):
         if filter_name not in self.filter_dict.keys():
             raise commands.CommandError(f"Filter '{filter_name}' not in list of available filters.")
         else:
