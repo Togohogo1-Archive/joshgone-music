@@ -438,6 +438,27 @@ class Music(commands.Cog):
         print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
+        history = info["history"]
+        # Handling prev song
+        if url == "prev":
+            if not history:
+                # Raise error no need for another case
+                raise commands.CommandError("No previous song.")
+            # History exists now
+            previous = history[-1]
+            if previous.ty != "stream":
+                raise commands.CommandError("Previous song added locally. Use ;local prev.")
+            # Else
+            url = previous.query
+        elif url == "cur":
+            current = info["current"]
+            if current is None:
+                raise commands.CommandError("No current song.")
+            # current exists now
+            if current.ty != "stream":
+                raise commands.CommandError("Current song was added locally. Use ;local cur.")
+            # Else
+            url = current.query
         audio = Audio(ty="stream", query=url)
         queue.append(audio)
         if info["current"] is None:
