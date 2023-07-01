@@ -149,7 +149,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [x] Prepend command
   - Appends at the front of the list instead of teh back
 - [x] Forceskip (not practical, more of a meme command)
-- [_] A more watered down version of play previous song
+- [x] A more watered down version of play previous song
   - Store a queue of previously played song (history command)
   - `;prev` removes last played song in history and adds to the end of queue
   - `;pprev` removes last played song in history and adds to the start of queue

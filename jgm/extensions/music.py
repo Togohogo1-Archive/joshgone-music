@@ -32,7 +32,7 @@ class FilterData:
         self.pitch = 1
         self.filter_name = "default"
 
-    def to_ffmpeg_opts(self, filter_dict):
+    def to_ffmpeg_opts(self, filter_dict, local=False):
         # Passing in _FFMPEG_FILTER_DICT
 
         # Non-tempo filter
@@ -53,7 +53,7 @@ class FilterData:
         ret = {
             'options': '-vn',
             # Source: https://stackoverflow.com/questions/66070749/
-            "before_options": f"{ffmpeg_filter_opt} -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+            "before_options": f"{ffmpeg_filter_opt} {'-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5' if not local else ''}",
         }
         print(ret)
         return ret
@@ -150,9 +150,11 @@ class Music(commands.Cog):
 
     # Finds a file using query. Title is query
     async def _play_local(self, ctx, query):
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        data = mutagen.File(query).info
+        # Move from before info["current"] line to here bc need to access the global filter and speed info
         info = self.get_info(ctx)
+        filter_data = info["filter_data"]
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
+        data = mutagen.File(query).info
         info["current"].filter_metadata(data)
         self.bot._datuh = data
 
