@@ -410,6 +410,27 @@ class Music(commands.Cog):
         """Plays a file from the local filesystem"""
         info = self.get_info(ctx)
         queue = info["queue"]
+        history = info["history"]
+        # Handling prev song
+        if query == "prev":
+            if not history:
+                # Raise error no need for another case
+                raise commands.CommandError("No previous song.")
+            # History exists now
+            previous = history[-1]
+            if previous.ty != "local":
+                raise commands.CommandError("Previous song not added locally. Use ;stream prev.")
+            # Else
+            query = previous.query
+        elif query == "cur":
+            current = info["current"]
+            if current is None:
+                raise commands.CommandError("No current song.")
+            # current exists now
+            if current.ty != "local":
+                raise commands.CommandError("Current song was not added locally. Use ;stream cur.")
+            # Else
+            query = current.query
         audio = Audio(ty="local", query=query)
         queue.append(audio)
         if info["current"] is None:
@@ -422,6 +443,27 @@ class Music(commands.Cog):
         # """Plays a file from the local filesystem"""
         info = self.get_info(ctx)
         queue = info["queue"]
+        history = info["history"]
+        # Handling prev song
+        if query == "prev":
+            if not history:
+                # Raise error no need for another case
+                raise commands.CommandError("No previous song.")
+            # History exists now
+            previous = history[-1]
+            if previous.ty != "local":
+                raise commands.CommandError("Previous song not added locally. Use ;stream_prepend prev.")
+            # Else
+            query = previous.query
+        elif query == "cur":
+            current = info["current"]
+            if current is None:
+                raise commands.CommandError("No current song.")
+            # current exists now
+            if current.ty != "local":
+                raise commands.CommandError("Current song was not added locally. Use ;stream_prepend cur.")
+            # Else
+            query = current.query
         audio = Audio(ty="local", query=query)
         queue.appendleft(audio)
         if info["current"] is None:
@@ -474,6 +516,27 @@ class Music(commands.Cog):
             raise ValueError(f"url not printable: {url!r}")
         info = self.get_info(ctx)
         queue = info["queue"]
+        history = info["history"]
+        # Handling prev song
+        if url == "prev":
+            if not history:
+                # Raise error no need for another case
+                raise commands.CommandError("No previous song.")
+            # History exists now
+            previous = history[-1]
+            if previous.ty != "stream":
+                raise commands.CommandError("Previous song added locally. Use ;local_prepend prev.")
+            # Else
+            url = previous.query
+        elif url == "cur":
+            current = info["current"]
+            if current is None:
+                raise commands.CommandError("No current song.")
+            # current exists now
+            if current.ty != "stream":
+                raise commands.CommandError("Current song was added locally. Use ;local cur.")
+            # Else
+            url = current.query
         audio = Audio(ty="stream", query=url)
         queue.appendleft(audio)
         if info["current"] is None:
