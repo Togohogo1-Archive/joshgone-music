@@ -71,15 +71,16 @@ class Audio:
             "title",
             "uploader",
             "duration",
-            "url",  # For 100% correct link when seeking
+            "url",  # The URL queried from the API (for seeking)
             "webpage_url",  # For display purposes (e.g. soundcloud generating an api audio link)
             "live_status",
             "webpage_url_domain",
             "duration_string"
         ]
         self.metadata_funcs_local = {
-            "length": lambda mi: mi.length,
-            "contents": lambda mi: mi.pprint()
+            "length": lambda mut: mut.info.length,
+            "contents": lambda mut: mut.info.pprint(),
+            "url": lambda mut: mut.filename  # For consistency with stream ["url"] query for seeking
         }
         self.metadata = {}
         self.filter_data = FilterData()
@@ -164,10 +165,10 @@ class Music(commands.Cog):
         filter_data = info["filter_data"]
         current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
         source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
-        data = mutagen.File(query).info
-        info["current"].filter_metadata(data)
-        self.bot._datuh = data
-
+        # print(mutagen.File(query).__dict__)
+        # data = mutagen.File(query).info
+        mutagen_query = mutagen.File(query)
+        info["current"].filter_metadata(mutagen_query)
         return source, query
 
     # Searches various sites using url. Title is data["title"] or url
@@ -179,6 +180,7 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         info["current"].filter_metadata(data)
         self.bot._datuh = data
+        self.bot._datuh2 = data
         return player, data.get("title", original_url)
 
     # Returns the raw source (calling the function if possible)
@@ -943,16 +945,16 @@ class Music(commands.Cog):
     async def jump(self, ctx):
         info = self.get_info(ctx)
         current = info["current"]
-        # await ctx.send(current.experimental_seek())
-        await ctx.send(current.ty)
-        # Jump -ss option
-        ffmpeg_opts = current.filter_data.to_ffmpeg_opts(self.filter_dict, current.ty=="local")
+        is_cur_local = current.ty=="local"  # More intuitive to put this outside function call below
+        ffmpeg_opts = current.filter_data.to_ffmpeg_opts(self.filter_dict, is_cur_local)
+        # Create a copy so "-ss" doesn't stack at the end
         ffmpeg_opts_after_jump = ffmpeg_opts.copy()
-        ffmpeg_opts_after_jump["before_options"] += " -ss 1:00"
-        await ctx.send(ffmpeg_opts_after_jump)
-        strem = patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump)
+        ffmpeg_opts_after_jump["before_options"] += " -ss 0"
+        strem = patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump)  # "url" is the same when querying
+        # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used
+        # with a seek flag
         ctx.voice_client._player.source = strem
-
+        await ctx.send("TBA")
 
     @commands.command()
     @commands.is_owner()
