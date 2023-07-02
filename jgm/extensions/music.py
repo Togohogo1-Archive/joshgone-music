@@ -71,7 +71,8 @@ class Audio:
             "title",
             "uploader",
             "duration",
-            "webpage_url",
+            "url",  # For 100% correct link when seeking
+            "webpage_url",  # For display purposes (e.g. soundcloud generating an api audio link)
             "live_status",
             "webpage_url_domain",
             "duration_string"
@@ -88,6 +89,13 @@ class Audio:
             self.metadata = {field:data.get(field) for field in self.metadata_fields_stream}
         else:
             self.metadata = {k:v(data) for k, v in self.metadata_funcs_local.items()}
+
+    # TODO deal with this filter dict weird argument passing
+    def experimental_seek(self, ctx, filter_dict):
+        # return self.filter_data
+        return self.filter_data.to_ffmpeg_opts(filter_dict)
+        # ctx.voice_client._player.source
+
 
     def __str__(self):
         return f"```{str(self.metadata)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}```"
@@ -152,7 +160,9 @@ class Music(commands.Cog):
     async def _play_local(self, ctx, query):
         # Move from before info["current"] line to here bc need to access the global filter and speed info
         info = self.get_info(ctx)
+        current = info["current"]
         filter_data = info["filter_data"]
+        current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
         source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
         data = mutagen.File(query).info
         info["current"].filter_metadata(data)
@@ -917,7 +927,7 @@ class Music(commands.Cog):
         task.cancel()
         await ctx.send("Cancelled the current sleep timer.")
 
-    @commands.command(aliases = ["i"])
+    @commands.command(aliases=["i"])
     async def info(self, ctx):
         info = self.get_info(ctx)
         current = info["current"]
@@ -928,6 +938,21 @@ class Music(commands.Cog):
             await ctx.send(current)
 
     # async def status
+
+    @commands.command(aliases=["j"])
+    async def jump(self, ctx):
+        info = self.get_info(ctx)
+        current = info["current"]
+        # await ctx.send(current.experimental_seek())
+        await ctx.send(current.ty)
+        # Jump -ss option
+        ffmpeg_opts = current.filter_data.to_ffmpeg_opts(self.filter_dict, current.ty=="local")
+        ffmpeg_opts_after_jump = ffmpeg_opts.copy()
+        ffmpeg_opts_after_jump["before_options"] += " -ss 1:00"
+        await ctx.send(ffmpeg_opts_after_jump)
+        strem = patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump)
+        ctx.voice_client._player.source = strem
+
 
     @commands.command()
     @commands.is_owner()
