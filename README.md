@@ -162,6 +162,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Disable is live feature
   - Command sorting (more vs filters)
 - [ ] Cooldown for commands prone to error when spamming
+- [ ] Playhead
 
 ## Features in v2.1.0
 
