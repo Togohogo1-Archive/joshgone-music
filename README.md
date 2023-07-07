@@ -263,6 +263,5 @@ You can also type ;help category for more info on a category.
 
 ## Issues to be addressed
 
-- Having the bot in multiple servers (instance variables not guild specific
-)
+- Having the bot in multiple servers (instance variables not guild specific)
 - Spamming `;ff` or `;s` causes the bot to freeze if advancer isn't forced
