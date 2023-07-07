@@ -14,13 +14,14 @@ Source code is adapted from discord/player.py.
 """
 import sys
 import subprocess
+from collections import deque
 
 import discord
+from discord.opus import Encoder as OpusEncoder
 
 __all__ = ("FFmpegPCMAudio",)
 
 class FFmpegPCMAudio(discord.FFmpegPCMAudio):
-
     # Default is 0 for no flags (used to be subprocess.CREATE_NO_WINDOW). See
     # the documentation for discord.FFmpegPCMAudio for more info on kwargs.
     def __init__(self, source, *, creationflags=0, **kwargs):
@@ -28,6 +29,19 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         # set creation flags before then, meaning this line can't be after the
         # super().__init__ call.
         self.creationflags = creationflags
+
+        # TODO seek head things ...
+        self.frames = 0
+
+        # MAX_BUF_SZ is the number of frames, frames can range from 10ms to 40ms
+        # Assume 20ms (normal frame size) upper bound of 2**12 = 4096 bytes (actually closer to 3840)
+        # deque then takes up approx 4096 * (1/20) * 1000 * 15 * 5 = 15360000 bytes = 15MB upper bound
+        # Seek forward maximum of 15 seconds, in worse case (0.25 speed), that equiv to 60 seconds of frames
+        # MAX_BUF_SZ can hold a maximum of 75 seconds of frames (extra padding)
+        self.MAX_BUF_SZ = 5 * 15 * 50
+        self.buffer = deque(maxlen=self.MAX_BUF_SZ)
+        self.unread_buffer = deque(maxlen=self.MAX_BUF_SZ)
+
         super().__init__(source, **kwargs)
 
     def _spawn_process(self, args, **subprocess_kwargs):
@@ -46,3 +60,20 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         except subprocess.SubprocessError as exc:
             message = f"Popen failed: {type(exc).__name__}: {exc}"
             raise discord.ClientException(message) from exc
+
+    def read(self):
+        if self.unread_buffer:
+            ret = self.unread_buffer.popleft()
+        else:
+            # TODO decide whether or not to include the empty binary string in the buffer
+            ret = self._stdout.read(OpusEncoder.FRAME_SIZE)
+            if len(ret) != OpusEncoder.FRAME_SIZE:
+                return b''
+
+        self.buffer.append(ret)
+        return ret
+
+    # Equivalent of `read` but does the opposite
+    def unread(self):
+        if self.buffer:
+            self.unread_buffer.appendleft(self.buffer.pop())

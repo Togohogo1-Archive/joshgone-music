@@ -957,11 +957,55 @@ class Music(commands.Cog):
         # Create a copy so "-ss" doesn't stack at the end
         ffmpeg_opts_after_jump = ffmpeg_opts.copy()
         ffmpeg_opts_after_jump["before_options"] += f" -ss {pos}"
-        seek_stream = patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump)  # "url" is the same when querying
+        seek_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump))  # "url" is the same when querying
         # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used with a seek flag
         ctx.voice_client._player.source = seek_stream
         await ctx.send(f"Jumped to {f'{pos} seconds' if self.match_any_seconds(pos) else f'timestamp {pos}'}.")
         # TODO seek head tracking
+
+    @commands.command(aliases=["ff"])
+    async def fast_forward(self, ctx, sec: int = 5):
+        if not (1 <= sec <= 15):
+            raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive.")
+
+        info = self.get_info(ctx)
+        current = info["current"]
+        tempo = current.filter_data.tempo
+
+        # Scaled seeking: a frame may not correspond to 20ms for different tempos
+        # We do an adjustment so that the relative seek time is the same
+        # For faster tempo a frame will contain > 20ms => seek less
+        # For slower tempo a frame will contain < 20ms => seek more
+        actual_frames = (1000/20) * sec
+        scaled_frames = actual_frames/tempo
+
+        # We round to average out the "one off errors"
+        for _ in range(round(scaled_frames)):
+            ctx.voice_client._player.source.original.read()
+
+        await ctx.send(f"Seeked {sec}s forward.")
+
+    @commands.command(aliases=["rr"])
+    async def rewind(self, ctx, sec: int = 5):
+        if not (1 <= sec <= 15):
+            raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive.")
+
+        info = self.get_info(ctx)
+        current = info["current"]
+        tempo = current.filter_data.tempo
+
+        # Scaled seeking: a frame may not correspond to 20ms for different tempos
+        # We do an adjustment so that the relative seek time is the same
+        # For faster tempo a frame will contain > 20ms => seek less
+        # For slower tempo a frame will contain < 20ms => seek more
+        actual_frames = (1000/20) * sec
+        scaled_frames = actual_frames/tempo
+
+        # We round to average out the "one off errors"
+        for _ in range(round(scaled_frames)):
+            ctx.voice_client._player.source.original.unread()
+
+        await ctx.send(f"Rewinded {sec}s backward.")
 
     @commands.command()
     @commands.is_owner()
@@ -984,6 +1028,7 @@ class Music(commands.Cog):
     @pause.before_invoke
     @resume.before_invoke
     @jump.before_invoke
+    @fast_forward.before_invoke
     async def check_playing(self, ctx):
         # Can't have forceskip before_invoke here because smth like ;local <nonexistent file>
         # Returns None, so we will have this error and not be able to forceskip

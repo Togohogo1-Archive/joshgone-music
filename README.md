@@ -116,7 +116,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 
 ## Features in v2.0.0
 
-- [_] Seeking forward and backward
+- [x] Seeking forward and backward
 - [x] Sleep timer
   - Sleep in hh:mm:ss or just raw seconds
 - [x] Goto
