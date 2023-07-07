@@ -942,19 +942,29 @@ class Music(commands.Cog):
     # async def status
 
     @commands.command(aliases=["j"])
-    async def jump(self, ctx):
+    async def jump(self, ctx, pos):
         info = self.get_info(ctx)
+
+        # After this is in the form of <int> seconds or [[HH:]MM:]SS
+        # This if statement
+        if not self.match_hhmmss_type(pos) and not self.match_any_seconds(pos):
+            raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS nor a positive integer number of seconds.")
+
+        # If in [[HH:]MM:]SS here, we're good, otherwise we do a length check
+        if self.match_any_seconds(pos) and int(pos) > self.hhmmss_to_seconds("99:59:59"):
+            raise commands.CommandError(f"Time in seconds greater than 99:59:59.")
+
         current = info["current"]
         is_cur_local = current.ty=="local"  # More intuitive to put this outside function call below
         ffmpeg_opts = current.filter_data.to_ffmpeg_opts(self.filter_dict, is_cur_local)
+
         # Create a copy so "-ss" doesn't stack at the end
         ffmpeg_opts_after_jump = ffmpeg_opts.copy()
-        ffmpeg_opts_after_jump["before_options"] += " -ss 0"
-        strem = patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump)  # "url" is the same when querying
-        # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used
-        # with a seek flag
-        ctx.voice_client._player.source = strem
-        await ctx.send("TBA")
+        ffmpeg_opts_after_jump["before_options"] += f" -ss {pos}"
+        seek_stream = patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump)  # "url" is the same when querying
+        # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used with a seek flag
+        ctx.voice_client._player.source = seek_stream
+        await ctx.send(f"Jumped to {f'{pos} seconds' if self.match_any_seconds(pos) else f'timestamp {pos}'}.")
 
     @commands.command()
     @commands.is_owner()
@@ -976,6 +986,7 @@ class Music(commands.Cog):
 
     @pause.before_invoke
     @resume.before_invoke
+    @jump.before_invoke
     async def check_playing(self, ctx):
         # Can't have forceskip before_invoke here because smth like ;local <nonexistent file>
         # Returns None, so we will have this error and not be able to forceskip
