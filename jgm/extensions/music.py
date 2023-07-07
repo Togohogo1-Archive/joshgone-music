@@ -933,6 +933,9 @@ class Music(commands.Cog):
             await ctx.send(current)
 
     # async def status
+    @commands.command(aliases=["ig"])
+    async def info_global(self, ctx):
+        await ctx.send("Differentiate between current song data and global data.")
 
     @commands.command(aliases=["j"])
     async def jump(self, ctx, pos):
