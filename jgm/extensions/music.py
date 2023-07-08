@@ -85,6 +85,10 @@ class Audio:
         self.metadata = {}
         self.filter_data = FilterData()
 
+        # TODO seek head things ...
+        # Scaled frames (we don't know how long a frame is, just the number of frames)
+        self.sframes = 0
+
     def filter_metadata(self, data):
         if self.ty == "stream":
             self.metadata = {field:data.get(field) for field in self.metadata_fields_stream}
