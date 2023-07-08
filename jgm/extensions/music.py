@@ -981,13 +981,24 @@ class Music(commands.Cog):
         # For faster tempo a frame will contain > 20ms => seek less
         # For slower tempo a frame will contain < 20ms => seek more
         actual_frames = (1000/20) * sec
-        scaled_frames = actual_frames/tempo
+        scaled_frames = round(actual_frames/tempo)
+        read_frames = 0
 
         # We round to average out the "one off errors"
-        for _ in range(round(scaled_frames)):
-            ctx.voice_client._player.source.original.read()
+        for _ in range(scaled_frames):
+            frame = ctx.voice_client._player.source.original.read()
+            if frame == b'':
+                break
+            # Means a full size frame was read and the program didn't break
+            read_frames += 1
 
-        await ctx.send(f"Seeked {sec}s forward.")
+        if read_frames == scaled_frames:
+            await ctx.send(f"Seeking {sec}s forward.")
+        elif read_frames == 0:
+            await ctx.send("Nothing to seek.")
+        else:
+            partial_sec = read_frames*tempo / (1000/20)
+            await ctx.send(f"[WARNING] Unable to seek {sec}s forward. Seeking {partial_sec}s instead.")
 
     @commands.command(aliases=["rr"])
     async def rewind(self, ctx, sec: int = 5):
@@ -1003,13 +1014,25 @@ class Music(commands.Cog):
         # For faster tempo a frame will contain > 20ms => seek less
         # For slower tempo a frame will contain < 20ms => seek more
         actual_frames = (1000/20) * sec
-        scaled_frames = actual_frames/tempo
+        scaled_frames = round(actual_frames/tempo)
+        read_frames = 0
 
         # We round to average out the "one off errors"
-        for _ in range(round(scaled_frames)):
-            ctx.voice_client._player.source.original.unread()
+        for _ in range(scaled_frames):
+            frame = ctx.voice_client._player.source.original.unread()
+            if frame == b'':
+                break
+            # Means a full size frame was read and the program didn't break
+            read_frames += 1
 
-        await ctx.send(f"Rewinded {sec}s backward.")
+        print("RR", scaled_frames, read_frames)
+        if read_frames == scaled_frames:
+            await ctx.send(f"Rewinding {sec}s backward.")
+        elif read_frames == 0:
+            await ctx.send("Nothing to rewind.")
+        else:
+            partial_sec = read_frames*tempo / (1000/20)
+            await ctx.send(f"[WARNING] Unable to rewind {sec}s backward. Rewinding {partial_sec}s instead.")
 
     @commands.command()
     @commands.is_owner()

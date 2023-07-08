@@ -62,15 +62,19 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         if self.unread_buffer:
             ret = self.unread_buffer.popleft()
         else:
-            # TODO decide whether or not to include the empty binary string in the buffer
             ret = self._stdout.read(OpusEncoder.FRAME_SIZE)
             if len(ret) != OpusEncoder.FRAME_SIZE:
                 return b''
-
+        # No empty binary strings in the buffer (otherwise will overflow)
+        # All frames appended in the buffer guaranteed to be size of `OpusEncoder.FRAME_SIZE`
         self.buffer.append(ret)
         return ret
 
     # Equivalent of `read` but does the opposite
     def unread(self):
         if self.buffer:
-            self.unread_buffer.appendleft(self.buffer.pop())
+            ret = self.buffer.pop()
+            self.unread_buffer.appendleft(ret)
+            return ret
+        # Nothing to unread
+        return b''
