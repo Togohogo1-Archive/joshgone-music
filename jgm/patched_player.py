@@ -30,9 +30,6 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         # super().__init__ call.
         self.creationflags = creationflags
 
-        # TODO seek head things ...
-        self.frames = 0
-
         # MAX_BUF_SZ is the number of frames, frames can range from 10ms to 40ms
         # Assume 20ms (normal frame size) upper bound of 2**12 = 4096 bytes (actually closer to 3840)
         # deque then takes up approx 4096 * (1/20) * 1000 * 15 * 5 = 15360000 bytes = 15MB upper bound
