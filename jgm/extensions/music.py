@@ -103,6 +103,35 @@ class Audio:
         # return "```" + contents + "```"
 
 
+def match_hhmmss_type(pos):
+    # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
+    # Match [[HH:]MM:]SS or integer seconds, brackets optional
+    # First check regex match
+    # Regex pattern slightly modified from: https://stackoverflow.com/a/8318367
+    return re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos)
+
+
+def match_any_seconds(pos):
+    # Returns false for negative numbers too
+    # Sufficient to check if `pos` is a positive integer in string form
+    return pos.isdigit()
+
+
+def hhmmss_to_seconds(hhmmss):
+    """
+    Assumes already in valid [[HH]:MM:]SS regex format
+    if len 1 -> ss
+    if len 2 -> mm:ss
+    if len 3 -> hh:mm:ss
+
+    never hh:ss
+    """
+    hhmmss_list = hhmmss.split(":")
+    hour_s = int(hhmmss_list[-3])*3600 if len(hhmmss_list) >= 3 else 0
+    min_s = int(hhmmss_list[-2])*60 if len(hhmmss_list) >= 2 else 0
+    return hour_s + min_s + int(hhmmss_list[-1])
+
+
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
     _DEFAULT_YTDL_OPTS = {
@@ -843,32 +872,6 @@ class Music(commands.Cog):
         info["loop"] = sign
         await ctx.send(f"Set queue status to {info['loop']} ({loop_messages[info['loop']]})")
 
-    def match_hhmmss_type(self, pos):
-        # Based off simplified version of https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax
-        # Match [[HH:]MM:]SS or integer seconds, brackets optional
-        # First check regex match
-        # Regex pattern slightly modified from: https://stackoverflow.com/a/8318367
-        return re.match(r"^(?:(?:(\d?\d):)?([0-5]?\d):)?([0-5]?\d)$", pos)
-
-    def match_any_seconds(self, pos):
-        # Returns false for negative numbers too
-        # Sufficient to check if `pos` is a positive integer in string form
-        return pos.isdigit()
-
-    def hhmmss_to_seconds(self, hhmmss):
-        """
-        Assumes already in valid [[HH]:MM:]SS regex format
-        if len 1 -> ss
-        if len 2 -> mm:ss
-        if len 3 -> hh:mm:ss
-
-        never hh:ss
-        """
-        hhmmss_list = hhmmss.split(":")
-        hour_s = int(hhmmss_list[-3])*3600 if len(hhmmss_list) >= 3 else 0
-        min_s = int(hhmmss_list[-2])*60 if len(hhmmss_list) >= 2 else 0
-        return hour_s + min_s + int(hhmmss_list[-1])
-
     async def sleep_task(self, ctx, dur):
         await asyncio.sleep(dur)
         info = self.get_info(ctx)
@@ -893,15 +896,15 @@ class Music(commands.Cog):
             return
 
         # After this is in the form of <int> seconds or [[HH:]MM:]SS
-        if not self.match_hhmmss_type(dur) and not self.match_any_seconds(dur):
+        if not match_hhmmss_type(dur) and not match_any_seconds(dur):
             raise commands.CommandError(f"Position [{dur}] not in the form of [[HH:]MM:]SS or a positive integer number of seconds.")
 
         # If the form is <int> seconds, check for > 99:59:59 exceed
-        if self.match_any_seconds(dur) and int(dur) > self.hhmmss_to_seconds("99:59:59"):
+        if match_any_seconds(dur) and int(dur) > hhmmss_to_seconds("99:59:59"):
             raise commands.CommandError(f"Time in seconds greater than 99:59:59.")
 
         # Now we have a valid form
-        dur_seconds = self.hhmmss_to_seconds(dur)
+        dur_seconds = hhmmss_to_seconds(dur)
 
         if task_tuple is None:
             await ctx.send(f"Sleep timer created, bot will disconnect in {datetime.timedelta(seconds=dur_seconds)}")
@@ -947,11 +950,11 @@ class Music(commands.Cog):
 
         # After this is in the form of <int> seconds or [[HH:]MM:]SS
         # This if statement
-        if not self.match_hhmmss_type(pos) and not self.match_any_seconds(pos):
+        if not match_hhmmss_type(pos) and not match_any_seconds(pos):
             raise commands.CommandError(f"Position [{pos}] not in the form of [[HH:]MM:]SS nor a positive integer number of seconds.")
 
         # If in [[HH:]MM:]SS here, we're good, otherwise we do a length check
-        if self.match_any_seconds(pos) and int(pos) > self.hhmmss_to_seconds("99:59:59"):
+        if match_any_seconds(pos) and int(pos) > hhmmss_to_seconds("99:59:59"):
             raise commands.CommandError(f"Time in seconds greater than 99:59:59.")
 
         current = info["current"]
@@ -964,8 +967,7 @@ class Music(commands.Cog):
         seek_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump))  # "url" is the same when querying
         # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used with a seek flag
         ctx.voice_client._player.source = seek_stream
-        await ctx.send(f"Jumped to {f'{pos} seconds' if self.match_any_seconds(pos) else f'timestamp {pos}'}.")
-        # TODO seek head tracking
+        await ctx.send(f"Jumped to {f'{pos} seconds' if match_any_seconds(pos) else f'timestamp {pos}'}.")
 
     @commands.command(aliases=["ff"])
     async def fast_forward(self, ctx, sec: int = 5):
