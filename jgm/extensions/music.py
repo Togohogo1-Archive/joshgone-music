@@ -100,7 +100,9 @@ class Audio:
         self.sframes = 0
 
     def __str__(self):
-        return f"```{str(self.metadata)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}```"
+        sm = self.metadata.copy()
+        sm["url"] = None
+        return f"```{str(sm)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}\n\n{seconds_to_hhmmss(scaled_frames_to_seconds(self.sframes, self.filter_data.tempo))}/{seconds_to_hhmmss(seconds=self.metadata['duration'])}```"
         # if self.ty == "stream"
         # contents = "\n".join(f'{k}\t{v}' for k, v in self.metadata.items()).expandtabs(19) \
         #     if self.metadata else "Info currently unavailable."
@@ -123,7 +125,7 @@ def match_any_seconds(pos):
 
 def hhmmss_to_seconds(hhmmss):
     """
-    Assumes already in valid [[HH]:MM:]SS regex format
+    Assumes already in valid [[HH:]MM:]SS regex format
     if len 1 -> ss
     if len 2 -> mm:ss
     if len 3 -> hh:mm:ss
@@ -1068,6 +1070,7 @@ class Music(commands.Cog):
     @resume.before_invoke
     @jump.before_invoke
     @fast_forward.before_invoke
+    @rewind.before_invoke
     async def check_playing(self, ctx):
         # Can't have forceskip before_invoke here because smth like ;local <nonexistent file>
         # Returns None, so we will have this error and not be able to forceskip
