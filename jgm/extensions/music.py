@@ -138,6 +138,26 @@ def hhmmss_to_seconds(hhmmss):
     return hour_s + min_s + int(hhmmss_list[-1])
 
 
+def seconds_to_hhmmss(seconds):
+    """
+    returns to [[HH:]MM:]SS
+    """
+    min, sec = divmod(seconds, 60)
+    hr, min = divmod(min, 60)  # Moves the bulk to hours
+    return f"{int(hr):0>2}:{int(min):0>2}:{round(sec):0>2}"
+
+
+def seconds_to_scaled_frames(seconds, tempo):
+    # Doesn't allow integer values
+    sframes = ((1000/20)*seconds) / tempo
+    return round(sframes)
+
+
+def scaled_frames_to_seconds(frames, tempo):
+    # Allows non integer values
+    return (frames*tempo) / (1000/20)
+
+
 class Music(commands.Cog):
     # Options that are passed to youtube-dl
     _DEFAULT_YTDL_OPTS = {
