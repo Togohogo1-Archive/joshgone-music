@@ -218,7 +218,7 @@ class Music(commands.Cog):
         # Cleaning up before playing (to prevent persistent history instance vars)
         current.reset_playhead()
         current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
-        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
+        source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, current, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
         # print(mutagen.File(query).__dict__)
         # data = mutagen.File(query).info
         mutagen_query = mutagen.File(query)
@@ -397,7 +397,7 @@ class Music(commands.Cog):
         # Cleaning up before playing (to prevent persistent history instance vars)
         current.reset_playhead()
         current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
-        audio = patched_player.FFmpegPCMAudio(filename, **filter_data.to_ffmpeg_opts(self.filter_dict))
+        audio = patched_player.FFmpegPCMAudio(filename, current, **filter_data.to_ffmpeg_opts(self.filter_dict))
         player = discord.PCMVolumeTransformer(audio)
         return player, data
 
@@ -997,6 +997,7 @@ class Music(commands.Cog):
         # Updating the seek playhead
         # hhmmss_to_seconds(<seconds>) will return seconds
         current.sframes = seconds_to_scaled_frames(hhmmss_to_seconds(pos), current.filter_data.tempo)
+        seek_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(current.metadata.get("url"), current, **ffmpeg_opts_after_jump))  # "url" is the same when querying
         # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used with a seek flag
         ctx.voice_client._player.source = seek_stream
         await ctx.send(f"Jumped to {f'{pos} seconds' if match_any_seconds(pos) else f'timestamp {pos}'}.")

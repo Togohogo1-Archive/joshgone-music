@@ -24,7 +24,8 @@ __all__ = ("FFmpegPCMAudio",)
 class FFmpegPCMAudio(discord.FFmpegPCMAudio):
     # Default is 0 for no flags (used to be subprocess.CREATE_NO_WINDOW). See
     # the documentation for discord.FFmpegPCMAudio for more info on kwargs.
-    def __init__(self, source, *, creationflags=0, **kwargs):
+    # TODO passing in source and current_ref redundant, maybe onl
+    def __init__(self, source, current_ref, *, creationflags=0, **kwargs):
         # The superclass's __init__ calls self._spawn_process, so we need to
         # set creation flags before then, meaning this line can't be after the
         # super().__init__ call.
@@ -38,6 +39,9 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         self.MAX_BUF_SZ = 5 * 15 * 50
         self.buffer = deque(maxlen=self.MAX_BUF_SZ)
         self.unread_buffer = deque(maxlen=self.MAX_BUF_SZ)
+
+        # Not aware of a better way to do this
+        self.current_ref = current_ref
 
         super().__init__(source, **kwargs)
 
@@ -68,6 +72,7 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         # No empty binary strings in the buffer (otherwise will overflow)
         # All frames appended in the buffer guaranteed to be size of `OpusEncoder.FRAME_SIZE`
         self.buffer.append(ret)
+        self.current_ref.sframes += 1
         return ret
 
     # Equivalent of `read` but does the opposite
@@ -75,6 +80,7 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         if self.buffer:
             ret = self.buffer.pop()
             self.unread_buffer.appendleft(ret)
+            self.current_ref.sframes -= 1
             return ret
         # Nothing to unread
         return b''
