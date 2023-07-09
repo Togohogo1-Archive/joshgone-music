@@ -103,6 +103,7 @@ pew inraw joshgone-pypy pip install -r requirements-soundit.txt
 You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to run PyPy inside the virtual environment, where it can access the libraries it needs.
 
 ## TODO
+
 - Note about guild_join server table ;running command combo causing chants to work
 - Note about adding extensions
 - Notes about installation
@@ -114,64 +115,67 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Inconsistency in error quotes (`ExtensionNotFound` vs `CommandNotFound` single & double quotes)
 
 ## Features in v2.0.0
+
 - [x] Seeking forward and backward
 - [x] Sleep timer
-    - Sleep in hh:mm:ss or just raw seconds
+  - Sleep in hh:mm:ss or just raw seconds
 - [x] Goto
-    - Go to hh:mm:ss
-    - ~~Use fast ff and rw if time difference is less than x minutes (set to 10?)~~
-    - Seems like VLC android doesn't allow jumping to ms
+  - Go to hh:mm:ss
+  - ~~Use fast ff and rw if time difference is less than x minutes (set to 10?)~~
+  - Seems like VLC android doesn't allow jumping to ms
 - [x] Autoshuffle
-    - Shuffle
+  - Shuffle
 - [x] Loop current song
-    - Continuous play the current song
+  - Continuous play the current song
 - [x] More detailed song info
-    - length
-    - file size?
-    - 0:00/5:00
-    - codec
-    - sample rate
-    - metadata
+  - length
+  - file size?
+  - 0:00/5:00
+  - codec
+  - sample rate
+  - metadata
 - [x] Playback speed
-    - A value between 0.25 and 4
-    - ^ if that's too laggy then to 0.5 to 2
-    - Will be applied on next song
+  - A value between 0.25 and 4
+  - ^ if that's too laggy then to 0.5 to 2
+  - Will be applied on next song
 - [x] Filters
-    - Present, some examples include:
-    - Nightcore
-    - Daycore
-    - Bass boost
-    - Vaporwave (reverb)
-    - Radio
-    - Will require complete redesign of `_DEFAULT_FFMPEG_OPTS`
-- [x] Append command
-    - Appends at the front of the list instead of teh back
+  - Present, some examples include:
+  - Nightcore
+  - Daycore
+  - Bass boost
+  - Vaporwave (reverb)
+  - Radio
+  - Will require complete redesign of `_DEFAULT_FFMPEG_OPTS`
+- [x] Prepend command
+  - Appends at the front of the list instead of teh back
 - [x] Forceskip (not practical, more of a meme command)
 - [x] A more watered down version of play previous song
-    - Store a queue of previously played song (history command)
-    - `;prev` removes last played song in history and adds to the end of queue
-    - `;pprev` removes last played song in history and adds to the start of queue
-    - Size of history queue capped at some number (I'm thinking 15)
-    - Or only keep previously played and full playback history
+  - Store a queue of previously played song (history command)
+  - `;prev` removes last played song in history and adds to the end of queue
+  - `;pprev` removes last played song in history and adds to the start of queue
+  - Size of history queue capped at some number (I'm thinking 15)
+  - Or only keep previously played and full playback history
 - [x] Playback history (subset of previous)
 - [x] Migrate to discord.py 2.0 to use apiv10
 - Extra decorations
-    - Typing indicator in channel
-    - Disable is live feature
-    - Command sorting (more vs filters)
+  - Typing indicator in channel
+  - Disable is live feature
+  - Command sorting (more vs filters)
+- [ ] Cooldown for commands prone to error when spamming
+- [x] Playhead
+- [ ] Info global command
 
 ## Features in v2.1.0
+
 - [ ] Better local file support
-    - Cap on file directory size
+  - Cap on file directory size
 - [ ] Better playlist support
 - [ ] Figure out database (playlist) importing exporting
 - [ ] Soundcloud playlists
 - [ ] Better reloading and unloading
 
-## Eventually in a future version
-- [ ] Add slash commands functionality
-
 ## VLC features that may not be implemented
+
 - Stop after some track
 - Song bookmarking (bookmark song at 1:25)
 - The ability to sort tracks (might make an exception for playlists tho)
@@ -179,23 +183,33 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - Full on customized equalizer
 
 ## Random cases that might cause the bot to break or unexpected behaviour
+
 - when ;ff 15 for a long song, then do ;s or other commands
 - when ;jump x:xx for a long song, then do other commands
 - when ;batch_add a bunch of songs, do a ;ff when a current one is playing
 - when ;batch_add a bunch of songs, do a ;jump x:xx when a current one is playing
 - when ;jump x:xx causes a large delay, change the ffmpeg settings
+- spamming ;reschedule
+- ;fs and then ;s outputs 2 queue empty, then stops outputting
+- ;reschedule command when there is only one song
+- if a long local file path, then paginator breaks
+- ;reschedule when there is only one song left in the queue and it is not looping in any way
 
 ## Short term todo
+
 - Reorgainze commands based on simple/advanced/filter usage
 - Continue making the bot unreloadable by hardcoding unload/load functions in `admin.py`
 - Write a basic first-level help description for each command
 - Move some instance variables into `self.data` so running the bot in 2 servers at a time doesn't cause issues
+- ytdl logs in a log file instead of terminal
+- should queue and playback history require before_invoke?
 
 ## Longer term goals
+
 - More organized error messages
 - Know where to use before/after_invoke decorators
 
-```
+```txt
 Chant:
   chant            Repeat a chant multiple times
   chant1           Repeats a chant once
@@ -249,6 +263,6 @@ You can also type ;help category for more info on a category.
 ```
 
 ## Issues to be addressed
-- Having the bot in multiple servers (instance variables not guild specific
-)
+
+- Having the bot in multiple servers (instance variables not guild specific)
 - Spamming `;ff` or `;s` causes the bot to freeze if advancer isn't forced
