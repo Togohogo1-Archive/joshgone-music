@@ -78,7 +78,7 @@ class Audio:
             "duration_string"
         ]
         self.metadata_funcs_local = {
-            "length": lambda mut: mut.info.length,
+            "duration": lambda mut: mut.info.length,
             "contents": lambda mut: mut.info.pprint(),
             "url": lambda mut: mut.filename  # For consistency with stream ["url"] query for seeking
         }
