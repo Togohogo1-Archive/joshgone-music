@@ -95,6 +95,10 @@ class Audio:
         else:
             self.metadata = {k:v(data) for k, v in self.metadata_funcs_local.items()}
 
+    # More readable in the code following
+    def reset_playhead(self):
+        self.sframes = 0
+
     def __str__(self):
         return f"```{str(self.metadata)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}```"
         # if self.ty == "stream"
@@ -189,6 +193,8 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         current = info["current"]
         filter_data = info["filter_data"]
+        # Cleaning up before playing (to prevent persistent history instance vars)
+        current.reset_playhead()
         current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
         source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(query, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
         # print(mutagen.File(query).__dict__)
@@ -366,6 +372,8 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         current = info["current"]  # Also need to get current
         filter_data = info["filter_data"]
+        # Cleaning up before playing (to prevent persistent history instance vars)
+        current.reset_playhead()
         current.filter_data.copy_from(filter_data)  # Before playing current, override its filterdata
         audio = patched_player.FFmpegPCMAudio(filename, **filter_data.to_ffmpeg_opts(self.filter_dict))
         player = discord.PCMVolumeTransformer(audio)
@@ -964,7 +972,9 @@ class Music(commands.Cog):
         # Create a copy so "-ss" doesn't stack at the end
         ffmpeg_opts_after_jump = ffmpeg_opts.copy()
         ffmpeg_opts_after_jump["before_options"] += f" -ss {pos}"
-        seek_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(current.metadata.get("url"), **ffmpeg_opts_after_jump))  # "url" is the same when querying
+        # Updating the seek playhead
+        # hhmmss_to_seconds(<seconds>) will return seconds
+        current.sframes = seconds_to_scaled_frames(hhmmss_to_seconds(pos), current.filter_data.tempo)
         # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used with a seek flag
         ctx.voice_client._player.source = seek_stream
         await ctx.send(f"Jumped to {f'{pos} seconds' if match_any_seconds(pos) else f'timestamp {pos}'}.")
