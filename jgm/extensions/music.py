@@ -13,6 +13,7 @@ import shlex
 import re
 import time
 import datetime
+import textwrap
 import mutagen  # Alphabetize later
 from collections import deque
 
@@ -99,14 +100,30 @@ class Audio:
     def reset_playhead(self):
         self.sframes = 0
 
-    def __str__(self):
-        sm = self.metadata.copy()
-        sm["url"] = None
-        return f"```{str(sm)}\n\n{self.filter_data.__dict__}\n\n{self.ty}\n\n{self.query}\n\n{seconds_to_hhmmss(scaled_frames_to_seconds(self.sframes, self.filter_data.tempo))}/{seconds_to_hhmmss(seconds=self.metadata['duration'])}```"
-        # if self.ty == "stream"
-        # contents = "\n".join(f'{k}\t{v}' for k, v in self.metadata.items()).expandtabs(19) \
-        #     if self.metadata else "Info currently unavailable."
-        # return "```" + contents + "```"
+
+    def playhead_hashtags(self):
+        duration = self.metadata.get("duration")
+
+        if duration is None:
+            return ""
+
+        # We round down to be safe (no exceed 20 #s)
+        duration = int(duration)
+        secs_passed = scaled_frames_to_seconds(self.sframes, self.filter_data.tempo)
+        duration_ratio = secs_passed/duration
+        hashtags = int(20*duration_ratio)
+
+        return "#"*hashtags
+
+    def generate_time_sig(self):
+        duration = self.metadata.get("duration")
+        secs_passed = scaled_frames_to_seconds(self.sframes, self.filter_data.tempo)
+        timestamp = seconds_to_hhmmss(secs_passed)
+
+        if duration is None:
+            duration = 0
+
+        return f"{timestamp}/{seconds_to_hhmmss(int(duration))}"
 
 
 def match_hhmmss_type(pos):
@@ -962,12 +979,36 @@ class Music(commands.Cog):
     @commands.command(aliases=["i"])
     async def info(self, ctx):
         info = self.get_info(ctx)
-        current = info["current"]
+        a = info["current"]  # A for audio
 
-        if current is None or info["waiting"]:
+        if a is None or info["waiting"]:
             await ctx.send("Nothing currently playing.")
-        else:
-            await ctx.send(current)
+            return
+
+        local_metadata_formatted = f"""
+        METADATA {a.metadata.get("contents")}
+        """.strip()
+        stream_metadata_formatted = f"""
+        DOMAIN   {a.metadata.get("webpage_url_domain")}
+        ID       {a.metadata.get("id")}
+        LINK     {a.metadata.get("webpage_url")}
+        LIVE     {a.metadata.get("live_status")}
+        TITLE    {a.metadata.get("title")}
+        UPLOADER {a.metadata.get("uploader")}
+        """.strip()
+
+        await ctx.send(textwrap.dedent(f"""
+        ```
+        ;{a.ty} {a.query}
+
+        {stream_metadata_formatted if a.ty == "stream" else local_metadata_formatted}
+
+        EFFECTS  x{a.filter_data.tempo} tempo, x{a.filter_data.pitch} speed
+        FILTER   {a.filter_data.filter_name}
+        VOLUME   {ctx.voice_client.source.volume*100}%
+
+        {'(Paused) ' if ctx.voice_client.is_paused() else ''}[{a.playhead_hashtags():.<20}] {a.generate_time_sig()}
+        ```"""))
 
     # async def status
     @commands.command(aliases=["ig"])
