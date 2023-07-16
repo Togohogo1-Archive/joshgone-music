@@ -445,7 +445,7 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         filter_data = info["filter_data"]
         filter_data.tempo = factor
-        await ctx.send(f"Setting speed factor = {factor}x for next song.")
+        await ctx.send(f"Setting speed factor = x{factor} for next song.")
 
     @commands.command(aliases=["pi"])
     async def pitch(self, ctx, factor: float = None):
@@ -455,7 +455,7 @@ class Music(commands.Cog):
         info = self.get_info(ctx)
         filter_data = info["filter_data"]
         filter_data.pitch = factor
-        await ctx.send(f"Setting pitch factor = {factor}x for next song.")
+        await ctx.send(f"Setting pitch factor = x{factor} for next song.")
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
