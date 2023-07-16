@@ -56,7 +56,6 @@ class FilterData:
             # Source: https://stackoverflow.com/questions/66070749/
             "before_options": f"{ffmpeg_filter_opt} {'-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5' if not local else ''}",
         }
-        print(ret)
         return ret
 
     def copy_from(self, other):
@@ -564,7 +563,6 @@ class Music(commands.Cog):
             raise ValueError("url too long (length over 100)")
         if not url.isprintable():
             raise ValueError(f"url not printable: {url!r}")
-        print(ctx.message.author.name, "queued", repr(url))
         info = self.get_info(ctx)
         queue = info["queue"]
         history = info["history"]
@@ -637,7 +635,6 @@ class Music(commands.Cog):
             raise ValueError("url too long (length over 100)")
         if not url.isprintable():
             raise ValueError(f"url not printable: {url!r}")
-        print(ctx.message.author.name, "queued playlist", repr(url))
         bracketed = False
         if url[0] == "<" and url[-1] == ">":
             bracketed = True
@@ -1100,7 +1097,6 @@ class Music(commands.Cog):
             # Means a full size frame was read and the program didn't break
             read_frames += 1
 
-        print("RR", scaled_frames, read_frames)
         if read_frames == scaled_frames:
             await ctx.send(f"Rewinding {sec}s backward.")
         elif read_frames == 0:
