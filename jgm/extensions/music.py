@@ -999,17 +999,33 @@ class Music(commands.Cog):
 
         {stream_metadata_formatted if a.ty == "stream" else local_metadata_formatted}
 
-        EFFECTS  x{a.filter_data.tempo} tempo, x{a.filter_data.pitch} speed
+        EFFECTS  x{a.filter_data.tempo} speed, x{a.filter_data.pitch} pitch
         FILTER   {a.filter_data.filter_name}
         VOLUME   {ctx.voice_client.source.volume*100}%
 
-        {'(Paused) ' if ctx.voice_client.is_paused() else ''}[{a.playhead_hashtags():.<20}] {a.generate_time_sig()}{" (Live)" if a.metadata.get("live_status") == "is_live" else ''}
+        {'(paused) ' if ctx.voice_client.is_paused() else ''}[{a.playhead_hashtags():.<20}] {a.generate_time_sig()}{" (live)" if a.metadata.get("live_status") == "is_live" else ''}
         ```"""))
 
     # async def status
     @commands.command(aliases=["ig"])
     async def info_global(self, ctx):
-        await ctx.send("Differentiate between current song data and global data.")
+        info = self.get_info(ctx)
+        await ctx.send(textwrap.dedent(f"""
+        ```
+        AUTOSHUFFLE_TASK {"running" if info["autoshuffle_task"] else None}
+        GLOBAL_EFFECTS   x{info["filter_data"].tempo} speed, x{info["filter_data"].pitch} pitch
+        GLOBAL_FILTER    {info["filter_data"].filter_name}
+        HISTORY_SIZE     {len(info["history"])}
+        LOOP_TYPE        {dict([(1, "loop all"), (0, "no loop"), (-1, "loop one")])[info["loop"]]}
+        PAUSED           {False if ctx.voice_client is None else ctx.voice_client.is_paused()}
+        PLAYING          {False if ctx.voice_client is None else ctx.voice_client.is_playing()}
+        PROCESSING       {info["processing"]}
+        QUEUE_LENGTH     {len(info["queue"])}
+        SLEEP_TIMER_TASK {"running" if info["sleep_timer_task"] else None}
+        SONGS_PLAYED     {info["songs_played"]}
+        WAITING          {info["waiting"]}
+        ```
+        """))
 
     @commands.command(aliases=["j"])
     async def jump(self, ctx, pos):
