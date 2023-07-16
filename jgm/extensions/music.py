@@ -992,7 +992,6 @@ class Music(commands.Cog):
         DOMAIN   {a.metadata.get("webpage_url_domain")}
         ID       {a.metadata.get("id")}
         LINK     {a.metadata.get("webpage_url")}
-        LIVE     {a.metadata.get("live_status")}
         TITLE    {a.metadata.get("title")}
         UPLOADER {a.metadata.get("uploader")}
         """.strip()
@@ -1007,7 +1006,7 @@ class Music(commands.Cog):
         FILTER   {a.filter_data.filter_name}
         VOLUME   {ctx.voice_client.source.volume*100}%
 
-        {'(Paused) ' if ctx.voice_client.is_paused() else ''}[{a.playhead_hashtags():.<20}] {a.generate_time_sig()}
+        {'(Paused) ' if ctx.voice_client.is_paused() else ''}[{a.playhead_hashtags():.<20}] {a.generate_time_sig()}{" (Live)" if a.metadata.get("live_status") == "is_live" else ''}
         ```"""))
 
     # async def status
