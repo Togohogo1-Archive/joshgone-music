@@ -113,7 +113,7 @@ class Audio:
         duration_ratio = secs_passed/duration
         hashtags = int(20*duration_ratio)
 
-        return "#"*hashtags
+        return "#"*min(20, hashtags)
 
     def generate_time_sig(self):
         duration = self.metadata.get("duration")
