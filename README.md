@@ -170,6 +170,9 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 - [ ] Better local file support
   - Cap on file directory size
 - [ ] Better playlist support
+  - [ ] Only alphanumeric
+  - [ ] ;h1 command looks ugly
+  - [ ] Phase out chant and replace with playlist
 - [ ] Figure out database (playlist) importing exporting
 - [ ] Soundcloud playlists
 - [ ] Better reloading and unloading
