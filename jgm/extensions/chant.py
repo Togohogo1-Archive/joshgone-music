@@ -95,7 +95,7 @@ class Chant(commands.Cog):
 
     @_chants.command(name="find", ignore_extra=False)
     async def _find(self, ctx, name_pattern: str):
-        """Find chants whose names match the given pattern
+        """Find chants whose names contain or match the given pattern
 
         Assume the following chants exist:
             %chants add amogus   -
@@ -105,13 +105,14 @@ class Chant(commands.Cog):
 
         Usage:
             %chants find amogus      -> amogus               # exact match
-            %chants find amo*        -> amogus, amoguise     # prefix
-            %chants find *gus        -> amogus, mongus       # suffix
+            %chants find amo%        -> amogus, amoguise     # prefix
+            %chants find %gus        -> amogus, mongus       # suffix
             %chants find mongu?      -> mongus, mongue       # any character
-            %chants find *m?gu*e     -> amoguise             # combine them
-            %chants find [am]?[!n]*s -> amogus
+            %chants find %m?gu%e     -> amoguise             # combine them
 
-        Uses UNIX style matching
+        The only special characters supported are ? and %, for matching one and
+        any number of characters respectively.
+
         """
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute(
@@ -121,7 +122,7 @@ class Chant(commands.Cog):
                 names = [
                     name
                     async for [name] in cursor
-                    if fnmatch.fnmatch(name, name_pattern)
+                    if match(name_pattern, name) or name_pattern in name
                 ]
         length = len(names)
         if not names:
@@ -132,7 +133,33 @@ class Chant(commands.Cog):
         for message in self.pack(names):
             await ctx.send(message)
 
-    @_chants.command(name="regexlist", ignore_extra=False, hidden=True)
+    @_chants.command(name="search", ignore_extra=False)
+    @commands.is_owner()
+    async def _search(self, ctx, name_pattern: str, max_amount: typing.Optional[int] = -1):
+        """Find chants whose contents contain or match the given pattern
+
+        Can use substring or glob-ish pattern match
+        """
+        async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
+            async with db.execute("SELECT chant_name, chant_text FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+                chants = [row async for row in cursor]
+        found = []
+        for name, text in chants:
+            if len(found) == max_amount:
+                break
+            if not (match(name_pattern, text) or name_pattern in text):
+                continue
+            found.append(name)
+        length = len(found)
+        if not found:
+            found = ["None"]
+        for i in range(1, len(found)):
+            found[i] = f", {found[i]}"
+        found.insert(0, f"Found {length}: ")
+        for message in self.pack(found):
+            await ctx.send(message)
+
+    @_chants.command(name="regexfind", ignore_extra=False, hidden=True)
     @commands.is_owner()
     async def _regexlist(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
@@ -143,6 +170,28 @@ class Chant(commands.Cog):
             if len(found) == max_amount:
                 break
             if not re.search(regex, name):
+                continue
+            found.append(name)
+        length = len(found)
+        if not found:
+            found = ["None"]
+        for i in range(1, len(found)):
+            found[i] = f", {found[i]}"
+        found.insert(0, f"Found {length}: ")
+        for message in self.pack(found):
+            await ctx.send(message)
+
+    @_chants.command(name="regexsearch", ignore_extra=False, hidden=True)
+    @commands.is_owner()
+    async def _regexsearch(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
+        async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
+            async with db.execute("SELECT chant_name, chant_text FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+                chants = [row async for row in cursor]
+        found = []
+        for name, text in chants:
+            if len(found) == max_amount:
+                break
+            if not re.search(regex, text):
                 continue
             found.append(name)
         length = len(found)
