@@ -44,9 +44,9 @@ class Admin(commands.Cog):
         await self.bot.wrap_async(self.bot.unload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension unloaded.")
 
-    @commands.command(hidden=True)
+    @commands.command(aliases=["reload"], hidden=True)
     @commands.is_owner()
-    async def reload(self, ctx, *, module: str):
+    async def _reload(self, ctx, *, module: str):
         await self.bot.wrap_async(self.bot.reload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension reloaded.")
 
