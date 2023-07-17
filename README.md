@@ -163,7 +163,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
   - Command sorting (more vs filters)
 - [ ] Cooldown for commands prone to error when spamming
 - [x] Playhead
-- [ ] Info global command
+- [x] Info global command
 
 ## Features in v2.1.0
 

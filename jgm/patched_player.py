@@ -25,7 +25,7 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
     # Default is 0 for no flags (used to be subprocess.CREATE_NO_WINDOW). See
     # the documentation for discord.FFmpegPCMAudio for more info on kwargs.
     # TODO passing in source and current_ref redundant, maybe onl
-    def __init__(self, source, current_ref, *, creationflags=0, **kwargs):
+    def __init__(self, current_ref, *, creationflags=0, **kwargs):
         # The superclass's __init__ calls self._spawn_process, so we need to
         # set creation flags before then, meaning this line can't be after the
         # super().__init__ call.
@@ -43,7 +43,7 @@ class FFmpegPCMAudio(discord.FFmpegPCMAudio):
         # Not aware of a better way to do this
         self.current_ref = current_ref
 
-        super().__init__(source, **kwargs)
+        super().__init__(current_ref.metadata.get("url"), **kwargs)
 
     def _spawn_process(self, args, **subprocess_kwargs):
         # Creation flags only work in Windows
