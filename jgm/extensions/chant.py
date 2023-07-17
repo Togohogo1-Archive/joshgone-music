@@ -332,7 +332,7 @@ class Chant(commands.Cog):
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
 
-    @_chants.command(name="check", ignore_extra=False)
+    @commands.command(name="h1", ignore_extra=False)
     async def _check(self, ctx, name: str):
         """Output the text for a single chant"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
@@ -418,26 +418,6 @@ class Chant(commands.Cog):
                 await cron.notify_chants_updated({"guild_id": ctx.guild.id})
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
-
-    @commands.command(name="chant", aliases=["h1"], ignore_extra=False)
-    async def _chant(self, ctx, name: str):
-        """Repeat a chant multiple times
-
-        `repeat` specifies the number of times to repeat the chant
-        `delay` specifies the number of seconds to wait between chants
-        """
-        async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT running FROM server WHERE server_id = ? LIMIT 1;", (ctx.guild.id,)) as cursor:
-                if not (row := await cursor.fetchone()) or not row[0]:
-                    return
-            async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
-                row = await cursor.fetchone()
-                if not row:
-                    return
-                text = row[0]
-                if not text:
-                    return
-        await ctx.send(text)
 
 def setup(bot):
     return bot.add_cog(Chant(bot))
