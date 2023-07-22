@@ -236,7 +236,7 @@ class Chant(commands.Cog):
         if not removed:
             removed = ["None"]
         for i in range(1, len(removed)):
-            removed[i] = f", {removed[i]}"
+            removed[i] = f", `{removed[i]}`"
         removed.insert(0, f"Removed {length}: ")
         for message in self.pack(removed):
             await ctx.send(message)
@@ -307,7 +307,7 @@ class Chant(commands.Cog):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant {name} exists")
+                    await ctx.send(f"Chant `{name}` exists")
                     return
             async with db.execute("SELECT COUNT(*) FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 if not (row := await cursor.fetchone()):
@@ -316,7 +316,7 @@ class Chant(commands.Cog):
                     raise ValueError(f"too many chants stored: {row[0]}")
             await db.execute("INSERT INTO chants VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, ctx.author.id))
             await db.commit()
-        await ctx.send(f"Added chant {name}")
+        await ctx.send(f"Added chant `{name}`")
         if cron := self.bot.get_cog("Cron"):
             try:
                 await cron.notify_chants_updated({"guild_id": ctx.guild.id})
@@ -329,9 +329,9 @@ class Chant(commands.Cog):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant {name} {{`{name!r}`}}: {row[0]}")
+                    await ctx.send(row[0])
                 else:
-                    await ctx.send(f"Chant {name} {{`{name!r}`}} doesn't exist")
+                    await ctx.send(f"Chant `{name}` doesn't exist")
 
     @_chants.command(name="owner", ignore_extra=False)
     async def _owner(self, ctx, name: str, new_owner: typing.Union[discord.Member, Dashes] = None):
@@ -351,15 +351,15 @@ class Chant(commands.Cog):
             async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 row = await cursor.fetchone()
                 if row is None:
-                    await ctx.send(f"Chant {name} doesn't exist")
+                    await ctx.send(f"Chant `{name}` doesn't exist")
                     return
                 current = row[0]
         # Get owner
         if new_owner is None:
             if current is None:
-                await ctx.send(f"Chant {name} has no owner")
+                await ctx.send(f"Chant `{name}` has no owner")
             else:
-                await ctx.send(f"Chant {name} owner is {ctx.guild.get_member(current).name}")
+                await ctx.send(f"Chant `{name}` owner is {ctx.guild.get_member(current).name}")
             return
         # If there's already an owner, make sure they are allowed to change it
         if current is not None:
@@ -403,7 +403,7 @@ class Chant(commands.Cog):
             # Delete the chant
             await db.execute("DELETE FROM chants WHERE server_id = ? AND chant_name = ?;", (ctx.guild.id, name))
             await db.commit()
-        await ctx.send(f"Removed chant {name}")
+        await ctx.send(f"Removed chant `{name}`")
         if cron := self.bot.get_cog("Cron"):
             try:
                 await cron.notify_chants_updated({"guild_id": ctx.guild.id})
