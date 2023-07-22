@@ -301,7 +301,9 @@ class Chant(commands.Cog):
         This will fail if a chant with the same name already exists.
         """
         if len(name) > 35:
-            raise ValueError("name too long (length over 35)")
+            raise ValueError("Name too long (length over 35)")
+        if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
+            raise ValueError("Name does not conform to the regex ^[a-zA-Z_][a-zA-Z0-9_]*$")
         if not name.isprintable():
             raise ValueError(f"Name not printable: {name!r}")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
@@ -326,6 +328,8 @@ class Chant(commands.Cog):
     @commands.command(name="h1", ignore_extra=False)
     async def _check(self, ctx, name: str):
         """Output the text for a single chant"""
+        if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
+            raise ValueError("Not a valid chant name")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if (row := await cursor.fetchone()):
