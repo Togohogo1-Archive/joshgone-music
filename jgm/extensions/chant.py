@@ -77,7 +77,19 @@ class Chant(commands.Cog):
     @commands.group(name="chants", ignore_extra=False, pass_context=True, invoke_without_command=True)
     async def _chants(self, ctx):
         """Configure chants"""
-        await self._list(ctx)
+        async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
+            async with db.execute("SELECT chant_name FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+                names = [row[0] async for row in cursor]
+        for i, name in enumerate(names):
+            names[i] = f"`{name}`"
+        length = len(names)
+        if not names:
+            names = ["None"]
+        for i in range(1, len(names)):
+            names[i] = f", {names[i]}"
+        names.insert(0, f"Chants [{length}]: ")
+        for message in self.pack(names):
+            await ctx.send(message)
 
     @staticmethod
     def pack(strings, *, maxlen=2000):
@@ -233,27 +245,6 @@ class Chant(commands.Cog):
                 await cron.notify_chants_updated({"guild_id": ctx.guild.id})
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
-
-    @_chants.command(name="list", ignore_extra=False)
-    async def _list(self, ctx, debug: bool = False):
-        """List available chants"""
-        async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_name FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
-                names = [row[0] async for row in cursor]
-        if debug:
-            for i, name in enumerate(names):
-                names[i] = "``" + name.replace("`", "\u200b`\u200b") + "``"
-        else:
-            for i, name in enumerate(names):
-                names[i] = escape_markdown(name)
-        length = len(names)
-        if not names:
-            names = ["None"]
-        for i in range(1, len(names)):
-            names[i] = f", {names[i]}"
-        names.insert(0, f"Chants [{length}]: ")
-        for message in self.pack(names):
-            await ctx.send(message)
 
     @_chants.command(name="update")
     @commands.check_any(
