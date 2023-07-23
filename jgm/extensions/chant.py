@@ -270,7 +270,7 @@ class Chant(commands.Cog):
             # If there's already an owner, make sure they are allowed to change it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to change this chant's owner")
+                    await ctx.send("You are not allowed to change this chant")
                     return
             # Update the chant
             if current is None:
