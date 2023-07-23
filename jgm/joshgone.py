@@ -7,7 +7,7 @@ from discord.ext import commands
 
 # These extensions are loaded automatically on startup
 LOAD_ON_STARTUP = (
-    "admin", "chant", "music", "database", "info"
+    "admin", "playlists", "music", "database", "info"
 )
 
 # We need intents to resolve a name to a Member object

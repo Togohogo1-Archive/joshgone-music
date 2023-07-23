@@ -69,16 +69,16 @@ def match(pattern: str, string: str) -> bool:
         return False
     return True
 
-class Chant(commands.Cog):
+class Playlists(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(name="chants", ignore_extra=False, pass_context=True, invoke_without_command=True)
-    async def _chants(self, ctx):
-        """Configure chants"""
+    @commands.group(aliases=["pl"], name="playlists", ignore_extra=False, pass_context=True, invoke_without_command=True)
+    async def _playlists(self, ctx):
+        """Configure playlists"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_name FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+            async with db.execute("SELECT playlist_name FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 names = [row[0] async for row in cursor]
         for i, name in enumerate(names):
             names[i] = f"`{name}`"
@@ -87,7 +87,7 @@ class Chant(commands.Cog):
             names = ["None"]
         for i in range(1, len(names)):
             names[i] = f", {names[i]}"
-        names.insert(0, f"Chants [{length}]: ")
+        names.insert(0, f"Playlists [{length}]: ")
         for message in self.pack(names):
             await ctx.send(message)
 
@@ -105,30 +105,30 @@ class Chant(commands.Cog):
         if current:
             yield "".join(current)
 
-    @_chants.command(name="find", ignore_extra=False)
+    @_playlists.command(name="find", ignore_extra=False)
     async def _find(self, ctx, name_pattern: str):
-        """Find chants whose names contain or match the given pattern
+        """Find playlists whose names contain or match the given pattern
 
-        Assume the following chants exist:
-            %chants add amogus   -
-            %chants add amoguise -
-            %chants add mongus   -
-            %chants add mongue   -
+        Assume the following playlists exist:
+            %playlists add amogus   -
+            %playlists add amoguise -
+            %playlists add mongus   -
+            %playlists add mongue   -
 
         Usage:
-            %chants find amogus  -> amogus           # exact match
-            %chants find amo%    -> amogus, amoguise # prefix
-            %chants find %gus    -> amogus, mongus   # suffix
-            %chants find mongu?  -> mongus, mongue   # any character
-            %chants find %m?gu%e -> amoguise         # combine them
-            %chants find gui     -> amoguise         # "gui" in amoguise
+            %playlists find amogus  -> amogus           # exact match
+            %playlists find amo%    -> amogus, amoguise # prefix
+            %playlists find %gus    -> amogus, mongus   # suffix
+            %playlists find mongu?  -> mongus, mongue   # any character
+            %playlists find %m?gu%e -> amoguise         # combine them
+            %playlists find gui     -> amoguise         # "gui" in amoguise
 
         The only special characters supported are ? and %, for matching one and
         any number of characters respectively.
         """
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute(
-                "SELECT chant_name FROM chants WHERE server_id = ?;",
+                "SELECT playlist_name FROM playlists WHERE server_id = ?;",
                 [ctx.guild.id],
             ) as cursor:
                 names = [
@@ -145,17 +145,17 @@ class Chant(commands.Cog):
         for message in self.pack(names):
             await ctx.send(message)
 
-    @_chants.command(name="search", ignore_extra=False)
+    @_playlists.command(name="search", ignore_extra=False)
     async def _search(self, ctx, name_pattern: str, max_amount: typing.Optional[int] = -1):
-        """Find chants whose contents contain or match the given pattern
+        """Find playlists whose contents contain or match the given pattern
 
         Can use substring or glob-ish pattern match
         """
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_name, chant_text FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
-                chants = [row async for row in cursor]
+            async with db.execute("SELECT playlist_name, playlist_text FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+                playlists = [row async for row in cursor]
         found = []
-        for name, text in chants:
+        for name, text in playlists:
             if len(found) == max_amount:
                 break
             if not (match(name_pattern, text) or name_pattern in text):
@@ -170,11 +170,11 @@ class Chant(commands.Cog):
         for message in self.pack(found):
             await ctx.send(message)
 
-    @_chants.command(name="regexfind", ignore_extra=False, hidden=True)
+    @_playlists.command(name="regexfind", ignore_extra=False, hidden=True)
     @commands.is_owner()
     async def _regexfind(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_name FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+            async with db.execute("SELECT playlist_name FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 names = [row[0] async for row in cursor]
         found = []
         for name in names:
@@ -192,14 +192,14 @@ class Chant(commands.Cog):
         for message in self.pack(found):
             await ctx.send(message)
 
-    @_chants.command(name="regexsearch", ignore_extra=False, hidden=True)
+    @_playlists.command(name="regexsearch", ignore_extra=False, hidden=True)
     @commands.is_owner()
     async def _regexsearch(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_name, chant_text FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
-                chants = [row async for row in cursor]
+            async with db.execute("SELECT playlist_name, playlist_text FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+                playlists = [row async for row in cursor]
         found = []
-        for name, text in chants:
+        for name, text in playlists:
             if len(found) == max_amount:
                 break
             if not re.search(regex, text):
@@ -214,11 +214,11 @@ class Chant(commands.Cog):
         for message in self.pack(found):
             await ctx.send(message)
 
-    @_chants.command(name="regexremove", ignore_extra=False, hidden=True)
+    @_playlists.command(name="regexremove", ignore_extra=False, hidden=True)
     @commands.is_owner()
     async def _regexremove(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_name FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+            async with db.execute("SELECT playlist_name FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 names = [row[0] async for row in cursor]
         removed = []
         for name in names:
@@ -229,7 +229,7 @@ class Chant(commands.Cog):
             removed.append(f"`{name}`")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             for name in removed:
-                await db.execute("DELETE FROM chants WHERE server_id = ? AND chant_name = ?;", (ctx.guild.id, name))
+                await db.execute("DELETE FROM playlists WHERE server_id = ? AND playlist_name = ?;", (ctx.guild.id, name))
             await db.commit()
         length = len(removed)
         if not removed:
@@ -241,19 +241,19 @@ class Chant(commands.Cog):
             await ctx.send(message)
         if cron := self.bot.get_cog("Cron"):
             try:
-                await cron.notify_chants_updated({"guild_id": ctx.guild.id})
+                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
 
-    @_chants.command(name="update")
+    @_playlists.command(name="update")
     @commands.check_any(
         commands.has_permissions(manage_messages=True),
         commands.has_role("enchanter"),
     )
     async def _update(self, ctx, name, *, text):
-        """Update a chant
+        """Update a playlist
 
-        This will silently overwrite any previous chant with the same name.
+        This will silently overwrite any previous playlist with the same name.
         """
         if len(name) > 35:
             raise ValueError("name too long (length over 35)")
@@ -261,39 +261,39 @@ class Chant(commands.Cog):
             raise ValueError(f"Name not printable: {name!r}")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             # Check if user can actually change it
-            async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+            async with db.execute("SELECT owner_id FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if not (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    await ctx.send(f"Playlist `{name}` doesn't exist")
                     return
                 else:
                     current = row[0]
             # If there's already an owner, make sure they are allowed to change it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to change this chant")
+                    await ctx.send("You are not allowed to change this playlist")
                     return
-            # Update the chant
-            async with db.execute("SELECT COUNT(*) FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+            # Update the playlist
+            async with db.execute("SELECT COUNT(*) FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 if not (row := await cursor.fetchone()):
-                    raise ValueError("could not get count of chants")
+                    raise ValueError("could not get count of playlists")
                 if row[0] >= 500:
-                    raise ValueError(f"too many chants stored: {row[0]}")
-            await db.execute("INSERT OR REPLACE INTO chants VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, current))
+                    raise ValueError(f"too many playlists stored: {row[0]}")
+            await db.execute("INSERT OR REPLACE INTO playlists VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, current))
             await db.commit()
-        await ctx.send(f"Updated chant `{name}`")
+        await ctx.send(f"Updated playlist `{name}`")
         if cron := self.bot.get_cog("Cron"):
             try:
-                await cron.notify_chants_updated({"guild_id": ctx.guild.id})
+                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
 
-    @_chants.command(name="rename")
+    @_playlists.command(name="rename")
     @commands.check_any(
         commands.has_permissions(manage_messages=True),
         commands.has_role("enchanter"),
     )
     async def _rename(self, ctx, name, *, new_name):
-        """Rename a chant"""
+        """Rename a playlist"""
         if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
             raise ValueError("Name does not conform to the regex ^[a-zA-Z_][a-zA-Z0-9_]*$")
         if len(name) > 35:
@@ -301,40 +301,40 @@ class Chant(commands.Cog):
         if not name.isprintable():
             raise ValueError(f"Name not printable: {name!r}")
         if name == new_name:
-            await ctx.send("Chant unchanged, new name is the same as old name")
+            await ctx.send("Playlist unchanged, new name is the same as old name")
             return
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             # Check if user can actually change it
-            async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+            async with db.execute("SELECT owner_id FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if not (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    await ctx.send(f"Playlist `{name}` doesn't exist")
                     return
                 else:
                     current = row[0]
-            # Check if the new chant name exists
-            async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, new_name)) as cursor:
+            # Check if the new playlist name exists
+            async with db.execute("SELECT playlist_text FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, new_name)) as cursor:
                 if (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant `{new_name}` exists")
+                    await ctx.send(f"Playlist `{new_name}` exists")
                     return
             # If there's already an owner, make sure they are allowed to update it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to rename this chant")
+                    await ctx.send("You are not allowed to rename this playlist")
                     return
             # Update the name
-            await db.execute("UPDATE chants SET chant_name = ? WHERE chant_name = ? AND server_id = ?;", (new_name, name, ctx.guild.id))
+            await db.execute("UPDATE playlists SET playlist_name = ? WHERE playlist_name = ? AND server_id = ?;", (new_name, name, ctx.guild.id))
             await db.commit()
-        await ctx.send(f"Renamed chant `{name}` to `{new_name}`")
+        await ctx.send(f"Renamed playlist `{name}` to `{new_name}`")
 
-    @_chants.command(name="add")
+    @_playlists.command(name="add")
     @commands.check_any(
         commands.has_permissions(manage_messages=True),
         commands.has_role("enchanter"),
     )
     async def _add(self, ctx, name, *, text):
-        """Add a chant
+        """Add a playlist
 
-        This will fail if a chant with the same name already exists.
+        This will fail if a playlist with the same name already exists.
         """
         if len(name) > 35:
             raise ValueError("Name too long (length over 35)")
@@ -343,112 +343,112 @@ class Chant(commands.Cog):
         if not name.isprintable():
             raise ValueError(f"Name not printable: {name!r}")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+            async with db.execute("SELECT playlist_text FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant `{name}` exists")
+                    await ctx.send(f"Playlist `{name}` exists")
                     return
-            async with db.execute("SELECT COUNT(*) FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
+            async with db.execute("SELECT COUNT(*) FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 if not (row := await cursor.fetchone()):
-                    raise ValueError("could not get count of chants")
+                    raise ValueError("could not get count of playlists")
                 if row[0] >= 500:
-                    raise ValueError(f"too many chants stored: {row[0]}")
-            await db.execute("INSERT INTO chants VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, ctx.author.id))
+                    raise ValueError(f"too many playlists stored: {row[0]}")
+            await db.execute("INSERT INTO playlists VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, ctx.author.id))
             await db.commit()
-        await ctx.send(f"Added chant `{name}`")
+        await ctx.send(f"Added playlist `{name}`")
         if cron := self.bot.get_cog("Cron"):
             try:
-                await cron.notify_chants_updated({"guild_id": ctx.guild.id})
+                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
 
     @commands.command(name="h1", ignore_extra=False)
     async def _check(self, ctx, name: str):
-        """Output the text for a single chant"""
+        """Output the text for a single playlist"""
         if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
-            raise ValueError("Not a valid chant name")
+            raise ValueError("Not a valid playlist name")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+            async with db.execute("SELECT playlist_text FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if (row := await cursor.fetchone()):
                     await ctx.send(row[0])
                 else:
-                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    await ctx.send(f"Playlist `{name}` doesn't exist")
 
-    @_chants.command(name="owner", ignore_extra=False)
+    @_playlists.command(name="owner", ignore_extra=False)
     async def _owner(self, ctx, name: str, new_owner: typing.Union[discord.Member, Dashes] = None):
-        """Check or set the owner of a chant
+        """Check or set the owner of a playlist
 
-        To change a chant's owner, either the chant must have no owner, or you
-        are the bot owner, guild owner, or the chant owner.
+        To change a playlist's owner, either the playlist must have no owner, or you
+        are the bot owner, guild owner, or the playlist owner.
 
         To clear the owner, pass "-" as the new owner.
 
         Usage:
-            %chants owner chant             ->  gets the chant's current owner
-            %chants owner chant GeeTransit  ->  make GeeTransit the chant owner
-            %chants owner chant -           ->  removes the chant's owner
+            %playlists owner playlist             ->  gets the playlist's current owner
+            %playlists owner playlist GeeTransit  ->  make GeeTransit the playlist owner
+            %playlists owner playlist -           ->  removes the playlist's owner
         """
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+            async with db.execute("SELECT owner_id FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 row = await cursor.fetchone()
                 if row is None:
-                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    await ctx.send(f"Playlist `{name}` doesn't exist")
                     return
                 current = row[0]
         # Get owner
         if new_owner is None:
             if current is None:
-                await ctx.send(f"Chant `{name}` has no owner")
+                await ctx.send(f"Playlist `{name}` has no owner")
             else:
-                await ctx.send(f"Chant `{name}` owner is {ctx.guild.get_member(current).name}")
+                await ctx.send(f"Playlist `{name}` owner is {ctx.guild.get_member(current).name}")
             return
         # If there's already an owner, make sure they are allowed to change it
         if current is not None:
             if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                await ctx.send("You are not allowed to change this chant's owner")
+                await ctx.send("You are not allowed to change this playlist's owner")
                 return
-        # Store the chant's new owner
+        # Store the playlist's new owner
         if new_owner == "-":
             new_owner_value = None
         else:
             new_owner_value = new_owner.id
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            await db.execute("UPDATE chants SET owner_id = ? WHERE server_id = ? AND chant_name = ?;", (new_owner_value, ctx.guild.id, name))
+            await db.execute("UPDATE playlists SET owner_id = ? WHERE server_id = ? AND playlist_name = ?;", (new_owner_value, ctx.guild.id, name))
             await db.commit()
         # Respond with the new owner
         if new_owner == "-":
-            await ctx.send(f"Chant `{name}` now has no owner")
+            await ctx.send(f"Playlist `{name}` now has no owner")
         else:
-            await ctx.send(f"Chant `{name}` owner now is {new_owner.name}")
+            await ctx.send(f"Playlist `{name}` owner now is {new_owner.name}")
 
-    @_chants.command(name="remove", ignore_extra=False)
+    @_playlists.command(name="remove", ignore_extra=False)
     @commands.check_any(
         commands.has_permissions(manage_messages=True),
         commands.has_role("enchanter"),
     )
     async def _remove(self, ctx, name: str):
-        """Remove a chant"""
+        """Remove a playlist"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             # Check if user can actually change it
-            async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+            async with db.execute("SELECT owner_id FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if not (row := await cursor.fetchone()):
-                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    await ctx.send(f"Playlist `{name}` doesn't exist")
                     return
                 else:
                     current = row[0]
             # If there's already an owner, make sure they are allowed to change it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to change this chant's owner")
+                    await ctx.send("You are not allowed to change this playlist's owner")
                     return
-            # Delete the chant
-            await db.execute("DELETE FROM chants WHERE server_id = ? AND chant_name = ?;", (ctx.guild.id, name))
+            # Delete the playlist
+            await db.execute("DELETE FROM playlists WHERE server_id = ? AND playlist_name = ?;", (ctx.guild.id, name))
             await db.commit()
-        await ctx.send(f"Removed chant `{name}`")
+        await ctx.send(f"Removed playlist `{name}`")
         if cron := self.bot.get_cog("Cron"):
             try:
-                await cron.notify_chants_updated({"guild_id": ctx.guild.id})
+                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
 
 def setup(bot):
-    return bot.add_cog(Chant(bot))
+    return bot.add_cog(Playlists(bot))
