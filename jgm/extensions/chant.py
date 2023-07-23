@@ -273,8 +273,6 @@ class Chant(commands.Cog):
                     await ctx.send("You are not allowed to change this chant")
                     return
             # Update the chant
-            if current is None:
-                current = ctx.author.id
             async with db.execute("SELECT COUNT(*) FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 if not (row := await cursor.fetchone()):
                     raise ValueError("could not get count of chants")
