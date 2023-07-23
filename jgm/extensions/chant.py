@@ -289,6 +289,45 @@ class Chant(commands.Cog):
             except Exception as e:
                 print(f'Error notifying cron cog: {e!r}')
 
+    @_chants.command(name="rename")
+    @commands.check_any(
+        commands.has_permissions(manage_messages=True),
+        commands.has_role("enchanter"),
+    )
+    async def _rename(self, ctx, name, *, new_name):
+        """Rename a chant"""
+        if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
+            raise ValueError("Name does not conform to the regex ^[a-zA-Z_][a-zA-Z0-9_]*$")
+        if len(name) > 35:
+            raise ValueError("name too long (length over 35)")
+        if not name.isprintable():
+            raise ValueError(f"Name not printable: {name!r}")
+        if name == new_name:
+            await ctx.send("Chant unchanged, new name is the same as old name")
+            return
+        async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
+            # Check if user can actually change it
+            async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
+                if not (row := await cursor.fetchone()):
+                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    return
+                else:
+                    current = row[0]
+            # Check if the new chant name exists
+            async with db.execute("SELECT chant_text FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, new_name)) as cursor:
+                if (row := await cursor.fetchone()):
+                    await ctx.send(f"Chant `{new_name}` exists")
+                    return
+            # If there's already an owner, make sure they are allowed to update it
+            if current is not None:
+                if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
+                    await ctx.send("You are not allowed to rename this chant")
+                    return
+            # Update the name
+            await db.execute("UPDATE chants SET chant_name = ? WHERE chant_name = ? AND server_id = ?;", (new_name, name, ctx.guild.id))
+            await db.commit()
+        await ctx.send(f"Renamed chant `{name}` to `{new_name}`")
+
     @_chants.command(name="add")
     @commands.check_any(
         commands.has_permissions(manage_messages=True),
