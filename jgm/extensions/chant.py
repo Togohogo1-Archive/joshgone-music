@@ -146,7 +146,6 @@ class Chant(commands.Cog):
             await ctx.send(message)
 
     @_chants.command(name="search", ignore_extra=False)
-    @commands.is_owner()
     async def _search(self, ctx, name_pattern: str, max_amount: typing.Optional[int] = -1):
         """Find chants whose contents contain or match the given pattern
 
