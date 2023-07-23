@@ -262,9 +262,9 @@ class Chant(commands.Cog):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             # Check if user can actually change it
             async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
-                row = await cursor.fetchone()
-                if row is None:
-                    current = None
+                if not (row := await cursor.fetchone()):
+                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    return
                 else:
                     current = row[0]
             # If there's already an owner, make sure they are allowed to change it
@@ -432,9 +432,9 @@ class Chant(commands.Cog):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             # Check if user can actually change it
             async with db.execute("SELECT owner_id FROM chants WHERE server_id = ? AND chant_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
-                row = await cursor.fetchone()
-                if row is None:
-                    current = None
+                if not (row := await cursor.fetchone()):
+                    await ctx.send(f"Chant `{name}` doesn't exist")
+                    return
                 else:
                     current = row[0]
             # If there's already an owner, make sure they are allowed to change it
