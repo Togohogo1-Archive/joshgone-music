@@ -172,7 +172,7 @@ class Chant(commands.Cog):
 
     @_chants.command(name="regexfind", ignore_extra=False, hidden=True)
     @commands.is_owner()
-    async def _regexlist(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
+    async def _regexfind(self, ctx, max_amount: typing.Optional[int] = -1, *, regex):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT chant_name FROM chants WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 names = [row[0] async for row in cursor]
