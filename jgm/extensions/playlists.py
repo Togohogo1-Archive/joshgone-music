@@ -239,11 +239,6 @@ class Playlists(commands.Cog):
         removed.insert(0, f"Removed {length}: ")
         for message in self.pack(removed):
             await ctx.send(message)
-        if cron := self.bot.get_cog("Cron"):
-            try:
-                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
-            except Exception as e:
-                print(f'Error notifying cron cog: {e!r}')
 
     @_playlists.command(name="update")
     @commands.check_any(
@@ -281,11 +276,6 @@ class Playlists(commands.Cog):
             await db.execute("INSERT OR REPLACE INTO playlists VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, current))
             await db.commit()
         await ctx.send(f"Updated playlist `{name}`")
-        if cron := self.bot.get_cog("Cron"):
-            try:
-                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
-            except Exception as e:
-                print(f'Error notifying cron cog: {e!r}')
 
     @_playlists.command(name="rename")
     @commands.check_any(
@@ -355,11 +345,6 @@ class Playlists(commands.Cog):
             await db.execute("INSERT INTO playlists VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, ctx.author.id))
             await db.commit()
         await ctx.send(f"Added playlist `{name}`")
-        if cron := self.bot.get_cog("Cron"):
-            try:
-                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
-            except Exception as e:
-                print(f'Error notifying cron cog: {e!r}')
 
     @commands.command(name="h1", ignore_extra=False)
     async def _check(self, ctx, name: str):
@@ -444,11 +429,6 @@ class Playlists(commands.Cog):
             await db.execute("DELETE FROM playlists WHERE server_id = ? AND playlist_name = ?;", (ctx.guild.id, name))
             await db.commit()
         await ctx.send(f"Removed playlist `{name}`")
-        if cron := self.bot.get_cog("Cron"):
-            try:
-                await cron.notify_playlists_updated({"guild_id": ctx.guild.id})
-            except Exception as e:
-                print(f'Error notifying cron cog: {e!r}')
 
 def setup(bot):
     return bot.add_cog(Playlists(bot))
