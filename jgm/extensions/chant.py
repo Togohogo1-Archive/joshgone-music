@@ -116,15 +116,15 @@ class Chant(commands.Cog):
             %chants add mongue   -
 
         Usage:
-            %chants find amogus      -> amogus               # exact match
-            %chants find amo%        -> amogus, amoguise     # prefix
-            %chants find %gus        -> amogus, mongus       # suffix
-            %chants find mongu?      -> mongus, mongue       # any character
-            %chants find %m?gu%e     -> amoguise             # combine them
+            %chants find amogus  -> amogus           # exact match
+            %chants find amo%    -> amogus, amoguise # prefix
+            %chants find %gus    -> amogus, mongus   # suffix
+            %chants find mongu?  -> mongus, mongue   # any character
+            %chants find %m?gu%e -> amoguise         # combine them
+            %chants find gui     -> amoguise         # "gui" in amoguise
 
         The only special characters supported are ? and %, for matching one and
         any number of characters respectively.
-
         """
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute(
