@@ -132,7 +132,7 @@ class Chant(commands.Cog):
                 [ctx.guild.id],
             ) as cursor:
                 names = [
-                    name
+                    f"`{name}`"
                     async for [name] in cursor
                     if match(name_pattern, name) or name_pattern in name
                 ]
@@ -161,7 +161,7 @@ class Chant(commands.Cog):
                 break
             if not (match(name_pattern, text) or name_pattern in text):
                 continue
-            found.append(name)
+            found.append(f"`{name}`")
         length = len(found)
         if not found:
             found = ["None"]
@@ -183,7 +183,7 @@ class Chant(commands.Cog):
                 break
             if not re.search(regex, name):
                 continue
-            found.append(name)
+            found.append(f"`{name}`")
         length = len(found)
         if not found:
             found = ["None"]
@@ -205,7 +205,7 @@ class Chant(commands.Cog):
                 break
             if not re.search(regex, text):
                 continue
-            found.append(name)
+            found.append(f"`{name}`")
         length = len(found)
         if not found:
             found = ["None"]
@@ -227,7 +227,7 @@ class Chant(commands.Cog):
                 break
             if not re.search(regex, name):
                 continue
-            removed.append(name)
+            removed.append(f"`{name}`")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             for name in removed:
                 await db.execute("DELETE FROM chants WHERE server_id = ? AND chant_name = ?;", (ctx.guild.id, name))
@@ -236,7 +236,7 @@ class Chant(commands.Cog):
         if not removed:
             removed = ["None"]
         for i in range(1, len(removed)):
-            removed[i] = f", `{removed[i]}`"
+            removed[i] = f", {removed[i]}"
         removed.insert(0, f"Removed {length}: ")
         for message in self.pack(removed):
             await ctx.send(message)
@@ -283,7 +283,7 @@ class Chant(commands.Cog):
                     raise ValueError(f"too many chants stored: {row[0]}")
             await db.execute("INSERT OR REPLACE INTO chants VALUES (?, ?, ?, ?);", (ctx.guild.id, name, text, current))
             await db.commit()
-        await ctx.send(f"Updated chant {name}")
+        await ctx.send(f"Updated chant `{name}`")
         if cron := self.bot.get_cog("Cron"):
             try:
                 await cron.notify_chants_updated({"guild_id": ctx.guild.id})
@@ -380,9 +380,9 @@ class Chant(commands.Cog):
             await db.commit()
         # Respond with the new owner
         if new_owner == "-":
-            await ctx.send(f"Chant {name} now has no owner")
+            await ctx.send(f"Chant `{name}` now has no owner")
         else:
-            await ctx.send(f"Chant {name} owner now is {new_owner.name}")
+            await ctx.send(f"Chant `{name}` owner now is {new_owner.name}")
 
     @_chants.command(name="remove", ignore_extra=False)
     @commands.check_any(
