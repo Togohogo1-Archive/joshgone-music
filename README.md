@@ -201,10 +201,7 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 
 ## Short term todo
 
-- Reorgainze commands based on simple/advanced/filter usage
-- Continue making the bot unreloadable by hardcoding unload/load functions in `admin.py`
 - Write a basic first-level help description for each command
-- Move some instance variables into `self.data` so running the bot in 2 servers at a time doesn't cause issues
 - ytdl logs in a log file instead of terminal
 - should queue and playback history require before_invoke?
 
@@ -212,59 +209,6 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 
 - More organized error messages
 - Know where to use before/after_invoke decorators
-
-```txt
-Chant:
-  chant            Repeat a chant multiple times
-  chant1           Repeats a chant once
-  chants           Configure chants
-Database:
-  reinit
-  running
-Filters:
-  bassboost
-  daycore
-  deepfry
-  defaults
-  nightcore
-  normal
-  speed
-More:
-  _add_playlist    Adds all songs in a playlist to the queue
-  cancel
-  fast_forward
-  forceskip
-  jump
-  rewind
-  local            Plays a file from the local filesystem
-  reschedule       Reschedules the current guild onto the advancer task
-  sleepin
-Music:
-  autoshuffle
-  batch_add        Plays from multiple urls split by lines
-  clear            Clears all songs on queue
-  current          Shows the current song
-  info
-  join             Joins a voice channel
-  leave            Disconnects the bot from voice and clears the queue
-  loop             ;loop q(queue) c(current) n(none) <>
-  move             Moves a song on queue
-  pause            Pauses playing
-  playback_history
-  queue            Shows the songs on queue
-  remove           Removes a song on queue
-  resume           Resumes playing
-  shuffle          Shuffles the queue
-  skip             Skips current song
-  stream           Plays from a url (almost anything youtube_dl supports)
-  stream_prepend   Plays from a url (almost anything youtube_dl supports)
-  volume           Gets or changes the player's volume
-​No Category:
-  help             Shows this message
-
-Type ;help command for more info on a command.
-You can also type ;help category for more info on a category.
-```
 
 ## Issues to be addressed
 
