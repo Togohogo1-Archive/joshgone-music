@@ -15,14 +15,14 @@ steps = [
         "DROP TABLE server;",
     ),
     step(
-        '''CREATE TABLE chants (
+        '''CREATE TABLE playlists (
             server_id INTEGER,
-            chant_name TEXT,
-            chant_text TEXT,
-            owner_id INTEGER,  /* In order these features were added */
-            UNIQUE (server_id, chant_name),
+            playlist_name TEXT,
+            playlist_text TEXT,
+            owner_id INTEGER,
+            UNIQUE (server_id, playlist_name),
             FOREIGN KEY (server_id) REFERENCES server (server_id)
         );''',
-        "DROP TABLE chants;",
+        "DROP TABLE playlists;",
     )
 ]

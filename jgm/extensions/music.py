@@ -626,7 +626,7 @@ class Music(commands.Cog):
         await ctx.send(f"Prepended to queue: stream {audio.query}")
 
     @commands.command()
-    async def _add_playlist(self, ctx, *, url):
+    async def playlist_link(self, ctx, *, url):
         """Adds all songs in a playlist to the queue"""
         if len(url) > 100:
             raise ValueError("url too long (length over 100)")

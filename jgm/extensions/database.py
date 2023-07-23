@@ -16,7 +16,7 @@ class Database(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
-            await db.execute("INSERT OR IGNORE INTO server (server_id) VALUES (?);", (guild.id))
+            await db.execute("INSERT OR IGNORE INTO server (server_id) VALUES (?);", (guild.id,))
             await db.commit()
 
     @commands.Cog.listener()
@@ -30,7 +30,7 @@ class Database(commands.Cog):
     async def reinit_command(self, ctx):
         await self.on_guild_remove(ctx.guild)
         await self.on_guild_join(ctx.guild)
-        await ctx.send("Reinitialized JoshGone.")
+        await ctx.send("Reinitialized JoshGone Music.")
 
 def setup(bot):
     return bot.add_cog(Database(bot))

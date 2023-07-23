@@ -74,7 +74,7 @@ class Playlists(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(aliases=["pl"], name="playlists", ignore_extra=False, pass_context=True, invoke_without_command=True)
+    @commands.group(aliases=["li"], name="playlists", ignore_extra=False, pass_context=True, invoke_without_command=True)
     async def _playlists(self, ctx):
         """Configure playlists"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
@@ -226,12 +226,15 @@ class Playlists(commands.Cog):
                 break
             if not re.search(regex, name):
                 continue
-            removed.append(f"`{name}`")
+            removed.append(name)  # Don't wrap around with `` because need to remove from DB
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             for name in removed:
                 await db.execute("DELETE FROM playlists WHERE server_id = ? AND playlist_name = ?;", (ctx.guild.id, name))
+                name = f"`{name}`"
             await db.commit()
         length = len(removed)
+        # Before cuz in `None` would refer to a chant named `None`
+        removed = [f"`{i}`" for i in removed]
         if not removed:
             removed = ["None"]
         for i in range(1, len(removed)):
@@ -241,10 +244,6 @@ class Playlists(commands.Cog):
             await ctx.send(message)
 
     @_playlists.command(name="update")
-    @commands.check_any(
-        commands.has_permissions(manage_messages=True),
-        commands.has_role("enchanter"),
-    )
     async def _update(self, ctx, name, *, text):
         """Update a playlist
 
@@ -252,8 +251,6 @@ class Playlists(commands.Cog):
         """
         if len(name) > 35:
             raise ValueError("name too long (length over 35)")
-        if not name.isprintable():
-            raise ValueError(f"Name not printable: {name!r}")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             # Check if user can actually change it
             async with db.execute("SELECT owner_id FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
@@ -265,7 +262,7 @@ class Playlists(commands.Cog):
             # If there's already an owner, make sure they are allowed to change it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to change this playlist")
+                    await ctx.send("You do not have permission to update this playlist.")
                     return
             # Update the playlist
             async with db.execute("SELECT COUNT(*) FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
@@ -278,18 +275,12 @@ class Playlists(commands.Cog):
         await ctx.send(f"Updated playlist `{name}`")
 
     @_playlists.command(name="rename")
-    @commands.check_any(
-        commands.has_permissions(manage_messages=True),
-        commands.has_role("enchanter"),
-    )
     async def _rename(self, ctx, name, *, new_name):
         """Rename a playlist"""
-        if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
-            raise ValueError("Name does not conform to the regex ^[a-zA-Z_][a-zA-Z0-9_]*$")
+        if not re.fullmatch(r"[a-zA-Z0-9_]*", new_name):
+            raise ValueError("Name does not conform to the regex ^[a-zA-Z0-9_]*$")
         if len(name) > 35:
             raise ValueError("name too long (length over 35)")
-        if not name.isprintable():
-            raise ValueError(f"Name not printable: {name!r}")
         if name == new_name:
             await ctx.send("Playlist unchanged, new name is the same as old name")
             return
@@ -309,7 +300,7 @@ class Playlists(commands.Cog):
             # If there's already an owner, make sure they are allowed to update it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to rename this playlist")
+                    await ctx.send("You do not have permission to rename this playlist.")
                     return
             # Update the name
             await db.execute("UPDATE playlists SET playlist_name = ? WHERE playlist_name = ? AND server_id = ?;", (new_name, name, ctx.guild.id))
@@ -317,10 +308,6 @@ class Playlists(commands.Cog):
         await ctx.send(f"Renamed playlist `{name}` to `{new_name}`")
 
     @_playlists.command(name="add")
-    @commands.check_any(
-        commands.has_permissions(manage_messages=True),
-        commands.has_role("enchanter"),
-    )
     async def _add(self, ctx, name, *, text):
         """Add a playlist
 
@@ -328,10 +315,8 @@ class Playlists(commands.Cog):
         """
         if len(name) > 35:
             raise ValueError("Name too long (length over 35)")
-        if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
-            raise ValueError("Name does not conform to the regex ^[a-zA-Z_][a-zA-Z0-9_]*$")
-        if not name.isprintable():
-            raise ValueError(f"Name not printable: {name!r}")
+        if not re.fullmatch(r"[a-zA-Z0-9_]*", name):
+            raise ValueError("Name does not conform to the regex ^[a-zA-Z0-9_]*$")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT playlist_text FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 if (row := await cursor.fetchone()):
@@ -346,10 +331,10 @@ class Playlists(commands.Cog):
             await db.commit()
         await ctx.send(f"Added playlist `{name}`")
 
-    @commands.command(name="h1", ignore_extra=False)
+    @commands.command(aliases=["h1"], name="check", ignore_extra=False)
     async def _check(self, ctx, name: str):
         """Output the text for a single playlist"""
-        if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_]*", name):
+        if not re.fullmatch(r"[a-zA-Z0-9_]*", name):
             raise ValueError("Not a valid playlist name")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT playlist_text FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
@@ -406,10 +391,6 @@ class Playlists(commands.Cog):
             await ctx.send(f"Playlist `{name}` owner now is {new_owner.name}")
 
     @_playlists.command(name="remove", ignore_extra=False)
-    @commands.check_any(
-        commands.has_permissions(manage_messages=True),
-        commands.has_role("enchanter"),
-    )
     async def _remove(self, ctx, name: str):
         """Remove a playlist"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
@@ -423,7 +404,7 @@ class Playlists(commands.Cog):
             # If there's already an owner, make sure they are allowed to change it
             if current is not None:
                 if ctx.author.id not in (self.bot.owner_id, ctx.guild.owner_id, current):
-                    await ctx.send("You are not allowed to change this playlist's owner")
+                    await ctx.send("You do not have permission to remove this playlist.")
                     return
             # Delete the playlist
             await db.execute("DELETE FROM playlists WHERE server_id = ? AND playlist_name = ?;", (ctx.guild.id, name))

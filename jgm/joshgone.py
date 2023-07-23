@@ -11,10 +11,7 @@ LOAD_ON_STARTUP = (
 )
 
 # We need intents to resolve a name to a Member object
-intents = discord.Intents.default()
-intents.members = True
-if hasattr(intents, "message_content"):
-    intents.message_content = True
+intents = discord.Intents.all()
 
 # Our prefix is % or @joshgone
 command_prefix = commands.when_mentioned_or(";")

@@ -167,15 +167,16 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 
 ## Features in v2.1.0
 
-- [ ] Better local file support
+- [x] Better local file support
   - Cap on file directory size
-- [ ] Better playlist support
+  - Prevented at an operating system level (so no need to worry)
+- [x] Better playlist support
   - [x] Only alphanumeric (to python var naming)
-  - [ ] ;h1 command looks ugly
-  - [ ] Phase out chant and replace with playlist
-- [ ] Figure out database (playlist) importing exporting
-- [ ] Soundcloud playlists
-- [ ] Better reloading and unloading
+  - [x] ;h1 command looks ugly
+  - [x] Phase out chant and replace with playlist
+- [x] Figure out database (playlist) importing exporting
+- [x] Soundcloud playlists
+- [x] Better reloading and unloading
 
 ## VLC features that may not be implemented
 

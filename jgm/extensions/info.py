@@ -11,8 +11,15 @@ class Info(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         # Some debug info
+
         print(f"JoshGone logged on as {self.bot.user}.")
         print(f"SQLite version is {aiosqlite.sqlite_version}.")
+
+        # BUG: owner_id not initialized until someone runs a command
+        # https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=owner_id#discord.ext.commands.Bot.owner_id
+        print(f"Initializing bot `owner_id` [Workaround to potential bug].")
+        appinfo = await self.bot.application_info()
+        self.bot.owner_id = appinfo.owner.id
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
