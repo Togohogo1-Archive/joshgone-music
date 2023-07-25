@@ -214,3 +214,9 @@ You can then set JOSHGONE_OS_PY_EXE to `pew inraw joshgone-pypy pypy3` for it to
 
 - Having the bot in multiple servers (instance variables not guild specific)
 - Spamming `;ff` or `;s` causes the bot to freeze if advancer isn't forced
+
+## Build the docs
+
+```bash
+hatch env run -e docs serve
+```
