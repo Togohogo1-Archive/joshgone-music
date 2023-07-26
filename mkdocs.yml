@@ -1,4 +1,67 @@
-site_name: My Docs
+site_name: JoshGone Music
+repo_url: https://github.com/Togohogo1/joshgone-music
 
 theme:
+  features:
+    - navigation.sections
+
   name: material
+
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: pink
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Togohogo1
+      name: Togohogo1
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+  - attr_list
+  - md_in_html
+  - footnotes
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+nav:
+  - Setup: setup.md
+  - Using JoshGone Music:
+    - Basic Music Features: basic.md
+    - Additional Music Features: additional.md
+    - Playlist Management: playlists.md
+  - Advanced Usage:
+    - Admin Commands: _.md
+    - Using the REPL: _.md
+    - Database Migrations: _.md
+  - Devlogs:
+    - How JoshGone Music Works: devlog.md

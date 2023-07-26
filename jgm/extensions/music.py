@@ -20,6 +20,7 @@ from collections import deque
 import discord
 from discord.ext import commands
 from discord.ext import tasks
+from discord.ext.commands import BucketType
 
 import yt_dlp as youtube_dl
 
@@ -658,6 +659,7 @@ class Music(commands.Cog):
         await ctx.send(f"Added playlist to queue: {url}")
 
     @commands.command(name="batch_add")
+    @commands.cooldown(rate=1, per=2, type=BucketType.user)
     async def _batch_add(self, ctx, *, urls):
         """Plays from multiple urls split by lines"""
         for url in urls.splitlines():
@@ -754,6 +756,7 @@ class Music(commands.Cog):
         await ctx.voice_client.disconnect()
 
     @commands.command(aliases=["c"])
+    @commands.cooldown(1, 0.5, BucketType.user)
     async def current(self, ctx):
         """Shows the current song"""
         query = None
@@ -870,12 +873,16 @@ class Music(commands.Cog):
         await ctx.send(f"Moved song [{origin} -> {target}]: {song.query}")
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def clear(self, ctx):
-        """Clears all songs on queue"""
+        """Clears all songs in queue"""
         info = self.get_info(ctx)
         queue = info["queue"]
+        if not queue:
+            await ctx.send("Queue is empty.")
+            return
         queue.clear()
-        await ctx.send("Cleared queue")
+        await ctx.send("Cleared queue.")
 
     @commands.command(aliases=["s"])
     async def skip(self, ctx):
@@ -1149,10 +1156,12 @@ class Music(commands.Cog):
         if ctx.voice_client.source is None:
             raise commands.CommandError("Not playing anything right now")
 
+    @_batch_add.before_invoke
+    @clear.before_invoke
+    @current.before_invoke
     @remove.before_invoke
     @reschedule.before_invoke
     @skip.before_invoke
-    @clear.before_invoke
     @volume.before_invoke
     @sleep_in.before_invoke
     @forceskip.before_invoke

@@ -69,6 +69,7 @@ dependencies = [
 jgm = "python -m jgm"
 
 [tool.hatch.envs.docs]
+python = "3.10"
 skip-install = true
 dependencies = [
   "mkdocs-material==8.5.11"
