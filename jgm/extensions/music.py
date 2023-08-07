@@ -472,6 +472,7 @@ class Music(commands.Cog):
         await ctx.send(f"Setting pitch factor = x{factor} for next song.")
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel
 
@@ -748,6 +749,7 @@ class Music(commands.Cog):
         ctx.voice_client.resume()
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def leave(self, ctx):
         """Disconnects the bot from voice and clears the queue"""
         self.pop_info(ctx)
@@ -909,6 +911,7 @@ class Music(commands.Cog):
         await ctx.send(f"Forceskipped: {current.query}")
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def loop(self, ctx, loop: typing.Optional[int] = None):
         """Gets or sets queue looping"""
         sign = loop//abs(loop) if loop else 0
@@ -1166,6 +1169,7 @@ class Music(commands.Cog):
     @sleep_in.before_invoke
     @forceskip.before_invoke
     @info.before_invoke
+    @loop.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

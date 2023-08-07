@@ -52,6 +52,8 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.tilde
+  - toc:
+      toc_depth: 3
 
 nav:
   - Setup: setup.md

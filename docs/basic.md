@@ -13,6 +13,9 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;batch-add`](#batch_add) |  | `<urls>` | 2s | Plays from multiple URLs split by lines |
 | [`;clear`](#clear)    |  |  | 1s | Clears all songs in queue |
 | [`;current`](#current)   | `;c` |  | 0.5s | Shows the current song |
+| [`;join`](#join)   |  | `<channel>` | 1s | Joins a voice channel |
+| [`;leave`](#leave)   |  |  | 1s | Disconnects the bot from voice and clears the queue |
+| [`;loop`](#loop)   |  | `[loop]` | 1s | Gets or sets queue looping |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -24,13 +27,13 @@ Recategorize them later
 
 Plays from multiple URLs split by lines.
 
-Splits the URLs by appropriate line termination character and individually [`stream`](#stream)s [ref] each query. Does not support specification of local queries. Assuming no lag, there is approximately a 0.1 second delay between additions.
+Splits the URLs by appropriate line termination character and individually [`stream`](#stream)s each query. Does not support specification of local queries. Assuming no lag, there is approximately a 0.1 second delay between additions.
 
-**Arguments**
+#### Arguments
 
 - `urls` – (Required) The multiline string of URLs to be [`stream`](#stream)ed, separated by ++enter++ keypresses
 
-**Before Invoking Behaviour**
+#### Before Invoking Behaviour
 
 - Bot must be connected to a voice channel
 
@@ -55,7 +58,7 @@ Clears all songs in queue.
 
 This command does nothing if there are no songs in the queue. Clearing the queue does not do anything to a current playing song.
 
-**Before Invoking Behaviour**
+#### Before Invoking Behaviour
 
 - Bot must be connected to a voice channel
 
@@ -65,15 +68,45 @@ Shows the current song
 
 The current song is the exact text word-for-word that was queried. If the current song cannot be retrieved, the query will be `None`.
 
-**Before Invoking Behaviour**
+#### Before Invoking Behaviour
 
 - Bot must be connected to a voice channel
 
-### `join`
+### [`join`](#join)
 
-### `leave`
+Joins a voice channel
 
-### `loop`
+Also controls where bot messages are sent. Text output will be sent from the channel this command was run in. This command can be run multiple times safely.
+
+#### Arguments
+
+- `channels` – The name or id to the voice channel
+
+### [`leave`](#leave)
+
+Disconnects the bot from voice and clears the queue
+
+In addition to clearing the queue, this command also erases all [global bot information](./additional.md#info_global).
+
+### [`loop`](#loop)
+
+Gets or sets queue looping
+
+By default the queue is not set to loop. The user can set three types of looping options, specified by the `loop` argument:
+
+- If `loop` = 0, no loop
+- If `loop` > 0, loop all songs
+- If `loop` < 0, loop one songs
+
+If no argument is passed, it shows the type of looping.
+
+#### Arguments
+
+- `loop` – (Optinal) An integer specifying the loop type
+
+#### Before Invoking Behaviour
+
+- Bot must be connected to a voice channel
 
 ### `move`
 
