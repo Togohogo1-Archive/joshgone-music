@@ -33,7 +33,7 @@ Splits the URLs by appropriate line termination character and individually [`str
 
 - `urls` – (Required) The multiline string of URLs to be [`stream`](#stream)ed, separated by ++enter++ keypresses
 
-#### Before Invoking Behaviour
+#### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
 
@@ -58,7 +58,7 @@ Clears all songs in queue.
 
 This command does nothing if there are no songs in the queue. Clearing the queue does not do anything to a current playing song.
 
-#### Before Invoking Behaviour
+#### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
 
@@ -68,7 +68,7 @@ Shows the current song
 
 The current song is the exact text word-for-word that was queried. If the current song cannot be retrieved, the query will be `None`.
 
-#### Before Invoking Behaviour
+#### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
 
