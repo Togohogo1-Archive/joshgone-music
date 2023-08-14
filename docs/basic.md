@@ -16,6 +16,7 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;join`](#join)   |  | `<channel>` | 1s | Joins a voice channel |
 | [`;leave`](#leave)   |  |  | 1s | Disconnects the bot from voice and clears the queue |
 | [`;loop`](#loop)   |  | `[loop]` | 1s | Gets or sets queue looping |
+| [`;move`](#move)   |  | `<origin> <target>` | 1s | Moves a song on queue |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -96,19 +97,36 @@ By default the queue is not set to loop. The user can set three types of looping
 
 - If `loop` = 0, no loop
 - If `loop` > 0, loop all songs
-- If `loop` < 0, loop one songs
+- If `loop` < 0, loop one song
 
-If no argument is passed, it shows the type of looping.
+If no argument is passed, it shows the type of looping as either `0`, `1`, or `-1`.
 
 #### Arguments
 
-- `loop` – (Optinal) An integer specifying the loop type
+- `loop` – (Optional) An integer specifying the loop type
 
-#### Before Invoking Behaviour
+#### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
 
-### `move`
+### [`move`](#move)
+
+Moves a song on queue
+
+The playback queue is effectively 1-indexed. This means position 1 of the queue represents the first item in the queue, 2 the second item, and so on. The `move` command also supports negative indices where position -1 represents the last item in the queue, -2 the 2<sup>nd</sup> last item, ...
+
+When a song gets moved from `origin` to `target`, `origin`[^2] does not swap places with the song at `target`[^2]. Instead, `target` gets changed to `origin` and all songs after `target` gets pushed back one position.
+
+[^2]: Starting from here until the end of this paragraph References of `origin` and `target` refer to "song at `origin`" and "song at `target`" respectively.
+
+#### Arguments
+
+- `origin` – The position in queue of the song to be moved
+- `target` – The position in queue in which the moved song will occupy
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `pause`
 

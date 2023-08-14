@@ -855,6 +855,7 @@ class Music(commands.Cog):
         await ctx.send(f"Removed song [{position}]: {song.query}")
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def move(self, ctx, origin: int, target: int):
         """Moves a song on queue"""
         info = self.get_info(ctx)
