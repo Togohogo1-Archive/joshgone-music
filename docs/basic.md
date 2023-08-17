@@ -17,9 +17,10 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;leave`](#leave)   |  |  | 1s | Disconnects the bot from voice and clears the queue |
 | [`;loop`](#loop)   |  | `[loop]` | 1s | Gets or sets queue looping |
 | [`;move`](#move)   |  | `<origin> <target>` | 1s | Moves a song on queue |
-| [`;pause`](#pause)   | `;stop` | | 1s | Pauses playing |
+| [`;pause`](#pause)   | `;stop` | | 0.5s | Pauses playing |
 | [`;queue`](#queue)   | `;q` | | 1s | Shows the songs on queue |
 | [`;remove`](#remove)   |  | `<position>` | 1s | Removes a song on queue |
+| [`;resume`](#resume)   | `;start` | | 0.5s | Resumes playing |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -135,7 +136,7 @@ When a song gets moved from `origin` to `target`, `origin`[^2] does not swap pla
 
 Pauses playing
 
-Pausing the voice client.
+Pausing the voice client. This command can be used multiple times.
 
 #### Before Invoking Conditions
 
@@ -171,7 +172,15 @@ Likewise to [move](#move), the `remove` command accepts both positive and negati
 
 - Bot must be connected to voice channel
 
-### `resume`
+### [`resume`](#resume)
+
+Resumes playing
+
+Resumes the voice client to play the paused song. This command can be used repeatedly.
+
+#### Before Invoking Conditions
+
+- Bot must be playing something
 
 ### `shuffle`
 

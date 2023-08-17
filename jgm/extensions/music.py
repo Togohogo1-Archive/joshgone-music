@@ -739,12 +739,13 @@ class Music(commands.Cog):
         await ctx.send(f"Changed volume to {volume}%")
 
     @commands.command(aliases=["stop"])
-    @commands.cooldown(1, 1, BucketType.user)
+    @commands.cooldown(1, 0.5, BucketType.user)
     async def pause(self, ctx):
         """Pauses playing"""
         ctx.voice_client.pause()
 
     @commands.command(aliases=["start"])
+    @commands.cooldown(1, 0.5, BucketType.user)
     async def resume(self, ctx):
         """Resumes playing"""
         ctx.voice_client.resume()
