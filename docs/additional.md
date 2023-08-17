@@ -30,6 +30,10 @@ Recategorize them later
 
 ### `jump`
 
+...
+
+Does not cause resume
+
 ### `nightcore`
 
 ### `normal`

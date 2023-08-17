@@ -368,7 +368,7 @@ class Music(commands.Cog):
             wrapped["songs_played"] = 0
             wrapped["current"] = None
             wrapped["waiting"] = False
-            wrapped["loop"] = False
+            wrapped["loop"] = 0
             wrapped["processing"] = False
             wrapped["autoshuffle_task"] = None
             wrapped["sleep_timer_task"] = None
@@ -739,6 +739,7 @@ class Music(commands.Cog):
         await ctx.send(f"Changed volume to {volume}%")
 
     @commands.command(aliases=["stop"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def pause(self, ctx):
         """Pauses playing"""
         ctx.voice_client.pause()
@@ -770,6 +771,7 @@ class Music(commands.Cog):
         await ctx.send(f"Current: {query}")
 
     @commands.command(aliases=["q"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def queue(self, ctx):
         """Shows the songs on queue"""
         queue = ()
@@ -1171,6 +1173,7 @@ class Music(commands.Cog):
     @forceskip.before_invoke
     @info.before_invoke
     @loop.before_invoke
+    @queue.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

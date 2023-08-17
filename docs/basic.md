@@ -17,6 +17,8 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;leave`](#leave)   |  |  | 1s | Disconnects the bot from voice and clears the queue |
 | [`;loop`](#loop)   |  | `[loop]` | 1s | Gets or sets queue looping |
 | [`;move`](#move)   |  | `<origin> <target>` | 1s | Moves a song on queue |
+| [`;pause`](#pause)   | `;stop` | | 1s | Pauses playing |
+| [`;queue`](#queue)   | `;q` | | 1s | Shows the songs on queue |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -113,7 +115,7 @@ If no argument is passed, it shows the type of looping as either `0`, `1`, or `-
 
 Moves a song on queue
 
-The playback queue is effectively 1-indexed. This means position 1 of the queue represents the first item in the queue, 2 the second item, and so on. The `move` command also supports negative indices where position -1 represents the last item in the queue, -2 the 2<sup>nd</sup> last item, ...
+The playback queue is effectively 1-indexed. This means position 1 of the queue represents the first item in the queue, 2 the second item, and so on. The `move` command also supports negative indices where position -1 represents the last item in the queue, -2 the 2<sup>nd</sup> last item, etc.
 
 When a song gets moved from `origin` to `target`, `origin`[^2] does not swap places with the song at `target`[^2]. Instead, `target` gets changed to `origin` and all songs after `target` gets pushed back one position.
 
@@ -128,9 +130,31 @@ When a song gets moved from `origin` to `target`, `origin`[^2] does not swap pla
 
 - Bot must be connected to a voice channel
 
-### `pause`
+### `pause`(#pause)
 
-### `queue`
+Pauses playing
+
+Pausing the voice client.
+
+#### Before Invoking Conditions
+
+- Bot must be playing something
+
+### `queue`(#queue)
+
+Shows the songs on queue
+
+The first line of the queue specifies size as well as the type of [loop](#loop).
+
+If there are no songs in the queue, the next line will be `None`
+
+If there are songs in the queue, this command outputs and numbers them from 1 to the total queue size. Each item in the queue is the exact song query that the user specified with the [stream](#stream) command.
+
+If the queue exceeds the discord message limit size, it will be printed as multiple messages.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to voice channel
 
 ### `remove`
 
