@@ -838,11 +838,12 @@ class Music(commands.Cog):
             index -= 1
         if index < 0:
             index += length
-        if not 0 <= index < length:
+        if not 0 <= index < length or position == 0:
             raise ValueError(position)
         return index
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def remove(self, ctx, position: int):
         """Removes a song on queue"""
         info = self.get_info(ctx)

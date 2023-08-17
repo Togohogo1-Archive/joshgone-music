@@ -19,6 +19,7 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;move`](#move)   |  | `<origin> <target>` | 1s | Moves a song on queue |
 | [`;pause`](#pause)   | `;stop` | | 1s | Pauses playing |
 | [`;queue`](#queue)   | `;q` | | 1s | Shows the songs on queue |
+| [`;remove`](#remove)   |  | `<position>` | 1s | Removes a song on queue |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -130,7 +131,7 @@ When a song gets moved from `origin` to `target`, `origin`[^2] does not swap pla
 
 - Bot must be connected to a voice channel
 
-### `pause`(#pause)
+### [`pause`](#pause)
 
 Pauses playing
 
@@ -140,13 +141,13 @@ Pausing the voice client.
 
 - Bot must be playing something
 
-### `queue`(#queue)
+### [`queue`](#queue)
 
 Shows the songs on queue
 
 The first line of the queue specifies size as well as the type of [loop](#loop).
 
-If there are no songs in the queue, the next line will be `None`
+If there are no songs in the queue, the next line will be `None`.
 
 If there are songs in the queue, this command outputs and numbers them from 1 to the total queue size. Each item in the queue is the exact song query that the user specified with the [stream](#stream) command.
 
@@ -156,7 +157,19 @@ If the queue exceeds the discord message limit size, it will be printed as multi
 
 - Bot must be connected to voice channel
 
-### `remove`
+### [`remove`](#remove)
+
+Removes a song on queue
+
+Likewise to [move](#move), the `remove` command accepts both positive and negative positions. After removal, songs below the removed song are then shifted up one position to accomdate for the gap.
+
+#### Arguments
+
+- `position` – (Required) The position of the song in the queue to be removed
+
+#### Before Invoking Conditions
+
+- Bot must be connected to voice channel
 
 ### `resume`
 
