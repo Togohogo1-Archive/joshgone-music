@@ -162,7 +162,7 @@ If the queue exceeds the discord message limit size, it will be printed as multi
 
 Removes a song on queue
 
-Likewise to [move](#move), the `remove` command accepts both positive and negative positions. After removal, songs below the removed song are then shifted up one position to accomdate for the gap.
+Likewise to [move](#move), the `remove` command accepts both positive and negative positions. After removal, songs below the removed song are then shifted up one position to accommodate for the gap.
 
 #### Arguments
 
