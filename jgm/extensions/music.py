@@ -730,6 +730,7 @@ class Music(commands.Cog):
             task.cancel()
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def volume(self, ctx, volume: float = None):
         """Gets or changes the player's volume"""
         if volume is None:

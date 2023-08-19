@@ -24,6 +24,7 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;shuffle`](#shuffle)   | `;shuffle` | 1s | Shuffles the queue |
 | [`;skip`](#skip)   | `;s` | 1s | Skips current song |
 | [`;stream`](#stream) `<url>`  | `;yt`, `;play`, `;p` | 1s | Plays from a url (almost anything yt-dlp supports) |
+| [`;volume`](#volume) `[volume]`  | | 1s | Gets or changes the player's volume |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -297,4 +298,18 @@ The query must be printable[^3] and not longer than 100 characters.
     ;p ytsearch: prev
     ```
 
-### `volume`
+### [`volume`](#volume)
+
+Gets or changes the player's volume
+
+
+
+#### Arguments
+
+- `volume` – (Optional) The volume to set the bot to play at
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+...
