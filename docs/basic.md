@@ -8,19 +8,22 @@ title: Basic Features
 
 The table below summarizes all the commands for basic bot usage. Click on any of them for more details, including special use cases, caveats, etx.
 
-| Command | Aliases | Arguments[^1] | Cooldown | Description |
-|-|-|-|-|-|
-| [`;batch-add`](#batch_add) |  | `<urls>` | 2s | Plays from multiple URLs split by lines |
-| [`;clear`](#clear)    |  |  | 1s | Clears all songs in queue |
-| [`;current`](#current)   | `;c` |  | 0.5s | Shows the current song |
-| [`;join`](#join)   |  | `<channel>` | 1s | Joins a voice channel |
-| [`;leave`](#leave)   |  |  | 1s | Disconnects the bot from voice and clears the queue |
-| [`;loop`](#loop)   |  | `[loop]` | 1s | Gets or sets queue looping |
-| [`;move`](#move)   |  | `<origin> <target>` | 1s | Moves a song on queue |
-| [`;pause`](#pause)   | `;stop` | | 0.5s | Pauses playing |
-| [`;queue`](#queue)   | `;q` | | 1s | Shows the songs on queue |
-| [`;remove`](#remove)   |  | `<position>` | 1s | Removes a song on queue |
-| [`;resume`](#resume)   | `;start` | | 0.5s | Resumes playing |
+| Command with Arguments[^1] | Aliases | Cooldown | Description |
+|-|-|-|-|
+| [`;batch-add`](#batch_add) `<urls>` | | 2s | Plays from multiple URLs split by lines |
+| [`;clear`](#clear)    |   | 1s | Clears all songs in queue |
+| [`;current`](#current) | `;c` | 0.5s | Shows the current song |
+| [`;join`](#join) `<channel>`  | | 1s | Joins a voice channel |
+| [`;leave`](#leave)   |  | 1s | Disconnects the bot from voice and clears the queue |
+| [`;loop`](#loop) `[loop]`  | | 1s | Gets or sets queue looping |
+| [`;move`](#move) `<origin> <target>`  | `mv` | 1s | Moves a song on queue |
+| [`;pause`](#pause)   | `;stop` | 0.5s | Pauses playing |
+| [`;queue`](#queue)   | `;q` | 1s | Shows the songs on queue |
+| [`;remove`](#remove) `<position>` | `rm` | 1s | Removes a song on queue |
+| [`;resume`](#resume)   | `;start` | 0.5s | Resumes playing |
+| [`;shuffle`](#shuffle)   | `;shuffle` | 1s | Shuffles the queue |
+| [`;skip`](#skip)   | `;s` | 1s | Skips current song |
+| [`;stream`](#stream) `<url>`  | `;yt`, `;play`, `;p` | 1s | Plays from a url (almost anything yt-dlp supports) |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -140,7 +143,7 @@ Pausing the voice client. This command can be used multiple times.
 
 #### Before Invoking Conditions
 
-- Bot must be playing something
+- Bot must be in the process of playing something
 
 ### [`queue`](#queue)
 
@@ -180,12 +183,117 @@ Resumes the voice client to play the paused song. This command can be used repea
 
 #### Before Invoking Conditions
 
-- Bot must be playing something
+- Bot must be in the process of playing something
 
-### `shuffle`
+### [`shuffle`](#shuffle)
 
-### `skip`
+Shuffles the queue
 
-### `stream`
+The shuffle process is to randomly scramble the order of the songs in queue. Queue stays the same if there are 0 or 1 songs in the queue.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+### [`skip`](#skip)
+
+Skips current song
+
+Stops playing of the current song, which in turn causes the automatic fetching of the next song, which depends on the looping condition.
+
+If no loop is set on the queue, skipping causes the current song to be removed from the queue.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+??? warning
+
+    Having this command run in quick succession is known to cause the bot to freeze on the current song. The usual way to resolve the bot freezing is to [reschedule](./additional.md#reschedule).
+
+### [`stream`](#stream)
+
+Plays from a url (almost anything yt-dlp supports)
+
+Places the url to be streamed in the queue if a current song is playing. Plays[^4] the url's stream if this command is used is nothing is playing.
+
+[^4]: It actually forces a scheduled advancement of the queue. See [reschedule](./additional.md#reschedule) and the [dev log](./devlog.md) for more information.
+
+The "url" specified doesn't have to a url specifically. It can be any text query to be searched (on YouTube under normal usage). To be technical, "url" is the query passed into the yt-dlp `URL` argument.
+
+This command also supports the following special queries:
+
+- `prev`: Adds the previous song to the queue if it exists and it was added with this command (is a streamed query)
+- `cur`: Adds the current song to the queue if it exists and it was added with this command (is a streamed query)
+
+This command also supports the addition of links with embeds hidden by the `<>`.
+
+The query must be printable[^3] and not longer than 100 characters.
+
+#### Arguments
+
+- `url` – The song query (that gets fetched as a streamable link)
+
+#### Before Invoking Conditions
+
+- Author must be connected to a voice channel
+
+[^3]: <https://docs.python.org/3/library/string.html#string.printable> for more information. Put simply, it should be safely displayed and printed as human-readable text.
+
+??? tip
+
+    Sometimes a song might exist on one site but not in another. To specify a song to be played on SoundCloud for example, one can do:
+
+    ```
+    ;stream scsearch: damper float
+    ```
+
+    to search SoundCloud for the song "damper float" instead of YouTube, simply by specifying the `scsearch:` prefix.
+
+    If no prefix is specified as with normal usage of the command, it defaults to searching YouTube.
+
+    A list of supported prefixes can be found [here](https://github.com/ytdl-patched/ytdl-patched/blob/ytdlp/supportedsites.md).
+
+??? example
+
+    YouTube query:
+    ```
+    ;p SZA - Kill Bill
+    ```
+
+    YouTube link (Laura Brehm - Parallel):
+    ```
+    ;p https://www.youtube.com/watch?v=kWVNbXvIpxU
+    ```
+
+    SoundCloud query:
+    ```
+    ;p scsearch: Snail's House Pixel Galaxy
+    ```
+
+    SoundCloud link (elmo & Nico Harris - Mirage (feat. Israel Strom)):
+    ```
+    ;p https://soundcloud.com/radiojuicy1/elmo-nico-harris-mirage
+    ```
+
+    Other link (10 Hours of Vinyl - That Diggin’ Show Complete S03):
+    ```
+    ;p https://vimeo.com/248460715
+    ```
+
+    Play previous song:
+    ```
+    ;p prev
+    ```
+
+    Play current song:
+    ```
+    ;p cur
+    ```
+
+    Explicity search for the "prev" query:
+    ```
+    ;p ytsearch: prev
+    ```
 
 ### `volume`

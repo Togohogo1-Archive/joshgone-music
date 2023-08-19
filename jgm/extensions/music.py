@@ -16,6 +16,7 @@ import datetime
 import textwrap
 import mutagen  # Alphabetize later
 from collections import deque
+from urllib.parse import urlparse
 
 import discord
 from discord.ext import commands
@@ -240,11 +241,22 @@ class Music(commands.Cog):
         source = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(current, **filter_data.to_ffmpeg_opts(self.filter_dict, local=True)))
         return source, query
 
+    def uri_validator(self, x):
+        # Validates a URL
+        # https://stackoverflow.com/questions/7160737/how-to-validate-a-url-in-python-malformed-or-not
+        try:
+            result = urlparse(x)
+            return all([result.scheme, result.netloc])
+        except:
+            return False
+
     # Searches various sites using url. Title is data["title"] or url
     async def _play_stream(self, ctx, url):
         original_url = url
+
         if url[0] == "<" and url[-1] == ">":
-            url = url[1:-1]
+            if self.uri_validator(url[1:-1]):
+                url = url[1:-1]
         player, data = await self.player_from_url(ctx, url, stream=True)
         self.bot._datuh = data
         self.bot._datuh2 = data
@@ -557,7 +569,7 @@ class Music(commands.Cog):
 
     @commands.command(aliases=["yt", "play", "p"])
     async def stream(self, ctx, *, url):
-        """Plays from a url (almost anything youtube_dl supports)"""
+        """Plays from a url (almost anything yt-dlp supports)"""
         if len(url) > 100:
             raise ValueError("url too long (length over 100)")
         if not url.isprintable():
@@ -676,6 +688,7 @@ class Music(commands.Cog):
             queue_ref.appendleft(temp.pop())
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def shuffle(self, ctx):
         """Shuffles the queue"""
         info = self.get_info(ctx)
@@ -843,7 +856,7 @@ class Music(commands.Cog):
             raise ValueError(position)
         return index
 
-    @commands.command()
+    @commands.command(aliases=["rm"])
     @commands.cooldown(1, 1, BucketType.user)
     async def remove(self, ctx, position: int):
         """Removes a song on queue"""
@@ -858,7 +871,7 @@ class Music(commands.Cog):
         queue.rotate(index)
         await ctx.send(f"Removed song [{position}]: {song.query}")
 
-    @commands.command()
+    @commands.command(aliases=["mv"])
     @commands.cooldown(1, 1, BucketType.user)
     async def move(self, ctx, origin: int, target: int):
         """Moves a song on queue"""
@@ -892,6 +905,7 @@ class Music(commands.Cog):
         await ctx.send("Cleared queue.")
 
     @commands.command(aliases=["s"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def skip(self, ctx):
         """Skips current song"""
         info = self.get_info(ctx)
@@ -1176,6 +1190,7 @@ class Music(commands.Cog):
     @info.before_invoke
     @loop.before_invoke
     @queue.before_invoke
+    @shuffle.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
