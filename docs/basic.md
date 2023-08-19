@@ -223,8 +223,8 @@ The "url" specified doesn't have to a url specifically. It can be any text query
 
 This command also supports the following special queries:
 
-- `prev`: Adds the previous song to the queue if it exists and it was added with this command (is a streamed query)
-- `cur`: Adds the current song to the queue if it exists and it was added with this command (is a streamed query)
+- `prev`: Queries the previously played song and adds it to the queue if **it exists** and it was **added with this command** (is a streamed query)
+- `cur`: Queries the currently playing song and adds it to the queue if **it exists** and it was **added with this command** (is a streamed query)
 
 This command also supports the addition of links with embeds hidden by the `<>`.
 
@@ -271,9 +271,10 @@ The query must be printable[^3] and not longer than 100 characters.
     ;p scsearch: Snail's House Pixel Galaxy
     ```
 
-    SoundCloud link (elmo & Nico Harris - Mirage (feat. Israel Strom)):
+    SoundCloud link without embed (elmo & Nico Harris - Mirage (feat. Israel Strom)):
     ```
-    ;p https://soundcloud.com/radiojuicy1/elmo-nico-harris-mirage
+    ;p <https://soundcloud.com/radiojuicy1/elmo-nico-harris-mirage>
+
     ```
 
     Other link (10 Hours of Vinyl - That Diggin’ Show Complete S03):
