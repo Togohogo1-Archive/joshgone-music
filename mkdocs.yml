@@ -3,6 +3,7 @@ repo_url: https://github.com/Togohogo1/joshgone-music
 
 theme:
   features:
+    - navigation.top
     - navigation.sections
 
   name: material
