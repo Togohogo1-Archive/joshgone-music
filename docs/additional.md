@@ -4,7 +4,7 @@ title: Additional Features
 
 ## Overview
 
-In table form, the additional features covered only in the music cog
+The table below summarizes extra commands for more advanced bot usage. Click on any of them for more details, including special use cases, caveats, etc.
 
 These features were added to the original version
 
