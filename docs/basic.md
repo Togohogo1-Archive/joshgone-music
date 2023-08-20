@@ -302,7 +302,11 @@ The query must be printable[^3] and not longer than 100 characters.
 
 Gets or changes the player's volume
 
+Volume of the bot defaults to 100% for each new song played. The volume applied only persists for the duration of the current playing song.
 
+The bot is able to set the volume from 0% to 200%, thereore allowing for slight amplification.
+
+If the `volume` argument is not specified, then this command displays the volume of the current song.
 
 #### Arguments
 
@@ -311,5 +315,3 @@ Gets or changes the player's volume
 #### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
-
-...

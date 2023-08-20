@@ -744,11 +744,10 @@ class Music(commands.Cog):
         try:
             if int(volume) == volume:
                 volume = int(volume)
-        except (OverflowError, ValueError):
-            pass
-        if not await self.bot.is_owner(ctx.author):
-            # prevent insane ppl from doing this
-            volume = min(100, volume)
+        except (OverflowError, ValueError) as e:
+            raise commands.CommandError(e)
+        if not 0 <= volume <= 200:
+            raise commands.CommandError("Volume must be in the range [0, 200].")
         ctx.voice_client.source.volume = volume / 100
         await ctx.send(f"Changed volume to {volume}%")
 
