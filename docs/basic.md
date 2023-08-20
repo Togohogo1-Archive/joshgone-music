@@ -200,7 +200,7 @@ Likewise to [move](#move), the `remove` command accepts both positive and negati
 
 #### Arguments
 
-- `position` – (Required) The position of the song in the queue to be removed
+- `position` – The position of the song in the queue to be removed
 
 #### Before Invoking Conditions
 

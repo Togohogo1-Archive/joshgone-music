@@ -705,6 +705,7 @@ class Music(commands.Cog):
             await asyncio.sleep(5)
 
     @commands.command(aliases=["ashuffle"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def autoshuffle(self, ctx, to_ashuffle: typing.Optional[bool] = None):
         info = self.get_info(ctx)
         queue = info["queue"]
@@ -1196,6 +1197,7 @@ class Music(commands.Cog):
     @queue.before_invoke
     @shuffle.before_invoke
     @apply_filter.before_invoke
+    @autoshuffle.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

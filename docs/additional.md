@@ -6,9 +6,12 @@ title: Additional Features
 
 The table below summarizes extra commands for more advanced bot usage. Click on any of them for more details, including special use cases, caveats, etc.
 
-| Command with Arguments | Aliases | Cooldown | Description |
+| Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
 | [`;apply_filter`](#apply_filter) `<filter_name>` | `f` | 1s | Applies a filter to the next song |
+| [`;autoshuffle`](#autoshuffle) `[to_ashuffle]` | `ashuffle` | 1s | Gets or sets queue autoshuffler status |
+
+[^1]: `[optinal argument] <required arguiment>`
 
 ## Commands
 
@@ -43,7 +46,26 @@ Here is a table of the currently available filters:
 
 - Bot must be connected to a voice channel
 
-### `autoshuffle`
+### [`autoshuffle`](#autoshuffle)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Gets or sets queue autoshuffler status
+
+Randomly shuffles the queue once every 5 seconds if on.
+
+If no arguments are provided, then this command simply prints if the autoshuffler is on or off.
+
+#### Arguments
+
+- `to_ashuffle` – (Optional) A boolean value (True/False) representing the state of the autoshuffler
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `cancel`
 
