@@ -6,7 +6,7 @@ title: Basic Features
 
 ## Overview
 
-The table below summarizes all the commands for basic bot usage. Click on any of them for more details, including special use cases, caveats, etx.
+The table below summarizes all the commands for basic bot usage. Click on any of them for more details, including special use cases, caveats, etc.
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
