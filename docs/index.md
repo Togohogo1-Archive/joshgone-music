@@ -10,7 +10,6 @@ this bot (JoshGone music) is a basic bare bones, there are minimal permissions s
 
 ## TODO
 
-- [ ] Some accent colours are still blue
 - [ ] Fix inconsistency with GLOBAL_EFFECTS
 - [ ] Click links on the docs should link externally
 - [ ] Tags for command versioning
