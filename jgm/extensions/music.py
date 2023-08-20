@@ -194,6 +194,7 @@ class Music(commands.Cog):
     }
 
     _FFMPEG_FILTER_DICT = {
+        "bassboost": "bass=g=15",
         "default": "",
         "deepfry": "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1",
     }
@@ -454,7 +455,10 @@ class Music(commands.Cog):
         await ctx.send("Restoring default tempo, pitch, and filter for next song.")
 
     @commands.command(aliases=["f"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def apply_filter(self, ctx, filter_name):
+        """Applies a filter to the next song
+        """
         if filter_name not in self.filter_dict.keys():
             raise commands.CommandError(f"Filter '{filter_name}' not in list of available filters.")
         else:
@@ -1191,6 +1195,7 @@ class Music(commands.Cog):
     @loop.before_invoke
     @queue.before_invoke
     @shuffle.before_invoke
+    @apply_filter.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
