@@ -2,8 +2,6 @@
 title: Basic Features
 ---
 
-# Basic Features
-
 ## Overview
 
 The table below summarizes all the commands for basic bot usage. Click on any of them for more details, including special use cases, caveats, etc.
@@ -98,8 +96,10 @@ The current song is the exact text word-for-word that was queried. If the curren
 
 ### [`join`](#join)
 
-<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v1.0.0</a>
+</sup>
 
 Joins a voice channel
 
@@ -307,7 +307,7 @@ The query must be printable[^3] and not longer than 100 characters.
 
 - Author must be connected to a voice channel
 
-[^3]:  Put simply, it should be safely displayed and printed as human-readable text. Click <a href=https://docs.python.org/3/library/string.html#string.printable target="_blank">here</a> for more information.
+[^3]:  Put simply, it should be safely displayed and printed as human-readable text. Click <a href="https://docs.python.org/3/library/string.html#string.printable" target="_blank">here</a> for more information.
 
 ??? tip
 
