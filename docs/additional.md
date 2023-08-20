@@ -6,9 +6,9 @@ title: Additional Features
 
 The table below summarizes extra commands for more advanced bot usage. Click on any of them for more details, including special use cases, caveats, etc.
 
-| Command with Arguments[^1] | Aliases | Cooldown | Description |
+| Command with Arguments | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;apply_filter`](#apply_filter) `<filter_name>` | | 1s | Applies a filter to the next song |
+| [`;apply_filter`](#apply_filter) `<filter_name>` | `f` | 1s | Applies a filter to the next song |
 
 ## Commands
 
@@ -17,7 +17,7 @@ Recategorize them later
 ### [`apply_filter`](#apply_filter)
 
 <sup>
-<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
