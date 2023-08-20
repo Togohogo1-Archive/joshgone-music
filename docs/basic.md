@@ -239,7 +239,7 @@ The query must be printable[^3] and not longer than 100 characters.
 
 - Author must be connected to a voice channel
 
-[^3]: <https://docs.python.org/3/library/string.html#string.printable> for more information. Put simply, it should be safely displayed and printed as human-readable text.
+[^3]:  Put simply, it should be safely displayed and printed as human-readable text. Click <a href=https://docs.python.org/3/library/string.html#string.printable target="_blank">here</a> for more information.
 
 ??? tip
 
@@ -253,7 +253,7 @@ The query must be printable[^3] and not longer than 100 characters.
 
     If no prefix is specified as with normal usage of the command, it defaults to searching YouTube.
 
-    A list of supported prefixes can be found [here](https://github.com/ytdl-patched/ytdl-patched/blob/ytdlp/supportedsites.md).
+    A list of supported prefixes can be found <a href=https://github.com/ytdl-patched/ytdl-patched/blob/ytdlp/supportedsites.md target="_blank">here</a>.
 
 ??? example
 
