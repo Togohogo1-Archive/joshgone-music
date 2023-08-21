@@ -35,6 +35,8 @@ extra:
       name: Togohogo1
 
 markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true
   - admonition
   - pymdownx.details
   - pymdownx.superfences
