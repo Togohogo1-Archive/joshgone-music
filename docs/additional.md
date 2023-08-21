@@ -129,7 +129,6 @@ If the specified seek time goes beyond the end of the song, this command will mo
 
     Executing this command extremely quickly in succession may cause the bot to freeze on the current song, which is usually resolved with a [reschedule](#reschedule).
 
-
 #### Arguments
 
 - `sec` – (Optional, Default = 5) The amount of seconds to seek forward into the current song
