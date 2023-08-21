@@ -1096,7 +1096,10 @@ class Music(commands.Cog):
         await ctx.send(f"Jumped to {f'{pos} seconds' if match_any_seconds(pos) else f'timestamp {pos}'}.")
 
     @commands.command(aliases=["ff"])
+    @commands.cooldown(1, 0.5, BucketType.user)
     async def fast_forward(self, ctx, sec: int = 5):
+        """Seeks a short amount of time forward into a song
+        """
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive.")
 

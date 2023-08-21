@@ -12,6 +12,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;autoshuffle`](#autoshuffle) `[to_ashuffle]` | `ashuffle` | 1s | Gets or sets queue autoshuffler status |
 | [`;cancel`](#cancel) | | 1s | Cancels an existing sleep timer |
 | [`;daycore`](#daycore) | `dc` | 1s | Applies the daycore effect |
+| [`;fast_forward`](#fast_forward) `[sec]` | `ff` | 0.5s | Seeks a short amount of time forward into a song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -105,7 +106,37 @@ When run, the daycore effect will be applied to the next song played.
 
 - Bot must be connected to a voice channel
 
-### `fast_forward`
+### [`fast_forward`](#fast_forward)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Seeks a short amount of time forward into a song
+
+If no argument is specified, this command defaults to seeking forward 5 seconds. Otherwise, the amount of seconds seeked forward must be an integer in between 1 and 15.
+
+- something about speed
+
+If the specified seek time goes beyond the end of the song, this command will move forward by the remaining time until the end of the song.
+
+??? warning
+
+    For an unspecified reason (most likely due to latency), fast forwarding on [streamed](./basic.md#stream) audio longer than ~15 minutes tends to cause delays. See this Stack Overflow <a href="https://stackoverflow.com/questions/74972819/discord-py-music-bot-slowing-down-for-longer-audio-queries" target="_blank">post</a> for more details.
+
+    Slight buffering may also be noticeable when running this command while the tempo of the song is slower than normal.
+
+    Executing this command extremely quickly in succession may cause the bot to freeze on the current song, which is usually resolved with a [reschedule](#reschedule).
+
+
+#### Arguments
+
+- `sec` – (Optional, Default = 5) The amount of seconds to seek forward into the current song
+
+#### Before Invoking Conditions
+
+- Bot must be in the process of playing something
 
 ### `forceskip`
 
@@ -140,7 +171,8 @@ Does not cause resume
 
 ### `speed`
 
-Talk about how relative time is kept constant here?
+- Talk about how relative time is kept constant here?
+- Also point towards the librubberband warning
 
 ### `stream_prepend`
 
