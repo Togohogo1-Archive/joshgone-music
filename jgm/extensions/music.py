@@ -437,7 +437,10 @@ class Music(commands.Cog):
         await ctx.send("Applying nightcore (1.2x tempo and pitch) effect for next song")
 
     @commands.command(aliases=["dc"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def daycore(self, ctx):
+        """Applies the daycore effect
+        """
         info = self.get_info(ctx)
         filter_data = info["filter_data"]
         # A little bit less than 0.8333 (1/1.2) because I like more daycore
@@ -707,6 +710,8 @@ class Music(commands.Cog):
     @commands.command(aliases=["ashuffle"])
     @commands.cooldown(1, 1, BucketType.user)
     async def autoshuffle(self, ctx, to_ashuffle: typing.Optional[bool] = None):
+        """Gets or sets queue autoshuffler status
+        """
         info = self.get_info(ctx)
         queue = info["queue"]
 
@@ -990,7 +995,10 @@ class Music(commands.Cog):
             await ctx.send("Please cancel the currently running sleep timer first.")
 
     @commands.command()
+    @commands.cooldown(1, 1, BucketType.user)
     async def cancel(self, ctx):
+        """Cancels an existing sleep timer
+        """
         info = self.get_info(ctx)
         task_tuple = info["sleep_timer_task"]
 
@@ -1198,6 +1206,8 @@ class Music(commands.Cog):
     @shuffle.before_invoke
     @apply_filter.before_invoke
     @autoshuffle.before_invoke
+    @cancel.before_invoke
+    @daycore.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

@@ -10,6 +10,8 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 |-|-|-|-|
 | [`;apply_filter`](#apply_filter) `<filter_name>` | `f` | 1s | Applies a filter to the next song |
 | [`;autoshuffle`](#autoshuffle) `[to_ashuffle]` | `ashuffle` | 1s | Gets or sets queue autoshuffler status |
+| [`;cancel`](#cancel) | | 1s | Cancels an existing sleep timer |
+| [`;daycore`](#daycore) | `dc` | 1s | Applies the daycore effect |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -67,9 +69,41 @@ If no arguments are provided, then this command simply prints if the autoshuffle
 
 - Bot must be connected to a voice channel
 
-### `cancel`
+### [`cancel`](#cancel)
 
-### `daycore`
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Cancels an existing sleep timer
+
+Deactivates the sleep timer's task of automatically leaving the voice channel after a period of time, if there is a task running.
+
+Forcing the bot to [leave](./basic.md#leave) the voice channel forces a cancel.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+### [`daycore`](#daycore)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Applies the daycore effect
+
+In terms of this bot, an *effect* is defined as a pitch change or a tempo change in the song.
+
+The daycore effect is achieved by applying a 20% decrease in tempo and pitch. This effect is special enough to warrant its own command for ease of using.
+
+When run, the daycore effect will be applied to the next song played.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `fast_forward`
 
@@ -101,7 +135,12 @@ Does not cause resume
 
 ### `sleep_in`
 
+- there can be only one sleep timer running at a time
+- the sleep timer operates server-wide
+
 ### `speed`
+
+Talk about how relative time is kept constant here?
 
 ### `stream_prepend`
 
