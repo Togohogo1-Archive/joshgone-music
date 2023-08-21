@@ -13,3 +13,6 @@ How is this bot different than the others?
 - [ ] Fix inconsistency with GLOBAL_EFFECTS
 - [ ] Click links on the docs should link externally
 - [ ] Tags for command versioning
+- [ ] `<>` not actually needed for optional tags
+- [ ] Update JGM envvars and db name
+- [ ] Turn all emphasis '', "" to italics
