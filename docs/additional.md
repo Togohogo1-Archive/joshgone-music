@@ -165,9 +165,32 @@ This command uses the [`reschedule`](#reschedule) command behind the scenes in a
 
 Shows audio, metadata, and progress bar information for current song
 
+The very first line upon running this command will show the direct query that the user made to queue the song.
 
+Next, two tables outlining audio and metadata information:
+
+=== "Metadata Info"
+
+    | Field | Description |
+    |-|-|
+    | `DOMAIN` | fjskldfskljdf jsdklf sjdklf sdlkf sdkflsdj |
+    | `ID` | b |
+    | `LINK` | c |
+    | `TITLE` | d |
+    | `UPLOADER` | e |
+
+=== "Audio Info"
+
+    | Field | Description |
+    |-|-|
+    | `EFFECTS` | a |
+    | `FILTER` | b |
+    | `VOLUME` | c |
+
+- Description of the progress bar
 
 The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
+
 
 #### Before Invoking Conditions
 
