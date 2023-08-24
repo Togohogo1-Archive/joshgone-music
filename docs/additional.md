@@ -191,7 +191,6 @@ Next, two tables outlining audio and metadata information:
 
 The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
 
-
 #### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
@@ -213,7 +212,6 @@ The metadata information will be different for songs added locally. That is, wha
 
     [#######.............] 00:15:08/00:42:56
     ```
-
 
 ### `info_global`
 
