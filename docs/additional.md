@@ -14,6 +14,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;daycore`](#daycore) | `dc` | 1s | Applies the daycore effect |
 | [`;fast_forward`](#fast_forward) `[sec]` | `ff` | 0.5s | Seeks a short amount of time forward into a song |
 | [`;forceskip`](#forceskip) | `fs` | 1s | Skips a song and removes it from the queue |
+| [`;info`](#info) | `i` | 1s | Shows audio, metadata, and progress bar information for current song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -149,15 +150,47 @@ Skips a song and removes it from the queue
 
 Forceskip is a more advanced version of skip. It allows "forcefully" skipping songs that are currently playing. When a song is forcefully skipped, it gets removed from the queue which means that even if the queue is looping, the forceskipped song will not reappear again.
 
+This command uses the [`reschedule`](#reschedule) command behind the scenes in a way such that it is more resilient to spamming. The underlying mechanics of this command is tied to how the bot [works](./devlog.md), for those interested.
+
 #### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
 
-??? info
+### [`info`](#info)
 
-    This command uses the [`reschedule`](#reschedule) command behind the scene in a way such that it is more resilient to spamming. The underlying mechanics of this command is tied to how the bot [works](./devlog.md), for those interested.
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
 
-### `info`
+Shows audio, metadata, and progress bar information for current song
+
+
+
+The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+??? example
+
+    ``` text title="Sample output"
+    ;stream pink floyd
+
+    DOMAIN   youtube.com
+    ID       k9ynZnEBtvw
+    LINK     https://www.youtube.com/watch?v=k9ynZnEBtvw
+    TITLE    Pink Floyd - The Dark Side Of The Moon (50th Anniversary) [2023 Remaster] {Full Album}
+    UPLOADER Pink Floyd
+
+    EFFECTS  x0.8 speed, x0.8 pitch
+    FILTER   default
+    VOLUME   100.0%
+
+    [#######.............] 00:15:08/00:42:56
+    ```
+
 
 ### `info_global`
 

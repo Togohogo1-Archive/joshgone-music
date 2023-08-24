@@ -927,6 +927,8 @@ class Music(commands.Cog):
     @commands.command(aliases=["fs"])
     @commands.cooldown(1, 1, BucketType.user)
     async def forceskip(self, ctx):
+        """Skips a song and removes it from the queue
+        """
         info = self.get_info(ctx)
         current = info["current"]
         # The only exception to history command (because it was)
@@ -1014,7 +1016,10 @@ class Music(commands.Cog):
         await ctx.send("Cancelled the current sleep timer.")
 
     @commands.command(aliases=["i"])
+    @commands.command(1, 1, BucketType.user)
     async def info(self, ctx):
+        """Shows audio, metadata, and progress bar information for current song
+        """
         info = self.get_info(ctx)
         a = info["current"]  # A for audio
 
