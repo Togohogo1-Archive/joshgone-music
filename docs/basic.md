@@ -193,11 +193,11 @@ Pausing the voice client. This command can be used multiple times.
 
 Shows the songs on queue
 
-The first line of the queue specifies size as well as the type of [loop](#loop).
+The first line of the queue specifies size as well as the type of [`loop`](#loop).
 
 If there are no songs in the queue, the next line will be `None`.
 
-If there are songs in the queue, this command outputs and numbers them from 1 to the total queue size. Each item in the queue is the exact song query that the user specified with the [stream](#stream) command.
+If there are songs in the queue, this command outputs and numbers them from 1 to the total queue size. Each item in the queue is the exact song query that the user specified with the [`stream`](#stream) command.
 
 If the queue exceeds the discord message limit size, it will be printed as multiple messages.
 
@@ -214,7 +214,7 @@ If the queue exceeds the discord message limit size, it will be printed as multi
 
 Removes a song on queue
 
-Likewise to [move](#move), the `remove` command accepts both positive and negative positions. After removal, songs below the removed song are then shifted up one position to accommodate for the gap.
+Likewise to [`move`](#move), the `remove` command accepts both positive and negative positions. After removal, songs below the removed song are then shifted up one position to accommodate for the gap.
 
 #### Arguments
 
@@ -266,6 +266,8 @@ Skips current song
 Stops playing of the current song, which in turn causes the automatic fetching of the next song, which depends on the looping condition.
 
 If no loop is set on the queue, skipping causes the current song to be removed from the queue.
+
+Skipping a paused song does not persist the pause for the next song.
 
 #### Before Invoking Conditions
 

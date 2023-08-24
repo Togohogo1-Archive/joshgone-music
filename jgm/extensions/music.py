@@ -925,6 +925,7 @@ class Music(commands.Cog):
             await ctx.send(f"Skipped: {current.query}")
 
     @commands.command(aliases=["fs"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def forceskip(self, ctx):
         info = self.get_info(ctx)
         current = info["current"]

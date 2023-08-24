@@ -13,6 +13,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;cancel`](#cancel) | | 1s | Cancels an existing sleep timer |
 | [`;daycore`](#daycore) | `dc` | 1s | Applies the daycore effect |
 | [`;fast_forward`](#fast_forward) `[sec]` | `ff` | 0.5s | Seeks a short amount of time forward into a song |
+| [`;forceskip`](#forceskip) | `fs` | 1s | Skips a song and removes it from the queue |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -81,7 +82,7 @@ Cancels an existing sleep timer
 
 Deactivates the sleep timer's task of automatically leaving the voice channel after a period of time, if there is a task running.
 
-Forcing the bot to [leave](./basic.md#leave) the voice channel forces a cancel.
+Forcing the bot to [`leave`](./basic.md#leave) the voice channel forces a cancel.
 
 #### Before Invoking Conditions
 
@@ -117,17 +118,9 @@ Seeks a short amount of time forward into a song
 
 If no argument is specified, this command defaults to seeking forward 5 seconds. Otherwise, the amount of seconds seeked forward must be an integer in between 1 and 15.
 
-- something about speed
+Fast forwarding when a speed effect is applied makes no difference from fast forwarding on 1x speed. This command will seek to the same location given the same starting point of a song for any tempo.
 
 If the specified seek time goes beyond the end of the song, this command will move forward by the remaining time until the end of the song.
-
-??? warning
-
-    For an unspecified reason (most likely due to latency), fast forwarding on [streamed](./basic.md#stream) audio longer than ~15 minutes tends to cause delays. See this Stack Overflow <a href="https://stackoverflow.com/questions/74972819/discord-py-music-bot-slowing-down-for-longer-audio-queries" target="_blank">post</a> for more details.
-
-    Slight buffering may also be noticeable when running this command while the tempo of the song is slower than normal.
-
-    Executing this command extremely quickly in succession may cause the bot to freeze on the current song, which is usually resolved with a [reschedule](#reschedule).
 
 #### Arguments
 
@@ -137,7 +130,32 @@ If the specified seek time goes beyond the end of the song, this command will mo
 
 - Bot must be in the process of playing something
 
-### `forceskip`
+??? warning
+
+    For an unspecified reason (most likely due to latency), fast forwarding on [streamed](./basic.md#stream) audio longer than ~15 minutes tends to cause delays. See this Stack Overflow <a href="https://stackoverflow.com/questions/74972819/discord-py-music-bot-slowing-down-for-longer-audio-queries" target="_blank">post</a> for more details.
+
+    Slight buffering may also be noticeable when running this command while the tempo of the song is slower than normal.
+
+    Executing this command extremely quickly in succession may cause the bot to freeze on the current song, which is usually resolved with a [reschedule](#reschedule).
+
+### [`forceskip`](#forceskip)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Skips a song and removes it from the queue
+
+Forceskip is a more advanced version of skip. It allows "forcefully" skipping songs that are currently playing. When a song is forcefully skipped, it gets removed from the queue which means that even if the queue is looping, the forceskipped song will not reappear again.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+??? info
+
+    This command uses the [`reschedule`](#reschedule) command behind the scene in a way such that it is more resilient to spamming. The underlying mechanics of this command is tied to how the bot [works](./devlog.md), for those interested.
 
 ### `info`
 
