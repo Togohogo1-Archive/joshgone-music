@@ -15,6 +15,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;fast_forward`](#fast_forward) `[sec]` | `ff` | 0.5s | Seeks a short amount of time forward into a song |
 | [`;forceskip`](#forceskip) | `fs` | 1s | Skips a song and removes it from the queue |
 | [`;info`](#info) | `i` | 1s | Shows audio, metadata, and progress bar information for current song |
+| [`;info_global`](#info_global) | `ig` | 1s | Shows music information that doesn't get reset for each song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -215,7 +216,54 @@ The metadata information will be different for songs added locally. That is, wha
     [#######.............] 00:15:08/00:42:56
     ```
 
-### `info_global`
+### [`info_global`](#info_global)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Shows music information that doesn't get reset for each song
+
+The basic command description explains why this command has the name "global". These global features are outlined in the following table:
+
+| Field | Description |
+|-|-|
+|`AUTOSHUFFLE_TASK`||
+|`GLOBAL_EFFECTS`||
+|`GLOBAL_FILTER`||
+|`HISTORY_SIZE`||
+|`LOOP_TYPE`||
+|`PAUSED`||
+|`PLAYING`||
+|`PROCESSING`||
+|`QUEUE_LENGTH`||
+|`SLEEP_TIMER_TASK`||
+|`SONGS_PLAYED`||
+|`WAITING`||
+
+This command may be run as long as the bot is connected to a voice channel.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+??? example
+
+    ``` text title="Sample Command Output"
+    AUTOSHUFFLE_TASK running
+    GLOBAL_EFFECTS   x1.2 speed, x1.2 pitch
+    GLOBAL_FILTER    default
+    HISTORY_SIZE     10
+    LOOP_TYPE        no loop
+    PAUSED           False
+    PLAYING          False
+    PROCESSING       False
+    QUEUE_LENGTH     0
+    SLEEP_TIMER_TASK None
+    SONGS_PLAYED     10
+    WAITING          False
+    ```
 
 ### `jump`
 

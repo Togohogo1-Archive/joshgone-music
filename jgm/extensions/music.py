@@ -1053,7 +1053,10 @@ class Music(commands.Cog):
 
     # async def status
     @commands.command(aliases=["ig"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def info_global(self, ctx):
+        """Shows music information that doesn't get reset for each song
+        """
         info = self.get_info(ctx)
         await ctx.send(textwrap.dedent(f"""
         ```
