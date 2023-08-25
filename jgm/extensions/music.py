@@ -1016,7 +1016,7 @@ class Music(commands.Cog):
         await ctx.send("Cancelled the current sleep timer.")
 
     @commands.command(aliases=["i"])
-    @commands.command(1, 1, BucketType.user)
+    @commands.cooldown(1, 1, BucketType.user)
     async def info(self, ctx):
         """Shows audio, metadata, and progress bar information for current song
         """
