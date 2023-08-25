@@ -35,6 +35,8 @@ The definition of "filter" here refers to any distortion of the audio source suc
 
 Applying a specific filter affects all subsequent songs until a new filter is applied.
 
+The filter for the current song cannot be changed while the song is playing.
+
 Here is a table of the currently available filters:
 
 |Filter name | Description |
