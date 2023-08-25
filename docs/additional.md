@@ -285,6 +285,9 @@ Does not cause resume
 
 ### `rewind`
 
+- mention the buffer
+- only can seek back a certain amount of time
+
 ### `sleep_in`
 
 - there can be only one sleep timer running at a time
