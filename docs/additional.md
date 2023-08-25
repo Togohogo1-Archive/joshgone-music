@@ -173,23 +173,23 @@ Next, two tables outlining audio and metadata information:
 
 === "Metadata Info"
 
-    | Field | Description |
+    | Field | Description <small>(if applicable)</small> |
     |-|-|
-    | `DOMAIN` | fjskldfskljdf jsdklf sjdklf sdlkf sdkflsdj |
-    | `ID` | b |
-    | `LINK` | c |
-    | `TITLE` | d |
-    | `UPLOADER` | e |
+    | `DOMAIN` | Name of the website which the query was taken from |
+    | `ID` | The query URL's unique identifier |
+    | `LINK` | Direct link to the query URL |
+    | `TITLE` | Title retrieved from the query URL. Usually more complete than the actual query. |
+    | `UPLOADER` | User who was responsible for uploading/curating the query URL |
 
 === "Audio Info"
 
-    | Field | Description |
+    | Field | Description <small>(if applicable)</small> |
     |-|-|
-    | `EFFECTS` | a |
-    | `FILTER` | b |
-    | `VOLUME` | c |
+    | `EFFECTS` | The tempo and pitch being used for the currently playing song, formatted `x# speed, x# pitch`|
+    | `FILTER` | The filter being used for the currently playing song |
+    | `VOLUME` | The volume of the currently playing sone |
 
-- Description of the progress bar
+A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song (how much was played) and the duration of the entire song.
 
 The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
 
@@ -199,7 +199,7 @@ The metadata information will be different for songs added locally. That is, wha
 
 ??? example
 
-    ``` text title="Sample output"
+    ``` text title="Sample Command Output"
     ;stream pink floyd
 
     DOMAIN   youtube.com
