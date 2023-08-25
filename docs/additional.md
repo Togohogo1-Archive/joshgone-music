@@ -190,7 +190,7 @@ Next, two tables outlining audio and metadata information:
     | `FILTER` | The filter being used for the currently playing song |
     | `VOLUME` | The volume of the currently playing sone |
 
-A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song (how much was played) and the duration of the entire song.
+A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song (this value might be slightly inaccurate for long snogs) and the duration of the entire song.
 
 The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
 
@@ -270,6 +270,8 @@ This command may be run as long as the bot is connected to a voice channel.
 ...
 
 Does not cause resume
+
+may be inaccurate at times
 
 ### `nightcore`
 
