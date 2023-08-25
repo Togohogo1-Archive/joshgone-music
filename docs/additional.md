@@ -152,7 +152,7 @@ Skips a song and removes it from the queue
 
 Forceskip is a more advanced version of skip. It allows "forcefully" skipping songs that are currently playing. When a song is forcefully skipped, it gets removed from the queue which means that even if the queue is looping, the forceskipped song will not reappear again.
 
-This command uses the [`reschedule`](#reschedule) command behind the scenes in a way such that it is more resilient to spamming. The underlying mechanics of this command is tied to how the bot [works](./devlog.md), for those interested.
+This command uses the [`reschedule`](#reschedule) command behind the scenes in a way such that it is more resilient to spamming.
 
 #### Before Invoking Conditions
 
