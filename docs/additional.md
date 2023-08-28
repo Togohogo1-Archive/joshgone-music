@@ -186,9 +186,9 @@ Next, two tables outlining audio and metadata information:
 
     | Field | Description <small>(if applicable)</small> |
     |-|-|
-    | `EFFECTS` | The tempo and pitch being used for the currently playing song, formatted `x# speed, x# pitch`|
-    | `FILTER` | The filter being used for the currently playing song |
-    | `VOLUME` | The volume of the currently playing sone |
+    | `EFFECTS` | The tempo and pitch being used for the currently playing song, formatted `x# speed, x# pitch`. See [`speed`](#speed) and [`pitch`](#pitch) for more details.|
+    | `FILTER` | The filter being used for the currently playing song. See [`apply_filter`](#apply_filter) for more details. |
+    | `VOLUME` | The volume of the currently playing sone. See [`volume`](./basic.md#volume) for more details.|
 
 A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song (this value might be slightly inaccurate for long snogs) and the duration of the entire song.
 
@@ -231,11 +231,11 @@ The basic command description explains why this command has the name "global". T
 
 | Field | Description |
 |-|-|
-|`AUTOSHUFFLE_TASK`||
-|`GLOBAL_EFFECTS`||
-|`GLOBAL_FILTER`||
-|`HISTORY_SIZE`||
-|`LOOP_TYPE`||
+|`AUTOSHUFFLE_TASK`| Indicates if the autoshuffler is on or not. Takes on values of `running` and `None`. See [`autoshuffle`](#autoshuffle) for more details. |
+|`NEXT_EFFECTS`| The effects that will be applied to the next song. In the form of `x# speed, x# pitch`. See [`speed`](#speed) and [`pitch`](#pitch) for more details. |
+|`NEXT_FILTER`| The filter that will be applied to the next song. See [`apply_filter`](#apply_filter) for more details. |
+|`HISTORY_SIZE`| Minimum of the total number of songs played and 100, the maximum size of the playback history queue. See [`playback_history`](#playback_history) for more details|
+|`LOOP_TYPE`| Describes if the queue is looping or not (and the type of loop if it is). See [`loop`](./basic.md#loop) for more details.|
 |`PAUSED`||
 |`PLAYING`||
 |`PROCESSING`||
