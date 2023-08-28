@@ -337,6 +337,11 @@ The query must be printable[^3] and not longer than 100 characters.
     ;p https://www.youtube.com/watch?v=kWVNbXvIpxU
     ```
 
+    YouTube livestream (will bring up a livestream most of the time):
+    ```
+    ;p Lofi Girl livestream
+    ```
+
     SoundCloud query:
     ```
     ;p scsearch: Snail's House Pixel Galaxy
