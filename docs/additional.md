@@ -192,6 +192,8 @@ Next, two tables outlining audio and metadata information:
 
 A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song (this value might be slightly inaccurate for long snogs) and the duration of the entire song.
 
+If the song is a livestream, then a `(live)` will be there to indicate so, the total time of the song will be `00:00:00`. Time into the song will still be tracked normally.
+
 The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
 
 #### Before Invoking Conditions
