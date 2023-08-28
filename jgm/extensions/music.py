@@ -1061,8 +1061,8 @@ class Music(commands.Cog):
         await ctx.send(textwrap.dedent(f"""
         ```
         AUTOSHUFFLE_TASK {"running" if info["autoshuffle_task"] else None}
-        NEXT_EFFECTS   x{info["filter_data"].tempo} speed, x{info["filter_data"].pitch} pitch
-        NEXT_FILTER    {info["filter_data"].filter_name}
+        NEXT_EFFECTS     x{info["filter_data"].tempo} speed, x{info["filter_data"].pitch} pitch
+        NEXT_FILTER      {info["filter_data"].filter_name}
         HISTORY_SIZE     {len(info["history"])}
         LOOP_TYPE        {dict([(1, "loop all"), (0, "no loop"), (-1, "loop one")])[info["loop"]]}
         PAUSED           {False if ctx.voice_client is None else ctx.voice_client.is_paused()}
