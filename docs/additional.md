@@ -8,14 +8,15 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;apply_filter`](#apply_filter) `<filter_name>` | `f` | 1s | Applies a filter to the next song |
-| [`;autoshuffle`](#autoshuffle) `[to_ashuffle]` | `ashuffle` | 1s | Gets or sets queue autoshuffler status |
+| [`;apply_filter`](#apply_filter) `<filter_name>` | `;f` | 1s | Applies a filter to the next song |
+| [`;autoshuffle`](#autoshuffle) `[to_ashuffle]` | `;ashuffle` | 1s | Gets or sets queue autoshuffler status |
 | [`;cancel`](#cancel) | | 1s | Cancels an existing sleep timer |
-| [`;daycore`](#daycore) | `dc` | 1s | Applies the daycore effect |
-| [`;fast_forward`](#fast_forward) `[sec]` | `ff` | 0.5s | Seeks a short amount of time forward into a song |
-| [`;forceskip`](#forceskip) | `fs` | 1s | Skips a song and removes it from the queue |
-| [`;info`](#info) | `i` | 1s | Shows audio, metadata, and progress bar information for current song |
-| [`;info_global`](#info_global) | `ig` | 1s | Shows music information that doesn't get reset for each song |
+| [`;daycore`](#daycore) | `;dc` | 1s | Applies the daycore effect |
+| [`;fast_forward`](#fast_forward) `[sec]` | `;ff` | 0.5s | Seeks a short amount of time forward into a song |
+| [`;forceskip`](#forceskip) | `;fs` | 1s | Skips a song and removes it from the queue |
+| [`;info`](#info) | `;i` | 1s | Shows audio, metadata, and progress bar information for current song |
+| [`;info_global`](#info_global) | `;ig` | 1s | Shows music information that doesn't get reset for each song |
+| [`;jump`](#jump) | `;j` | 1s | Shows music information that doesn't get reset for each song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
