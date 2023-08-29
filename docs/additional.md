@@ -16,7 +16,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;forceskip`](#forceskip) | `;fs` | 1s | Skips a song and removes it from the queue |
 | [`;info`](#info) | `;i` | 1s | Shows audio, metadata, and progress bar information for current song |
 | [`;info_global`](#info_global) | `;ig` | 1s | Shows music information that doesn't get reset for each song |
-| [`;jump`](#jump) | `;j` | 1s | Shows music information that doesn't get reset for each song |
+| [`;jump`](#jump) `<pos>` | `;j` | 2s | Jumps to a timestamp in the song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -226,7 +226,7 @@ The metadata information will be different for songs added locally. That is, wha
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
-Shows music information that doesn't get reset for each song
+Shows music information that generally doesn't get reset for each song
 
 The basic command description explains why this command has the name "global". These global features are outlined in the following table:
 
@@ -268,7 +268,12 @@ This command may be run as long as the bot is connected to a voice channel.
     WAITING          False
     ```
 
-### `jump`
+### [`jump`](#jump)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
 
 ...
 

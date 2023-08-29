@@ -1055,7 +1055,7 @@ class Music(commands.Cog):
     @commands.command(aliases=["ig"])
     @commands.cooldown(1, 1, BucketType.user)
     async def info_global(self, ctx):
-        """Shows music information that doesn't get reset for each song
+        """Shows music information that generally doesn't get reset for each song
         """
         info = self.get_info(ctx)
         await ctx.send(textwrap.dedent(f"""
@@ -1076,7 +1076,10 @@ class Music(commands.Cog):
         """))
 
     @commands.command(aliases=["j"])
+    @commands.cooldown(1, 2, BucketType.user)
     async def jump(self, ctx, pos):
+        """Jumps to a timestamp in the song
+        """
         info = self.get_info(ctx)
 
         # After this is in the form of <int> seconds or [[HH:]MM:]SS
