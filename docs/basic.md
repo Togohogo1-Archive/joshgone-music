@@ -14,10 +14,10 @@ The table below summarizes all the commands for basic bot usage. Click on any of
 | [`;join`](#join) `<channel>`  | | 1s | Joins a voice channel |
 | [`;leave`](#leave)   |  | 1s | Disconnects the bot from voice and clears the queue |
 | [`;loop`](#loop) `[loop]`  | | 1s | Gets or sets queue looping |
-| [`;move`](#move) `<origin> <target>`  | `mv` | 1s | Moves a song on queue |
+| [`;move`](#move) `<origin> <target>`  | `;mv` | 1s | Moves a song on queue |
 | [`;pause`](#pause)   | `;stop` | 0.5s | Pauses playing |
 | [`;queue`](#queue)   | `;q` | 1s | Shows the songs on queue |
-| [`;remove`](#remove) `<position>` | `rm` | 1s | Removes a song on queue |
+| [`;remove`](#remove) `<position>` | `;rm` | 1s | Removes a song on queue |
 | [`;resume`](#resume)   | `;start` | 0.5s | Resumes playing |
 | [`;shuffle`](#shuffle)   | `;shuffle` | 1s | Shuffles the queue |
 | [`;skip`](#skip)   | `;s` | 1s | Skips current song |
