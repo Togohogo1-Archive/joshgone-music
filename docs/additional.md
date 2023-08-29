@@ -236,13 +236,13 @@ The basic command description explains why this command has the name "global". T
 |`NEXT_FILTER`| The filter that will be applied to the next song. See [`apply_filter`](#apply_filter) for more details. |
 |`HISTORY_SIZE`| Minimum of the total number of songs played and 100, the maximum size of the playback history queue. See [`playback_history`](#playback_history) for more details|
 |`LOOP_TYPE`| Describes if the queue is looping or not (and the type of loop if it is). See [`loop`](./basic.md#loop) for more details.|
-|`PAUSED`||
-|`PLAYING`||
-|`PROCESSING`||
-|`QUEUE_LENGTH`||
-|`SLEEP_TIMER_TASK`||
-|`SONGS_PLAYED`||
-|`WAITING`||
+|`PAUSED`| `True`/`False`, if the bot is paused. |
+|`PLAYING`| `True`/`False`, if the bot is playing. |
+|`PROCESSING`| JoshGone Music internal state for music advancing. Takes on `True`/`False`. See this [page](./devlog.md) for more information.|
+|`QUEUE_LENGTH`| Number of songs in the queue. |
+|`SLEEP_TIMER_TASK`| Indicates if a sleep timer is on ir not. Takes on values of `running` and `None`. See [`sleep_in`](#sleep_in) for more details. |
+|`SONGS_PLAYED`| Number of songs that have been played so far. Includes those skipped manually or from error. |
+|`WAITING`| JoshGone Music internal state for music advancing. Takes on `True`/`False`. See this [page](./devlog.md) for more information.|
 
 This command may be run as long as the bot is connected to a voice channel.
 
