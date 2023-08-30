@@ -429,7 +429,10 @@ class Music(commands.Cog):
         return player, data
 
     @commands.command(aliases=["nc"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def nightcore(self, ctx):
+        """Applies the nightcore effect
+        """
         info = self.get_info(ctx)
         filter_data = info["filter_data"]
         filter_data.tempo = 1.2

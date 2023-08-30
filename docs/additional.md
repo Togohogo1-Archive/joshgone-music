@@ -17,6 +17,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;info`](#info) | `;i` | 1s | Shows audio, metadata, and progress bar information for current song |
 | [`;info_global`](#info_global) | `;ig` | 1s | Shows music information that doesn't get reset for each song |
 | [`;jump`](#jump) `<pos>` | `;j` | 2s | Jumps to a timestamp in the song |
+| [`;nightcore`](#nightcore) | `;nc` | 1s | Applies the nightcore effect |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -100,11 +101,11 @@ Forcing the bot to [`leave`](./basic.md#leave) the voice channel forces a cancel
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
-Applies the daycore effect
+Applies the daycore effect, opposite of [`nightcore`](#nightcore)
 
 In terms of this bot, an *effect* is defined as a pitch change or a tempo change in the song.
 
-The daycore effect is achieved by applying a 20% decrease in tempo and pitch. This effect is special enough to warrant its own command for ease of using.
+The daycore effect is achieved by applying a 20% decrease in tempo and pitch. This effect is common enough to warrant its own command for ease of usage.
 
 When run, the daycore effect will be applied to the next song played.
 
@@ -286,6 +287,24 @@ Does not cause resume
 may be inaccurate at times
 
 ### `nightcore`
+### [`nightcore`](#nightcore)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Applies the nightcore effect, opposite of [`daycore`](#daycore)
+
+In terms of this bot, an *effect* is defined as a pitch change or a tempo change in the song.
+
+The nightcore effect is achieved by applying a 20% increase in tempo and pitch. This effect is common enough to warrant its own command for ease of usage.
+
+When run, the nightcore effect will be applied to the next song played.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `normal`
 
