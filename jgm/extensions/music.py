@@ -831,6 +831,8 @@ class Music(commands.Cog):
 
     @commands.command(aliases=["history", "hist"])
     async def playback_history(self, ctx, display_last: int = 5):
+        """Outputs the playback history
+        """
         info = self.get_info(ctx)
         history = info["history"]
         played = info["songs_played"]
@@ -1236,6 +1238,7 @@ class Music(commands.Cog):
     @cancel.before_invoke
     @daycore.before_invoke
     @normal.before_invoke
+    @pitch.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

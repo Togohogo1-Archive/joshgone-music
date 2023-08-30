@@ -19,7 +19,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;jump`](#jump) `<pos>` | `;j` | 2s | Jumps to a timestamp in the song |
 | [`;nightcore`](#nightcore) | `;nc` | 1s | Applies the nightcore effect |
 | [`;normal`](#normal) | `;no` | 1s | Resets current effects and filters |
-| [`;pitch`](#pitch) `<factor>` | `;pi` | 1s | Changes the pitch of a song |
+| [`;playback_history`](#playback_history) `[display_last]` | `;history`, `;hist` | 1s | Outputs the playback history|
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -132,7 +132,7 @@ If the specified seek time goes beyond the end of the song, this command will mo
 
 #### Arguments
 
-- `sec` – (Optional, Default = 5) The amount of seconds to seek forward into the current song
+- `sec` – (Optional, Default = 5) The amount of seconds to seek forward into the current song. Limited from 1 to 15 seconds.
 
 #### Before Invoking Conditions
 
@@ -396,11 +396,24 @@ Changes will be applied to the next song. To be specific, sets the tempo to x1, 
 
 ### [`pitch`](#pitch)
 
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
 Changes the pitch of a song
+
+A change in pitch is applying an *effect*. The definition of *effect* is a pitch or tempo change to the song. Changes are applied to the next song.
+
+A non-integer value for the pitch `factor` will shift the key of the song.
 
 #### Arguments
 
-- `filter_name` – Name of the filter to apply (see "Filter name" column)
+- `factor` – The factor in which to change the pitch by. Limited between x0.25 to x4
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `playback_history`
 
