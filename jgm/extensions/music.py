@@ -830,6 +830,7 @@ class Music(commands.Cog):
             await ctx.send(page)
 
     @commands.command(aliases=["history", "hist"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def playback_history(self, ctx, display_last: int = 5):
         """Outputs the playback history
         """

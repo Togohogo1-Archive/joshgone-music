@@ -19,7 +19,8 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;jump`](#jump) `<pos>` | `;j` | 2s | Jumps to a timestamp in the song |
 | [`;nightcore`](#nightcore) | `;nc` | 1s | Applies the nightcore effect |
 | [`;normal`](#normal) | `;no` | 1s | Resets current effects and filters |
-| [`;playback_history`](#playback_history) `[display_last]` | `;history`, `;hist` | 1s | Outputs the playback history|
+| [`;pitch`](#pitch) `<factor>` | `;pi` | 1s | Changes the pitch of a song |
+| [`;playback_history`](#playback_history) `[display_last]` | `;history`, `;hist` | 1s | Changes the pitch of a song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
