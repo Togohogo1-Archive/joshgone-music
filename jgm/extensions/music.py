@@ -452,7 +452,10 @@ class Music(commands.Cog):
         await ctx.send("Applying daycore (0.8x tempo and pitch) effect for next song")
 
     @commands.command(aliases=["no"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def normal(self, ctx):
+        """Reset current effects and filters
+        """
         info = self.get_info(ctx)
         filter_data = info["filter_data"]
         filter_data.tempo = 1
@@ -484,7 +487,10 @@ class Music(commands.Cog):
         await ctx.send(f"Setting speed factor = x{factor} for next song.")
 
     @commands.command(aliases=["pi"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def pitch(self, ctx, factor: float = None):
+        """Changes the pitch of a song
+        """
         if not (0.25 <= factor <= 4):
             raise commands.CommandError(f"Pitch factor = {factor}x outside of range from 0.25 to 4 inclusive.")
 
@@ -1229,6 +1235,7 @@ class Music(commands.Cog):
     @autoshuffle.before_invoke
     @cancel.before_invoke
     @daycore.before_invoke
+    @normal.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

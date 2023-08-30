@@ -18,6 +18,8 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;info_global`](#info_global) | `;ig` | 1s | Shows music information that doesn't get reset for each song |
 | [`;jump`](#jump) `<pos>` | `;j` | 2s | Jumps to a timestamp in the song |
 | [`;nightcore`](#nightcore) | `;nc` | 1s | Applies the nightcore effect |
+| [`;normal`](#normal) | `;no` | 1s | Resets current effects and filters |
+| [`;pitch`](#pitch) `<factor>` | `;pi` | 1s | Changes the pitch of a song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -377,9 +379,28 @@ When run, the nightcore effect will be applied to the next song played.
 
 - Bot must be connected to a voice channel
 
-### `normal`
+### [`normal`](#normal)
 
-### `pitch`
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Resets current effects and filters
+
+Changes will be applied to the next song. To be specific, sets the tempo to x1, pitch to x1, and the filter to `default`.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+### [`pitch`](#pitch)
+
+Changes the pitch of a song
+
+#### Arguments
+
+- `filter_name` – Name of the filter to apply (see "Filter name" column)
 
 ### `playback_history`
 
