@@ -1094,6 +1094,7 @@ class Music(commands.Cog):
         current = info["current"]
         is_cur_local = current.ty=="local"  # More intuitive to put this outside function call below
         ffmpeg_opts = current.filter_data.to_ffmpeg_opts(self.filter_dict, is_cur_local)
+        pre_jump_volume = ctx.voice_client.source.volume
 
         # Create a copy so "-ss" doesn't stack at the end
         ffmpeg_opts_after_jump = ffmpeg_opts.copy()
@@ -1103,6 +1104,8 @@ class Music(commands.Cog):
         current.sframes = seconds_to_scaled_frames(hhmmss_to_seconds(pos), current.filter_data.tempo)
         # Metadata generated before this line
         seek_stream = discord.PCMVolumeTransformer(patched_player.FFmpegPCMAudio(current, **ffmpeg_opts_after_jump))  # "url" is the same when querying
+        # Set volume before playing in case of delay
+        seek_stream.volume = pre_jump_volume
         # `current` doesn't get overridden, a copy of the same `ffmpeg_opts` is just used with a seek flag
         ctx.voice_client._player.source = seek_stream
         await ctx.send(f"Jumped to {f'{pos} seconds' if match_any_seconds(pos) else f'timestamp {pos}'}.")
