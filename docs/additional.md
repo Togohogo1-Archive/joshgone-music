@@ -191,15 +191,19 @@ Next, two tables outlining audio and metadata information:
     | `FILTER` | The filter being used for the currently playing song. See [`apply_filter`](#apply_filter) for more details. |
     | `VOLUME` | The volume of the currently playing sone. See [`volume`](./basic.md#volume) for more details.|
 
-A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song (this value might be slightly inaccurate for long snogs) and the duration of the entire song.
+A progress bar keeps track how far into the song one is, acting like a playhead. To the right of the progress bar includes the total time into the song and the duration of the entire song.
 
-If the song is a livestream, then a `(live)` will be there to indicate so, the total time of the song will be `00:00:00`. Time into the song will still be tracked normally.
+If the song is a livestream, then a `(live)` will be there to indicate so, the total time of the song will be `00:00:00`. Time into the song will still be tracked normally. In addition, `(paused)` will be shown if the song is paused.
 
 The metadata information will be different for songs added locally. That is, whatever <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">mutagen</a> is able to extract from the local audio file.
 
 #### Before Invoking Conditions
 
 - Bot must be connected to a voice channel
+
+??? warning
+
+    The progress bar/seek head showing total time into the song will be slightly in accurate for longer songs. The longer the song the more inaccurate. For most cases, this inaccuracy is negligible.
 
 ??? example
 
