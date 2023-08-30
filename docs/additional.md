@@ -280,13 +280,84 @@ This command may be run as long as the bot is connected to a voice channel.
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
-...
+Jumps to a timestamp in the song
 
-Does not cause resume
+The timestamp `<pos>` (as specified below) can be specified in terms of number of seconds or `[HH:[MM:]]SS`. The latter means that seconds are always mandatory, then followed by minutes and hours.
 
-may be inaccurate at times
+Seconds alone can range from 0 to 359999. If seconds is used as part of the latter form, then it only goes up to 59. The same happens with minutes. Hours can go up to 99.
 
-### `nightcore`
+Jumping is possible when the current song is paused and does not automatically resume the song when done. Jumping also preserves things like volume, filters, and effects.
+
+If jumped further than the current song's length, the song gets skipped.
+
+#### Arguments
+
+- `pos` – The timestamp to jump to. Either in seconds or `[[HH;]MM:]SS` format.
+
+#### Before Invoking Conditions
+
+- Bot must be in the process of playing something
+
+??? warning
+
+    Jumping to further locations be slightly in accurate for longer songs. The longer the song the more inaccurate. For most cases, this inaccuracy is negligible.
+
+??? example
+
+    Jump to 1 minute and 30 seconds
+
+    ```
+    ;j 1:30
+    ```
+
+    Jump to 1 minute and 30 seconds
+
+    ```
+    ;j 90
+    ```
+
+    Jump to 1 hour and 30 seconds
+
+    ```
+    ;j 1:30:00
+    ```
+
+    Jump to 99 hours and 59 minutes
+
+    ```
+    ;j 99:59:00
+    ```
+
+    Jump to 5 minutes
+
+    ```
+    ;j 5:00
+    ```
+
+    Jump to 1 second less than 10 minutes
+
+    ```
+    ;j 9:59
+    ```
+
+    Jump to the maximum time allowed
+
+    ```
+    ;j 99:59:59
+    ```
+
+    Jump to the maximum time allowed
+
+    ```
+    ;j 359999
+    ```
+
+    Jump to the beginning of a song
+
+    ```
+    ;j 0
+    ```
+
 ### [`nightcore`](#nightcore)
 
 <sup>
