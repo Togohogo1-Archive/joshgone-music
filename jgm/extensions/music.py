@@ -1240,6 +1240,7 @@ class Music(commands.Cog):
     @daycore.before_invoke
     @normal.before_invoke
     @pitch.before_invoke
+    @playback_history.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

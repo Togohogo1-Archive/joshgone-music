@@ -20,7 +20,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;nightcore`](#nightcore) | `;nc` | 1s | Applies the nightcore effect |
 | [`;normal`](#normal) | `;no` | 1s | Resets current effects and filters |
 | [`;pitch`](#pitch) `<factor>` | `;pi` | 1s | Changes the pitch of a song |
-| [`;playback_history`](#playback_history) `[display_last]` | `;history`, `;hist` | 1s | Changes the pitch of a song |
+| [`;playback_history`](#playback_history) `[display_last]` | `;history`, `;hist` | 1s | Outputs the playback history |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -416,7 +416,31 @@ A non-integer value for the pitch `factor` will shift the key of the song.
 
 - Bot must be connected to a voice channel
 
-### `playback_history`
+### [`playback_history`](#playback_history)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Outputs the playback history
+
+This command displays a maximum of 100 songs but keeps track of the total number of songs plays.
+The names of the items in the playback history are the direct queries that the user made.
+
+If the specified number of songs to include in playback history output includes all the songs ever played by the bot, the total songs played counter will not be displayed.
+
+Songs in the playback history outputs are numbered 1 to `display_last`. The smaller the number, the more recently played it was.
+
+This command will notify the user if there is no playback history. If output is too long, the bot will send multiple messages.
+
+#### Arguments
+
+- `display_last` – (Optional, Default = 5) Display last `display_last` songs played
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `playback_history_clear`
 
