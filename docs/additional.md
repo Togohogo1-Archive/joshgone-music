@@ -446,6 +446,8 @@ This command will notify the user if there is no playback history. If output is 
 
 ### `playlist_link`
 
+- one of the less developed commands, still in experimental phase
+
 ### `rewind`
 
 - mention the buffer
@@ -467,6 +469,12 @@ This command will notify the user if there is no playback history. If output is 
 
 ### `local`
 
+- experimental (tag for it?)
+
 ### `local_prepend`
 
+- experimental (tag for it?)
+
 ### `reschedule`
+
+- experimental (tag for it?)
