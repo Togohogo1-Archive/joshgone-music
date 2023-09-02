@@ -13,3 +13,4 @@ How is this bot different than the others?
 - [ ] `<>` not actually needed for optional arguments
 - [ ] Update JGM envvars and db name
 - [ ] Turn all emphasis '', "" to italics
+- [ ] 1x vs x1 speed
