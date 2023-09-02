@@ -24,7 +24,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;playback_history_clear`](#playback_history_clear) | `;hclear` | 1s | Clears the playback history |
 | [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
 | [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
-| [`;rewind`](#rewind) `[sec]` | `rr` | 0.5s | Seeks a short amount of time backwards into the song |
+| [`;rewind`](#rewind) `[sec]` | `;rr` | 0.5s | Seeks a short amount of time backwards into the song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
