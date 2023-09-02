@@ -562,7 +562,7 @@ This command has only been tested for YouTube and SoundCloud playlists:
 
     When adding a SoundCloud playlist with more than 5 songs, the 6<sup>th</sup> song and beyond will be an API link in the format of `https://api-v2.soundcloud.com/tracks/<track_id>`. The first 5 songs will be how they are normally displayed as an online link.
 
-### `rewind`
+### [`rewind`](#rewind)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
@@ -571,8 +571,19 @@ This command has only been tested for YouTube and SoundCloud playlists:
 
 Seeks a short amount of time backwards into the song
 
-- mention the buffer
-- only can seek back a certain amount of time
+If no argument is specified, this command defaults to seeking backward 5 seconds. Otherwise, the amount of seconds seeked backward must be an integer in between 1 and 15.
+
+Rewinding when a speed effect is applied makes no difference from fast forwarding on 1x speed. This command will seek to the same location given the same starting point of a song for any tempo.
+
+Unlike [`;fast_forward`](#fast_forward), only a certain amount of time may be seeked backward, and this amount of time depends on the current playback speed:
+
+- ~15 seconds for x0.25 speed
+- 75 seconds for x1 speed
+- nearly 5 minutes for 4x speed
+
+This is because the bot caches some of the raw audio that gets played and this difference in speed keeps the size of this cache consistent for different playback speeds.
+
+If the rewind time goes beyond what the cache can store or the beginning of the song, this command will truncate the rewind time to a value less than what was specified.
 
 #### Arguments
 
