@@ -1164,6 +1164,7 @@ class Music(commands.Cog):
             await ctx.send(f"[WARNING] Unable to seek {sec}s forward. Seeking {partial_sec}s instead.")
 
     @commands.command(aliases=["rr"])
+    @commands.cooldown(1, 0.5, BucketType.user)
     async def rewind(self, ctx, sec: int = 5):
         """Seeks a short amount of time backwards into the song
         """
