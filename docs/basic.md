@@ -307,7 +307,7 @@ The query must be printable[^3] and not longer than 100 characters.
 
 #### Before Invoking Conditions
 
-- Author must be connected to a voice channel
+- Either user or bot must be connected to a voice channel
 
 [^3]:  Put simply, it should be safely displayed and printed as human-readable text. Click <a href="https://docs.python.org/3/library/string.html#string.printable" target="_blank">here</a> for more information.
 

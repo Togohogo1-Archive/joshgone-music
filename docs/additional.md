@@ -21,6 +21,10 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;normal`](#normal) | `;no` | 1s | Resets current effects and filters |
 | [`;pitch`](#pitch) `<factor>` | `;pi` | 1s | Changes the pitch of a song |
 | [`;playback_history`](#playback_history) `[display_last]` | `;history`, `;hist` | 1s | Outputs the playback history |
+| [`;playback_history_clear`](#playback_history_clear) | `;hclear` | 1s | Clears the playback history |
+| [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
+| [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
+| [`;rewind`](#rewind) `[sec]` | `rr` | 0.5s | Seeks a short amount of time backwards into the song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -442,22 +446,121 @@ This command will notify the user if there is no playback history. If output is 
 
 - Bot must be connected to a voice channel
 
-### `playback_history_clear`
+### [`playback_history_clear`](#playback_history_clear)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
-### `playlist_link`
+Clears the playback history
 
-<sup>
-<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
-<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
+In addition to clearing the playback history, it also resets the number of songs played. If the bot leaves the voice channel, the playback history gets automatically cleared.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+### [`playlist_link`](#playlist_link)
+
+<sup> <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp; <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 :octicons-beaker-24: Experimental
 </sup>
 
-- one of the less developed commands, still in experimental phase
+Adds all songs in a playlist to the queue
+
+A playlist is any online collection of songs that yt-dlp is able to support. It essentially loops through all the songs in the playlist and adds them in via [`;stream`](./basic.md#stream). These songs are usually links.
+
+Wrapping the playlist link with angle brackets (`<>`) wraps all links in the playlist in brackets, effectively preventing individual links to show an embed (like when running the [`;current`](./basic.md#current) command).
+
+This command has only been tested for YouTube and SoundCloud playlists:
+
+- YouTube playlists are formatted like `https://www.youtube.com/playlist?list=<id>`
+- SoundCloud playlists are formatted like `https://soundcloud.com/<user>/sets/<playlist>`
+
+#### Arguments
+
+- `url` – Link to the online playlist
+
+#### Before Invoking Conditions
+
+- Either user or bot must be connected to a voice channel
+
+??? example
+
+    Running this command:
+
+    ```
+    ;playlist_link <https://www.youtube.com/playlist?list=PLocQeghkorOWXJ3tu8YwNfbwjxTJ2UZWV>
+    ```
+
+    And then `;queue` immediately after should output:
+
+    ```
+    Queue [56] (no loop):
+    1: <https://www.youtube.com/watch?v=z-ys_60gmEE>
+    2: <https://www.youtube.com/watch?v=edpbsFvypK0>
+    3: <https://www.youtube.com/watch?v=clVx1bccHpU>
+    4: <https://www.youtube.com/watch?v=osRSZaCswds>
+    5: <https://www.youtube.com/watch?v=-uH2_sPJuLw>
+    6: <https://www.youtube.com/watch?v=wdCbjTSQwn4>
+    7: <https://www.youtube.com/watch?v=P3UguXUvECM>
+    8: <https://www.youtube.com/watch?v=WTaABER2IgI>
+    9: <https://www.youtube.com/watch?v=vMbGOlMvmFU>
+    10: <https://www.youtube.com/watch?v=ubd3IRnogAk>
+    11: <https://www.youtube.com/watch?v=saZ0ZKE8sdo>
+    12: <https://www.youtube.com/watch?v=qD54sROmeIM>
+    13: <https://www.youtube.com/watch?v=SySHO4W00fs>
+    14: <https://www.youtube.com/watch?v=BoNDM-0PMjM>
+    15: <https://www.youtube.com/watch?v=UiOAyrrtbOs>
+    16: <https://www.youtube.com/watch?v=aup_iSqqAXE>
+    17: <https://www.youtube.com/watch?v=elAG4FsjkuA>
+    18: <https://www.youtube.com/watch?v=wSRAdi1wVW0>
+    19: <https://www.youtube.com/watch?v=tDOla8ZFVKo>
+    20: <https://www.youtube.com/watch?v=XORwfYUH23Y>
+    21: <https://www.youtube.com/watch?v=U7v2e_piJUc>
+    22: <https://www.youtube.com/watch?v=rBU8wRCnaUM>
+    23: <https://www.youtube.com/watch?v=R-kmPds0KSM>
+    24: <https://www.youtube.com/watch?v=wmmj7Giie6g>
+    25: <https://www.youtube.com/watch?v=Uc7567tTjOw>
+    26: <https://www.youtube.com/watch?v=LCdWr3Zrt5s>
+    27: <https://www.youtube.com/watch?v=_VDR2eLwtpo>
+    28: <https://www.youtube.com/watch?v=gADlgxrnAdQ>
+    29: <https://www.youtube.com/watch?v=QVhkyh5OYSU>
+    30: <https://www.youtube.com/watch?v=N_ILB4bQsLA>
+    31: <https://www.youtube.com/watch?v=zeCwfZWNt70>
+    32: <https://www.youtube.com/watch?v=BVP65Rg8myE>
+    33: <https://www.youtube.com/watch?v=Qc11_jkOKx0>
+    34: <https://www.youtube.com/watch?v=9N4airsRCV0>
+    35: <https://www.youtube.com/watch?v=WsWkLVi2Xf8>
+    36: <https://www.youtube.com/watch?v=foaw2arHA50>
+    37: <https://www.youtube.com/watch?v=wu0I5h6wG34>
+    38: <https://www.youtube.com/watch?v=E8e19xlb7mM>
+    39: <https://www.youtube.com/watch?v=I4VD4OwUhDw>
+    40: <https://www.youtube.com/watch?v=1qVrPtq2tcg>
+    41: <https://www.youtube.com/watch?v=pt6R-_-aEzY>
+    42: <https://www.youtube.com/watch?v=5y1lp540t_c>
+    43: <https://www.youtube.com/watch?v=--uwRamO3ws>
+    44: <https://www.youtube.com/watch?v=prNruaG9iDA>
+    45: <https://www.youtube.com/watch?v=aC4H7o53Ng4>
+    46: <https://www.youtube.com/watch?v=l03BFd3wDaE>
+    47: <https://www.youtube.com/watch?v=KsReWI83IC8>
+    48: <https://www.youtube.com/watch?v=13wdFhH34Ms>
+    49: <https://www.youtube.com/watch?v=-wbSvwa9hQk>
+    50: <https://www.youtube.com/watch?v=h66Ys4BXCU8>
+    51: <https://www.youtube.com/watch?v=dmzuBBu-O7Q>
+    52: <https://www.youtube.com/watch?v=ZhIs6rUn7Pg>
+    53: <https://www.youtube.com/watch?v=3grkLm0pabA>
+    54: <https://www.youtube.com/watch?v=uDcpSJIdx5g>
+    55: <https://www.youtube.com/watch?v=kszjdpUF0Js>
+    56: <https://www.youtube.com/watch?v=aSRHJmNJuQU>
+    ```
+
+    This playlist contains YouTube links to all songs from the Cuphead OST.
+
+??? warning
+
+    When adding a SoundCloud playlist with more than 5 songs, the 6<sup>th</sup> song and beyond will be an API link in the format of `https://api-v2.soundcloud.com/tracks/<track_id>`. The first 5 songs will be how they are normally displayed as an online link.
 
 ### `rewind`
 
@@ -466,8 +569,18 @@ This command will notify the user if there is no playback history. If output is 
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
+Seeks a short amount of time backwards into the song
+
 - mention the buffer
 - only can seek back a certain amount of time
+
+#### Arguments
+
+- `sec` – (Optional, Default = 5) The amount of seconds to seek backward into the current song. Limited from 1 to 15 seconds.
+
+#### Before Invoking Conditions
+
+- Bot must be in the process of playing something
 
 ### `sleep_in`
 
@@ -506,6 +619,10 @@ This command will notify the user if there is no playback history. If output is 
 :octicons-beaker-24: Experimental
 </sup>
 
+#### Before Invoking Conditions
+
+- Either user or bot must be connected to a voice channel
+
 ### `local_prepend`
 
 <sup>
@@ -513,6 +630,10 @@ This command will notify the user if there is no playback history. If output is 
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 :octicons-beaker-24: Experimental
 </sup>
+
+#### Before Invoking Conditions
+
+- Either user or bot must be connected to a voice channel
 
 ### `reschedule`
 

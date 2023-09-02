@@ -74,7 +74,7 @@ class Audio:
             "uploader",
             "duration",
             "url",  # The URL queried from the API (for seeking)
-            "webpage_url",  # For display purposes (e.g. soundcloud generating an api audio link)
+            "webpage_url",  # For display purposes (e.g. soundcloud generating an API audio link)
             "live_status",
             "webpage_url_domain",
             "duration_string"
@@ -656,6 +656,7 @@ class Music(commands.Cog):
         await ctx.send(f"Prepended to queue: stream {audio.query}")
 
     @commands.command()
+    @commands.cooldown(1, 3, BucketType.user)
     async def playlist_link(self, ctx, *, url):
         """Adds all songs in a playlist to the queue"""
         if len(url) > 100:
@@ -674,6 +675,7 @@ class Music(commands.Cog):
             "extract_flat": True,
         })
         data = await asyncio.to_thread(ytdl.extract_info, url, download=False)
+        print(data)
         if 'entries' not in data:
             raise ValueError("cannot find entries of playlist")
         entries = data['entries']
@@ -861,7 +863,10 @@ class Music(commands.Cog):
             await ctx.send(page)
 
     @commands.command(aliases=["hclear"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def playback_history_clear(self, ctx):
+        """Clears the playback history
+        """
         info = self.get_info(ctx)
         info["history"].clear()
         info["songs_played"] = 0
@@ -1160,6 +1165,8 @@ class Music(commands.Cog):
 
     @commands.command(aliases=["rr"])
     async def rewind(self, ctx, sec: int = 5):
+        """Seeks a short amount of time backwards into the song
+        """
         if not (1 <= sec <= 15):
             raise commands.CommandError(f"Seek time [{sec}] not a positive integer number of seconds ranging from 1 to 15 seconds inclusive.")
 
@@ -1202,6 +1209,7 @@ class Music(commands.Cog):
     @local_prepend.before_invoke
     @stream.before_invoke
     @stream_prepend.before_invoke
+    @playlist_link.before_invoke
     async def ensure_connected(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice:
@@ -1241,6 +1249,7 @@ class Music(commands.Cog):
     @normal.before_invoke
     @pitch.before_invoke
     @playback_history.before_invoke
+    @playback_history_clear.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")
