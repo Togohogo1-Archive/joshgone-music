@@ -25,6 +25,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
 | [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
 | [`;rewind`](#rewind) `[sec]` | `;rr` | 0.5s | Seeks a short amount of time backwards into the song |
+| [`;sleep_in`](#sleep_in) `[dur]` | `;leavein`, `;sleepin` | 1s | Makes the bot automatically leave the voice channel after some time |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -593,15 +594,30 @@ If the rewind time goes beyond what the cache can store or the beginning of the 
 
 - Bot must be in the process of playing something
 
-### `sleep_in`
+### [`sleep_in`](#sleep_in)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
-- there can be only one sleep timer running at a time
-- the sleep timer operates server-wide
+Makes the bot automatically leave the voice channel after some time
+
+More specifically, this command creates a sleep timer. Once the timer counts down to 0, the bot will automatically leave the voice channel. There can be only one sleep timer running at a time, and sleep timers operate on a server-level.
+
+If the argument `dur` is not specified, then this command will show if a sleep timer is running and how much time it will take for the bot to disconnect from the voice channel. This time may not be super accurate due to some Discord latency.
+
+If specifying the `dur` argument, please refer to the [`;jump`](#jump) command for a description on how to format it.
+
+Once the bot leaves the voice channel, all the information specified in [`;info`](#info) and [`;info_global`](#info_global) will be reset.
+
+#### Arguments
+
+- `dur` – (Optional) Time until the bot leaves the voice channel. Either in seconds or `[[HH;]MM:]SS` format.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
 
 ### `speed`
 

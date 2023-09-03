@@ -981,7 +981,11 @@ class Music(commands.Cog):
         await self.leave(ctx)
 
     @commands.command(aliases=["leavein", "sleepin"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def sleep_in(self, ctx, dur: typing.Optional[str] = None):
+        """Makes the bot automatically leave the voice channel after some time
+        """
+
         info = self.get_info(ctx)
         task_tuple = info["sleep_timer_task"]
 
