@@ -33,7 +33,7 @@ And some additional owner-only commands:
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;local`](#local) `<query>` | | 1s | Description |
+| [`;local`](#local) `<query>` | | 1s | Plays a file from the local filesystem |
 | [`;local_prepend`](#local_prepend) `<query>` | | 1s | Description |
 | [`;reschedule`](#reschedule) | |  | Description |
 
@@ -682,13 +682,34 @@ Exact same as [`;stream`](./basic.md#stream) but instead of inserting the song a
 
 ## Owner Only
 
-### `local`
+### [`local`](#local)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 :octicons-beaker-24: Experimental
 </sup>
+
+Plays a file from the local filesystem
+
+The bot that anything added with this command will be fetched form the local filesystem. Songs on the local filesystem may be in a variety of common audio formats (`.mp3`, `.wav`, `.ogg`, etc.)[^2].
+
+[^2]: This command supports all audio formats that <a href="https://mutagen.readthedocs.io/en/latest/" target="_blank">Mutagen</a> supports
+
+Like the [`;stream`](./basic.md#stream) command, `;local` places the query in the queue as a local type if a current song is playing. It plays the from the file if nothing is playing. *Play* here means reading the raw data from the audio file.
+
+This command also supports the following special queries:
+
+- `prev`: Queries the previously played song and adds it to the queue if **it exists** and it was **added with this command or [`;local_prepend`](#local_prepend)** (is a local query)
+- `cur`: Queries the currently playing song and adds it to the queue if **it exists** and it was **added with this command or [`;local_prepend`](#local_prepend)** (is a local query)
+
+This command also supports the addition of links with embeds hidden by the `<>`.
+
+Although there is no length limit on local file paths, their sizes will be naturally limited by the user's operating system.
+
+#### Arguments
+
+- `query` – The local file path to the song
 
 #### Before Invoking Conditions
 
@@ -702,9 +723,13 @@ Exact same as [`;stream`](./basic.md#stream) but instead of inserting the song a
 :octicons-beaker-24: Experimental
 </sup>
 
+#### Arguments
+
+- Same as [`;local`](#local)
+
 #### Before Invoking Conditions
 
-- Either user or bot must be connected to a voice channel
+- Same as [`;local`](#local)
 
 ### `reschedule`
 

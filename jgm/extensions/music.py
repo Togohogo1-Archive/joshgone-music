@@ -522,6 +522,7 @@ class Music(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
+    @commands.cooldown(1, 1, BucketType.user)
     async def local(self, ctx, *, query):
         """Plays a file from the local filesystem"""
         info = self.get_info(ctx)
