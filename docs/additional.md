@@ -411,11 +411,11 @@ Changes the pitch of a song
 
 A change in pitch is applying an *effect*. The definition of *effect* is a pitch or tempo change to the song. Changes are applied to the next song.
 
-A non-integer value for the pitch `factor` will shift the key of the song.
+A value for the pitch `factor` that isn't a power of 2 will shift the key of the song.
 
 #### Arguments
 
-- `factor` – The factor in which to change the pitch by. Limited between x0.25 to x4
+- `factor` – The factor in which to change the pitch by. Limited between x0.25 to x4.
 
 #### Before Invoking Conditions
 
