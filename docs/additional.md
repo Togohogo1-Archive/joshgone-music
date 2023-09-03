@@ -421,6 +421,10 @@ A value for the pitch `factor` that isn't a power of 2 (not x0.25, x0.5, x1, x2,
 
 - Bot must be connected to a voice channel
 
+??? warning
+
+    This command requires FFmpeg to be compiled with <a href="https://ffmpeg.org/ffmpeg-filters.html#rubberband" target="_blank">librubberband</a>.
+
 ### [`playback_history`](#playback_history)
 
 <sup>
