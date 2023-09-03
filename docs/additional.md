@@ -262,11 +262,11 @@ The basic command description explains why this command has the name "global". T
 |`LOOP_TYPE`| Describes if the queue is looping or not (and the type of loop if it is). See [`loop`](./basic.md#loop) for more details.|
 |`PAUSED`| `True`/`False`, if the bot is paused. |
 |`PLAYING`| `True`/`False`, if the bot is playing. |
-|`PROCESSING`| JoshGone Music internal state for music advancing. Takes on `True`/`False`. See this [page](./devlog.md) for more information.|
+|`PROCESSING`| JoshGone Music internal state for music advancing. Takes on `True`/`False`. See this [page](./jgmusic.md) for more information.|
 |`QUEUE_LENGTH`| Number of songs in the queue. |
 |`SLEEP_TIMER_TASK`| Indicates if a sleep timer is on ir not. Takes on values of `running` and `None`. See [`sleep_in`](#sleep_in) for more details. |
 |`SONGS_PLAYED`| Number of songs that have been played so far. Includes those skipped manually or from error. |
-|`WAITING`| JoshGone Music internal state for music advancing. Takes on `True`/`False`. See this [page](./devlog.md) for more information.|
+|`WAITING`| JoshGone Music internal state for music advancing. Takes on `True`/`False`. See this [page](./jgmusic.md) for more information.|
 
 This command may be run as long as the bot is connected to a voice channel.
 
@@ -735,15 +735,18 @@ Exact same as [`;local`](#local) but when placing the song into the queue, it pl
 
 - Same as [`;local`](#local)
 
-### `reschedule`
+### [`reschedule`](#reschedule)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
-:octicons-beaker-24: Experimental
 </sup>
 
 Reschedules the current guild onto the advancer task
+
+When playing audio, sometimes something unexpected happens and the bot chokes up and gets stuck in the middle of a song with no way to [`;skip`](./basic.md#skip). Compared to restarting and rejoining, invoking this command is the least destructive way to fix this issue. In other words, it forcefully restarts the queue advancement loop.
+
+For an in-depth explanation, see this [page](./jgmusic.md).
 
 #### Before Invoking Conditions
 

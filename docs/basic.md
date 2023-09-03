@@ -288,7 +288,7 @@ Plays from a url (almost anything yt-dlp supports)
 
 Places the url to be streamed in the queue if a current song is playing. Plays[^4] the url's stream if this command is used is nothing is playing.
 
-[^4]: It actually forces a scheduled advancement of the queue. See [reschedule](./additional.md#reschedule) and the [dev log](./devlog.md) for more information.
+[^4]: It actually forces a scheduled advancement of the queue. See [reschedule](./additional.md#reschedule) and the [dev log](./jgmusic.md) for more information.
 
 The "url" specified doesn't have to a url specifically. It can be any text query to be searched (on YouTube under normal usage). To be technical, "url" is the query passed into the yt-dlp `URL` argument.
 

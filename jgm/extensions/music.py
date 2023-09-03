@@ -556,6 +556,7 @@ class Music(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
+    @commands.cooldown(1, 1, BucketType.user)
     async def local_prepend(self, ctx, *, query):
         """Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue
         """
