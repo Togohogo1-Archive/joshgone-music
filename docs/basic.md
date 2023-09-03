@@ -294,8 +294,8 @@ The "url" specified doesn't have to a url specifically. It can be any text query
 
 This command also supports the following special queries:
 
-- `prev`: Queries the previously played song and adds it to the queue if **it exists** and it was **added with this command** (is a streamed query)
-- `cur`: Queries the currently playing song and adds it to the queue if **it exists** and it was **added with this command** (is a streamed query)
+- `prev`: Queries the previously played song and adds it to the queue if **it exists** and it was **added with this command or [`;stream_prepend`](./additional.md#stream_prepend)** (is a streamed query)
+- `cur`: Queries the currently playing song and adds it to the queue if **it exists** and it was **added with this command or [`;stream_prepend`](./additional.md#stream_prepend)** (is a streamed query)
 
 This command also supports the addition of links with embeds hidden by the `<>`.
 
