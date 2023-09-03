@@ -71,11 +71,8 @@ nav:
     - Basic Music Features: basic.md
     - Additional Music Features: additional.md
     - Playlist Management: playlists.md
-  - Advanced Usage:
-    - Admin Commands: _.md
-    - Using the REPL: _.md
-    - Database Migrations: _.md
-  - Devlogs:
+  - For Developers:
+    - Developer Features: dev.md
     - How JoshGone Music Works: jgmusic.md
 
 extra_javascript:
