@@ -477,7 +477,10 @@ class Music(commands.Cog):
             await ctx.send(f"Applying filter '{filter_name}' to the next song.")
 
     @commands.command(aliases=["sp"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def speed(self, ctx, factor: float = None):
+        """Changes the tempo of a song
+        """
         if not (0.25 <= factor <= 4):
             raise commands.CommandError(f"Speed factor = {factor}x outside of range from 0.25 to 4 inclusive.")
 
@@ -1255,6 +1258,7 @@ class Music(commands.Cog):
     @pitch.before_invoke
     @playback_history.before_invoke
     @playback_history_clear.before_invoke
+    @speed.before_invoke
     async def check_connected(self, ctx):
         if ctx.voice_client is None:
             raise commands.CommandError("Not connected to a voice channel")

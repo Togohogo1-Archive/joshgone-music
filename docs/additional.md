@@ -26,6 +26,7 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;playlist_link`](#playlist_link) `<url>` | | 3s | Adds all songs in a playlist to the queue |
 | [`;rewind`](#rewind) `[sec]` | `;rr` | 0.5s | Seeks a short amount of time backwards into the song |
 | [`;sleep_in`](#sleep_in) `[dur]` | `;leavein`, `;sleepin` | 1s | Makes the bot automatically leave the voice channel after some time |
+| [`;speed`](#speed) `<factor>` | `;sp` | 1s | Changes the tempo of a song |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -623,15 +624,33 @@ Once the bot leaves the voice channel, all the information specified in [`;info`
 
 - Bot must be connected to a voice channel
 
-### `speed`
+### [`speed`](#speed)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
 
-- Talk about how relative time is kept constant here?
-- Also point towards the librubberband warning
+Changes the tempo of a song
+
+A change in tempo is applying an *effect*. The definition of *effect* is a pitch or tempo change to the song. Changes are applied to the next song.
+
+When this effect is applied to a song, the relative time of the song is kept constant. This means that doing [`;fast_foward`](#fast_forward)s and [`;rewind`](#rewind)s will result in the same start and end seek positions no matter what the tempo may be. Another way to think about this is if:
+
+- `factor` > 1, then it will take less than 10 seconds for the song to reach the 10 second timestamp shown in [`;info`](#info)
+- `factor` < 1, then it will take more than 10 secods for the song tor each 10 second timestamp shown in [`;info`](#info)
+
+#### Arguments
+
+- `factor` – The factor in which to change the tempo by. Limited between x0.25 to x4.
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
+
+??? warning
+
+    This command requires FFmpeg to be compiled with <a href="https://ffmpeg.org/ffmpeg-filters.html#rubberband" target="_blank">librubberband</a>.
 
 ### `stream_prepend`
 
