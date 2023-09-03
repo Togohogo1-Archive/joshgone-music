@@ -27,6 +27,8 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;rewind`](#rewind) `[sec]` | `;rr` | 0.5s | Seeks a short amount of time backwards into the song |
 | [`;sleep_in`](#sleep_in) `[dur]` | `;leavein`, `;sleepin` | 1s | Makes the bot automatically leave the voice channel after some time |
 | [`;speed`](#speed) `<factor>` | `;sp` | 1s | Changes the tempo of a song |
+| [`;stream_prepend`](#stream_prepend) `<url>` | | 1s | Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue |
+
 And some additional owner-only commands:
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
@@ -659,12 +661,24 @@ When this effect is applied to a song, the relative time of the song is kept con
 
     This command requires FFmpeg to be compiled with <a href="https://ffmpeg.org/ffmpeg-filters.html#rubberband" target="_blank">librubberband</a>.
 
-### `stream_prepend`
+### [`stream_prepend`](#stream_prepend)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
+
+Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue
+
+Exact same as [`;stream`](./basic.md#stream) but instead of inserting the song at the back of the queue, it inserts it at the front. This ensures a prepended song will be played next, if an autoshuffler doesn't affect the queue ordering first.
+
+#### Arguments
+
+- Exact same as [`;stream`](./basic.md#stream)
+
+#### Before Invoking Conditions
+
+- Exact same as [`;stream`](./basic.md#stream)
 
 ## Owner Only
 

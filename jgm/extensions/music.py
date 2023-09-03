@@ -623,6 +623,7 @@ class Music(commands.Cog):
         await ctx.send(f"Appended to queue: stream {audio.query}")
 
     @commands.command(aliases=["prepend", "pplay", "pp"])
+    @commands.cooldown(1, 1, BucketType.user)
     async def stream_prepend(self, ctx, *, url):
         # """Plays from a url (almost anything youtube_dl supports)"""
         if len(url) > 100:
