@@ -4,7 +4,7 @@ title: Additional Features
 
 ## Overview
 
-The table below summarizes extra commands for more advanced bot usage. Click on any of them for more details, including special use cases, caveats, etc.
+The table below summarizes extra commands for more advanced bot usage. Click on any of them for more details, including special use cases, caveats, etc:
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
@@ -27,6 +27,13 @@ The table below summarizes extra commands for more advanced bot usage. Click on 
 | [`;rewind`](#rewind) `[sec]` | `;rr` | 0.5s | Seeks a short amount of time backwards into the song |
 | [`;sleep_in`](#sleep_in) `[dur]` | `;leavein`, `;sleepin` | 1s | Makes the bot automatically leave the voice channel after some time |
 | [`;speed`](#speed) `<factor>` | `;sp` | 1s | Changes the tempo of a song |
+And some additional owner-only commands:
+
+| Command with Arguments[^1] | Aliases | Cooldown | Description |
+|-|-|-|-|
+| [`;local`](#local) `<query>` | | 1s | Description |
+| [`;local_prepend`](#local_prepend) `<query>` | | 1s | Description |
+| [`;reschedule`](#reschedule) | |  | Description |
 
 [^1]: `[optinal argument] <required arguiment>`
 
