@@ -1,4 +1,6 @@
 __pycache__
 joshgone.db
-*.mp3
 tests.md
+
+# Testing song for ;local and ;local_prepend
+assl.wav
