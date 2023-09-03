@@ -44,15 +44,15 @@ class Admin(commands.Cog):
         await self.bot.wrap_async(self.bot.unload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension unloaded.")
 
-    @commands.command(aliases=["reload"], hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
-    async def _reload(self, ctx, *, module: str):
+    async def reload(self, ctx, *, module: str):
         await self.bot.wrap_async(self.bot.reload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension reloaded.")
 
     @commands.command(name="list", hidden=True)
     @commands.is_owner()
-    async def list_(self, ctx):
+    async def extensions(self, ctx):
         extensions = ", ".join(self.bot.extensions)
         await ctx.send(f"Extensions loaded: [{extensions}]")
 
@@ -70,8 +70,8 @@ class Admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def _ctx(self, ctx):
-        if not hasattr(self.bot, "_ctx"):
+    async def ctx_(self, ctx):
+        if not hasattr(self.bot, "ctx_"):
             self.bot._ctx = ctx
             await ctx.send("[DEBUG PURPOSES] Added a `ctx` instance to the bot.")
 
