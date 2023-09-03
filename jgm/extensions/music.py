@@ -557,7 +557,8 @@ class Music(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def local_prepend(self, ctx, *, query):
-        # """Plays a file from the local filesystem"""
+        """Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue
+        """
         info = self.get_info(ctx)
         queue = info["queue"]
         history = info["history"]

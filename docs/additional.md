@@ -34,8 +34,8 @@ And some additional owner-only commands:
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
 | [`;local`](#local) `<query>` | | 1s | Plays a file from the local filesystem |
-| [`;local_prepend`](#local_prepend) `<query>` | | 1s | Description |
-| [`;reschedule`](#reschedule) | |  | Description |
+| [`;local_prepend`](#local_prepend) `<query>` | | 1s | Plays a file from the local filesystem and places it at the beginning of the queue |
+| [`;reschedule`](#reschedule) | |  | Reschedules the current guild onto the advancer task |
 
 [^1]: `[optinal argument] <required arguiment>`
 
@@ -670,7 +670,7 @@ When this effect is applied to a song, the relative time of the song is kept con
 
 Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue
 
-Exact same as [`;stream`](./basic.md#stream) but instead of inserting the song at the back of the queue, it inserts it at the front. This ensures a prepended song will be played next, if an autoshuffler doesn't affect the queue ordering first.
+Exact same as [`;stream`](./basic.md#stream) but when placing the song into the queue, it places it in the beginning rather than the end. A prepended song placed in the queue will be played next provided no autoshuffler is active.
 
 #### Arguments
 
@@ -715,13 +715,17 @@ Although there is no length limit on local file paths, their sizes will be natur
 
 - Either user or bot must be connected to a voice channel
 
-### `local_prepend`
+### [`local_prepend`](#local_prepend)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 :octicons-beaker-24: Experimental
 </sup>
+
+Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue
+
+Exact same as [`;local`](#local) but when placing the song into the queue, it places it in the beginning rather than the end. A prepended song placed in the queue will be played next provided no autoshuffler task is active.
 
 #### Arguments
 
@@ -738,3 +742,9 @@ Although there is no length limit on local file paths, their sizes will be natur
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v2.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
 :octicons-beaker-24: Experimental
 </sup>
+
+Reschedules the current guild onto the advancer task
+
+#### Before Invoking Conditions
+
+- Bot must be connected to a voice channel
