@@ -628,7 +628,8 @@ class Music(commands.Cog):
     @commands.command(aliases=["prepend", "pplay", "pp"])
     @commands.cooldown(1, 1, BucketType.user)
     async def stream_prepend(self, ctx, *, url):
-        # """Plays from a url (almost anything youtube_dl supports)"""
+        """Plays from a url (almost anything yt-dlp supports) and places it at the beginning of the queue
+        """
         if len(url) > 100:
             raise ValueError("url too long (length over 100)")
         if not url.isprintable():
