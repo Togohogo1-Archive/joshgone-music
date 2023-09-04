@@ -8,6 +8,7 @@ import aiosqlite
 import discord
 from discord.ext import commands
 from discord.utils import escape_markdown
+from discord.ext.commands import BucketType
 
 class Dashes(commands.Converter):
     async def convert(self, ctx, argument):
@@ -75,6 +76,7 @@ class Playlists(commands.Cog):
         self.bot = bot
 
     @commands.group(aliases=["li"], name="playlists", ignore_extra=False, pass_context=True, invoke_without_command=True)
+    @commands.cooldown(1, 1, BucketType.user)
     async def _playlists(self, ctx):
         """Configure playlists"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
@@ -332,6 +334,7 @@ class Playlists(commands.Cog):
         await ctx.send(f"Added playlist `{name}`")
 
     @commands.command(aliases=["h1"], name="check", ignore_extra=False)
+    @commands.cooldown(1, 1, BucketType.user)
     async def _check(self, ctx, name: str):
         """Output the text for a single playlist"""
         if not re.fullmatch(r"[a-zA-Z0-9_]*", name):
