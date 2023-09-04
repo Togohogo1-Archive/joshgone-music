@@ -15,6 +15,10 @@ The first two playlist commands are the [`;check`](#check) command and the [`;pl
 | [`;check`](#check) `<name>` | `;h1` | 1s | Output the text for a single playlist |
 | [`;playlist`](#playlist) | `;li` | 1s | Configure playlists |
 
+
+
+And some owner-only subcommands
+
 ## Commands
 
 ### [`check`](#check)
@@ -23,4 +27,4 @@ The first two playlist commands are the [`;check`](#check) command and the [`;pl
 
 ## Subcommands
 
-## Admin Only Subcommands
+## Owner Only Subcommands
