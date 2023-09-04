@@ -15,9 +15,25 @@ The first two playlist commands are the [`;check`](#check) command and the [`;pl
 | [`;check`](#check) `<name>` | `;h1` | 1s | Output the text for a single playlist |
 | [`;playlist`](#playlist) | `;li` | 1s | Configure playlists |
 
+The [`;playlist`](#playlist) command may be followed by a subcommand to form `;playlist subcommand` that acts like a normal command. Some [`;playlist`](#playlist) subcommands:
 
+| Command with Arguments[^1] | Aliases | Cooldown | Description |
+|-|-|-|-|
+| [`;playlist add`](#add) ... | | | |
+| [`;playlist check`](#check) ... | | | |
+| [`;playlist find`](#find) ... | | | |
+| [`;playlist list`](#list) ... | | | |
+| [`;playlist owner`](#owner) ... | | | |
+| [`;playlist remove`](#remove) ... | | | |
+| [`;playlist update`](#update) ... | | | |
 
 And some owner-only subcommands
+
+| Command with Arguments[^1] | Aliases | Cooldown | Description |
+|-|-|-|-|
+| [`;playlist regexfind`](#add) ... | | | |
+| [`;playlist regexremove`](#add) ... | | | |
+| [`;playlist regexsearch`](#add) ... | | | |
 
 ## Commands
 
@@ -27,4 +43,24 @@ And some owner-only subcommands
 
 ## Subcommands
 
+### [`add`](#add)
+
+### [`check`](#check)
+
+### [`find`](#find)
+
+### [`list`](#list)
+
+### [`owner`](#owner)
+
+### [`remove`](#remove)
+
+### [`update`](#update)
+
 ## Owner Only Subcommands
+
+### [`regexfind`](#regexfind)
+
+### [`regexremove`](#regexremove)
+
+### [`regexsearch`](#regexsearch)
