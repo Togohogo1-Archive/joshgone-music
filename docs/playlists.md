@@ -20,7 +20,6 @@ The [`;playlist`](#playlist) command may be followed by a subcommand to form `;p
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
 | [`;playlist add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
-| [`;playlist check`](#check) ... | | | |
 | [`;playlist find`](#find) ... | | | |
 | [`;playlist owner`](#owner) ... | | | |
 | [`;playlist remove`](#remove) ... | | | |
