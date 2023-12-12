@@ -346,6 +346,7 @@ class Playlists(commands.Cog):
                     await ctx.send(f"Playlist `{name}` doesn't exist")
 
     @_playlists.command(name="owner", ignore_extra=False)
+    @commands.cooldown(1, 1, BucketType.user)
     async def _owner(self, ctx, name: str, new_owner: typing.Union[discord.Member, Dashes] = None):
         """Check or set the owner of a playlist
 
