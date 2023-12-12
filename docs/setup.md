@@ -7,8 +7,8 @@ title: Setup
 Clone the repo using <a href="https://git-scm.com/downloads" target="_blank">Git</a> and enter it using the commands below:
 
 ```sh
-git clone https://github.com/Togohogo1/joshgone-music
-cd joshgone-music
+git clone https://github.com/Togohogo1/jgmusic
+cd jgmusic
 ```
 
 Install <a href="https://www.python.org/downloads/" target="_blank">Python</a> (minimum is 3.10).
