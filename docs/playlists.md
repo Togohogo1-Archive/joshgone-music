@@ -8,24 +8,24 @@ This bot also provides very basic playlist functionality[^1]. Playlists here are
 
 [^1]: Playlists are implemented this way for legacy reasons
 
-The first two playlist commands are the [`;check`](#check) command and the [`;playlist`](#playlist) command
+The first two playlist commands are the [`;check`](#check) command and the [`;playlists`](#playlists) command
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
 | [`;check`](#check) `<name>` | `;h1` | 1s | Output the text for a single playlist |
-| [`;playlist`](#playlist) | `;li` | 1s | Configure playlists |
+| [`;playlists`](#playlists) | `;li` | 1s | Configure playlists |
 
-The [`;playlist`](#playlist) command may be followed by a subcommand to form `;playlist subcommand` that acts like a normal command. Some [`;playlist`](#playlist) subcommands:
+The [`;playlists`](#playlists) command may be followed by a subcommand to form `;playlists subcommand` that acts like a normal command. Some [`;playlists`](#playlists) subcommands:
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;playlist add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
-| [`;playlist find`](#find) ... | | | |
-| [`;playlist owner`](#owner) ... | | | |
-| [`;playlist remove`](#remove) ... | | | |
-| [`;playlist rename`](#rename) ... | | | |
-| [`;playlist search`](#search) ... | | | |
-| [`;playlist update`](#update) ... | | | |
+| [`;playlists add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
+| [`;playlists find`](#find) ... | | | |
+| [`;playlists owner`](#owner) ... | | | |
+| [`;playlists remove`](#remove) ... | | | |
+| [`;playlists rename`](#rename) ... | | | |
+| [`;playlists search`](#search) ... | | | |
+| [`;playlists update`](#update) ... | | | |
 
 And some owner-only subcommands
 
@@ -52,7 +52,7 @@ The playlist must exist in the list of playlists
 
 - `name` – The name of the playlist
 
-### [`playlist`](#playlist)
+### [`playlists`](#playlists)
 
 <sup>
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
