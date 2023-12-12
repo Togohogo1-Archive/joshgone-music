@@ -54,6 +54,12 @@ The playlist must exist in the list of playlists
 
 ### [`playlist`](#playlist)
 
+Configure playlists
+
+If not followed by a subcommand, this command simply prints out the number of playlists and their names in alphabetical order. If there exists 0 playlists, then it prints `None`.
+
+See the following section [Subcommands](#subcommands) for usage of this command in such a way.
+
 ## Subcommands
 
 ### [`add`](#add)
