@@ -313,8 +313,7 @@ class Playlists(commands.Cog):
     @_playlists.command(name="add")
     @commands.cooldown(1, 5, BucketType.user)
     async def _add(self, ctx, name, *, text):
-        """Add a playlist
-        """
+        """Add a playlist"""
         if len(name) > 35:
             raise ValueError("Name too long (length over 35)")
         if not re.fullmatch(r"[a-zA-Z0-9_]*", name):
