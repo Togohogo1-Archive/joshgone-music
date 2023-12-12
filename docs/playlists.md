@@ -143,7 +143,13 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 
 Find playlists whose names contain or match the given pattern
 
-The find command uses basic glob matching and operates on the name of the playlist.
+The find command uses basic [glob](https://research.swtch.com/glob) matching and operates on the name of the playlist. In addition to normal alphanumeric characters and underscore special characters supported are ? and %, for matching one and any number of characters respectively.
+
+This command returns the number of playlists found that satisfy the given pattern along with their names, listed in alphabetical order. If none are found, it simply returns a list of 0 playlist with output `None`.
+
+#### Arguments
+
+- `name_pattern` – The character (glob) patten to match playlist names against
 
 ??? example
 
