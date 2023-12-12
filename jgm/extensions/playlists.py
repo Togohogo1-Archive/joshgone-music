@@ -310,10 +310,9 @@ class Playlists(commands.Cog):
         await ctx.send(f"Renamed playlist `{name}` to `{new_name}`")
 
     @_playlists.command(name="add")
+    @commands.cooldown(1, 5, BucketType.user)
     async def _add(self, ctx, name, *, text):
         """Add a playlist
-
-        This will fail if a playlist with the same name already exists.
         """
         if len(name) > 35:
             raise ValueError("Name too long (length over 35)")

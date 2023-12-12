@@ -19,7 +19,7 @@ The [`;playlist`](#playlist) command may be followed by a subcommand to form `;p
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;playlist add`](#add) ... | | | |
+| [`;playlist add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
 | [`;playlist check`](#check) ... | | | |
 | [`;playlist find`](#find) ... | | | |
 | [`;playlist list`](#list) ... | | | |
@@ -44,6 +44,63 @@ And some owner-only subcommands
 ## Subcommands
 
 ### [`add`](#add)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Add a playlist
+
+This command will fail if a playlist with the same name already exists. Playlists can be stored as multiline text blocks with Discord formatting. Playlists are stored as plaintext and cannot be executed directly via a command.
+
+#### Arguments
+
+- `name` – The name of the playlist
+- `text` – The contents of the playlist
+
+??? Example
+
+    The command
+
+    ```
+    ;playlists add myplaylist
+    # My Playlist
+
+    ## Jazz
+    - "Autumn Leaves" by Miles Davis
+    - "Take Five" by Dave Brubeck
+    - "So What" by Miles Davis
+
+    ## Rock
+    - "Stairway to Heaven" by Led Zeppelin
+    - "Bohemian Rhapsody" by Queen
+    - "Hotel California" by Eagles
+
+    ## Pop
+    - "Shape of You" by Ed Sheeran
+    - "Happy" by Pharrell Williams
+    - "Uptown Funk" by Mark Ronson ft. Bruno Mars
+    ```
+
+    Will result in nicely rendered Discord output when `;check myplaylist` is run:
+
+    # My Playlist
+
+    ## Jazz
+    - "Autumn Leaves" by Miles Davis
+    - "Take Five" by Dave Brubeck
+    - "So What" by Miles Davis
+
+    ## Rock
+    - "Stairway to Heaven" by Led Zeppelin
+    - "Bohemian Rhapsody" by Queen
+    - "Hotel California" by Eagles
+
+    ## Pop
+    - "Shape of You" by Ed Sheeran
+    - "Happy" by Pharrell Williams
+    - "Uptown Funk" by Mark Ronson ft. Bruno Mars
 
 ### [`check`](#check)
 
