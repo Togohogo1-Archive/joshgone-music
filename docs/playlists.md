@@ -39,6 +39,19 @@ And some owner-only subcommands
 
 ### [`check`](#check)
 
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Output the text for a single playlist
+
+The playlist must exist in the list of playlists
+
+#### Arguments
+
+- `name` – The name of the playlist
+
 ### [`playlist`](#playlist)
 
 ## Subcommands
@@ -53,6 +66,8 @@ And some owner-only subcommands
 Add a playlist
 
 This command will fail if a playlist with the same name already exists. Playlists can be stored as multiline text blocks with Discord formatting. Playlists are stored as plaintext and cannot be executed directly via a command.
+
+Playlists also must only contain alphanumeric characters + underscore, and the maximum number of playlists that can be stored is 500 with each playlist not being able to exceed 35 characters in length.
 
 #### Arguments
 
