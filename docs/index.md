@@ -15,3 +15,4 @@ How is this bot different than the others?
 - [ ] Turn all emphasis '', "" to italics
 - [ ] 1x vs x1 speed
 - [ ] Design philosopy (keyboard ASCII, simple, etc.)
+- [ ] Not all changes reflect repo rename
