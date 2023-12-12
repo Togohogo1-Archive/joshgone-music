@@ -22,9 +22,10 @@ The [`;playlist`](#playlist) command may be followed by a subcommand to form `;p
 | [`;playlist add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
 | [`;playlist check`](#check) ... | | | |
 | [`;playlist find`](#find) ... | | | |
-| [`;playlist list`](#list) ... | | | |
 | [`;playlist owner`](#owner) ... | | | |
 | [`;playlist remove`](#remove) ... | | | |
+| [`;playlist rename`](#rename) ... | | | |
+| [`;playlist search`](#search) ... | | | |
 | [`;playlist update`](#update) ... | | | |
 
 And some owner-only subcommands
@@ -144,9 +145,9 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 
 ### [`remove`](#remove)
 
-### [`rename`](#remove)
+### [`rename`](#rename)
 
-### [`search`](#remove)
+### [`search`](#search)
 
 ### [`update`](#update)
 
