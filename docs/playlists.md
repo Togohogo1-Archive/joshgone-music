@@ -128,15 +128,25 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
     - "Happy" by Pharrell Williams
     - "Uptown Funk" by Mark Ronson ft. Bruno Mars
 
-### [`check`](#check)
-
 ### [`find`](#find)
 
-### [`list`](#list)
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
 
 ### [`owner`](#owner)
 
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
 ### [`remove`](#remove)
+
+### [`rename`](#remove)
+
+### [`search`](#remove)
 
 ### [`update`](#update)
 
