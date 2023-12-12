@@ -77,6 +77,11 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 
 #### Arguments
 
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
 - `name` – The name of the playlist
 - `text` – The contents of the playlist
 
