@@ -21,7 +21,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 |-|-|-|-|
 | [`;playlists add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
 | [`;playlists find`](#find) `<name_pattern>` | `;li find` | 1s | Find playlists whose names contain or match the given pattern |
-| [`;playlists owner`](#owner) ... | | | |
+| [`;playlists owner`](#owner) `<name>` `<new_owner` | `;li owner` | 1s | |
 | [`;playlists remove`](#remove) ... | | | |
 | [`;playlists rename`](#rename) ... | | | |
 | [`;playlists search`](#search) ... | | | |
