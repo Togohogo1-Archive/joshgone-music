@@ -20,7 +20,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
 | [`;playlists add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
-| [`;playlists find`](#find) ... | | | |
+| [`;playlists find`](#find) `<name_pattern>` | `;li find` | 1s | Find playlists whose names contain or match the given pattern |
 | [`;playlists owner`](#owner) ... | | | |
 | [`;playlists remove`](#remove) ... | | | |
 | [`;playlists rename`](#rename) ... | | | |
@@ -85,7 +85,7 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 - `name` – The name of the playlist
 - `text` – The contents of the playlist
 
-??? Example
+??? example
 
     The command
 
@@ -111,22 +111,28 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 
     Will result in nicely rendered Discord output when `;check myplaylist` is run:
 
-    # My Playlist
+    <h1>My Playlist</h1>
 
-    ## Jazz
-    - "Autumn Leaves" by Miles Davis
-    - "Take Five" by Dave Brubeck
-    - "So What" by Miles Davis
+    <h2>Jazz</h2>
+    <ul>
+      <li>"Autumn Leaves" by Miles Davis</li>
+      <li>"Take Five" by Dave Brubeck</li>
+      <li>"So What" by Miles Davis</li>
+    </ul>
 
-    ## Rock
-    - "Stairway to Heaven" by Led Zeppelin
-    - "Bohemian Rhapsody" by Queen
-    - "Hotel California" by Eagles
+    <h2>Rock</h2>
+    <ul>
+      <li>"Stairway to Heaven" by Led Zeppelin</li>
+      <li>"Bohemian Rhapsody" by Queen</li>
+      <li>"Hotel California" by Eagles</li>
+    </ul>
 
-    ## Pop
-    - "Shape of You" by Ed Sheeran
-    - "Happy" by Pharrell Williams
-    - "Uptown Funk" by Mark Ronson ft. Bruno Mars
+    <h2>Pop</h2>
+    <ul>
+      <li>"Shape of You" by Ed Sheeran</li>
+      <li>"Happy" by Pharrell Williams</li>
+      <li>"Uptown Funk" by Mark Ronson ft. Bruno Mars</li>
+    </ul>
 
 ### [`find`](#find)
 
@@ -134,6 +140,30 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
+
+Find playlists whose names contain or match the given pattern
+
+The find command uses basic glob matching and operates on the name of the playlist.
+
+??? example
+
+    Assume the following playlists exist (if these commands are run in series):
+    ```
+    %playlists add amogus   -
+    %playlists add amoguise -
+    %playlists add mongus   -
+    %playlists add mongue   -
+    ```
+
+    Usage:
+    ```
+    %playlists find amogus  -> amogus           (exact match)
+    %playlists find amo%    -> amogus, amoguise (prefix)
+    %playlists find %gus    -> amogus, mongus   (suffix)
+    %playlists find mongu?  -> mongus, mongue   (any character)
+    %playlists find %m?gu%e -> amoguise         (combine them)
+    %playlists find gui     -> amoguise         ("gui" in amoguise)
+    ```
 
 ### [`owner`](#owner)
 

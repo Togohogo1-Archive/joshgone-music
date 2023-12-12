@@ -108,6 +108,7 @@ class Playlists(commands.Cog):
             yield "".join(current)
 
     @_playlists.command(name="find", ignore_extra=False)
+    @commands.cooldown(1, 1, BucketType.user)
     async def _find(self, ctx, name_pattern: str):
         """Find playlists whose names contain or match the given pattern
 
