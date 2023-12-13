@@ -380,6 +380,7 @@ class Playlists(commands.Cog):
                 await ctx.send("You are not allowed to change this playlist's owner")
                 return
         # Store the playlist's new owner
+        print(new_owner, type(new_owner), type(new_owner) == discord.Member)
         if new_owner == "-":
             new_owner_value = None
         else:
