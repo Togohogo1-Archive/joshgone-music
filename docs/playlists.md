@@ -21,7 +21,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 |-|-|-|-|
 | [`;playlists add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
 | [`;playlists find`](#find) `<name_pattern>` | `;li find` | 1s | Find playlists whose names contain or match the given pattern |
-| [`;playlists owner`](#owner) `<name>` `<new_owner` | `;li owner` | 1s | |
+| [`;playlists owner`](#owner) `<name>` `[new_owner]` | `;li owner` | 1s | Check or set the owner of a playlist |
 | [`;playlists remove`](#remove) ... | | | |
 | [`;playlists rename`](#rename) ... | | | |
 | [`;playlists search`](#search) ... | | | |
@@ -177,6 +177,31 @@ This command returns the number of playlists found that satisfy the given patter
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
 </sup>
+
+Check or set the owner of a playlist
+
+To check the owner of a playlist, run this command without specifying the `new_owner` argument.
+
+To change a playlist's owner, either the playlist must have no owner, or you are the bot owner, guild owner, or the playlist owner.
+
+To clear the owner, pass `-` as the new owner.
+
+#### Arguments
+
+- `name` – The name of the playlist
+- `new_owner` – (Optional) The nickname, handle, ID of a Discord user or a `-` to indicate no owner
+
+??? warning
+
+    If anyone in the server has the nickname `-`, then this command cannot be used to set ownership using that nickname. You have to use their Discord handle or Discord ID instead.
+
+??? Example
+
+    ```
+    %playlists owner playlist             ->  gets the playlist's current owner
+    %playlists owner playlist phibiscool  ->  make phibiscool the playlist owner
+    %playlists owner playlist -           ->  removes the playlist's owner
+    ```
 
 ### [`remove`](#remove)
 

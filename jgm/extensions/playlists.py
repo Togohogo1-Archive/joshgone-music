@@ -110,25 +110,7 @@ class Playlists(commands.Cog):
     @_playlists.command(name="find", ignore_extra=False)
     @commands.cooldown(1, 1, BucketType.user)
     async def _find(self, ctx, name_pattern: str):
-        """Find playlists whose names contain or match the given pattern
-
-        Assume the following playlists exist:
-            %playlists add amogus   -
-            %playlists add amoguise -
-            %playlists add mongus   -
-            %playlists add mongue   -
-
-        Usage:
-            %playlists find amogus  -> amogus           # exact match
-            %playlists find amo%    -> amogus, amoguise # prefix
-            %playlists find %gus    -> amogus, mongus   # suffix
-            %playlists find mongu?  -> mongus, mongue   # any character
-            %playlists find %m?gu%e -> amoguise         # combine them
-            %playlists find gui     -> amoguise         # "gui" in amoguise
-
-        The only special characters supported are ? and %, for matching one and
-        any number of characters respectively.
-        """
+        """Find playlists whose names contain or match the given pattern"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute(
                 "SELECT playlist_name FROM playlists WHERE server_id = ?;",
@@ -348,18 +330,7 @@ class Playlists(commands.Cog):
     @_playlists.command(name="owner", ignore_extra=False)
     @commands.cooldown(1, 1, BucketType.user)
     async def _owner(self, ctx, name: str, new_owner: typing.Union[Dash, discord.Member] = None):
-        """Check or set the owner of a playlist
-
-        To change a playlist's owner, either the playlist must have no owner, or you
-        are the bot owner, guild owner, or the playlist owner.
-
-        To clear the owner, pass "-" as the new owner.
-
-        Usage:
-            %playlists owner playlist             ->  gets the playlist's current owner
-            %playlists owner playlist GeeTransit  ->  make GeeTransit the playlist owner
-            %playlists owner playlist -           ->  removes the playlist's owner
-        """
+        """Check or set the owner of a playlist"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT owner_id FROM playlists WHERE server_id = ? AND playlist_name = ? LIMIT 1;", (ctx.guild.id, name)) as cursor:
                 row = await cursor.fetchone()
