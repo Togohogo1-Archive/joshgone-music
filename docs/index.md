@@ -16,3 +16,4 @@ How is this bot different than the others?
 - [ ] 1x vs x1 speed
 - [ ] Design philosopy (keyboard ASCII, simple, etc.)
 - [ ] Not all changes reflect repo rename
+- [ ] Still have text portions in help manual

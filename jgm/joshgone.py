@@ -17,12 +17,12 @@ intents = discord.Intents.all()
 command_prefix = commands.when_mentioned_or(";")
 
 # Use v1.x help command
-try:
-    help_command = commands.DefaultHelpCommand(
-        show_parameter_descriptions=False
-    )
-except TypeError:
-    help_command = None
+# try:
+#     help_command = commands.DefaultHelpCommand(
+#         show_parameter_descriptions=False
+#     )
+# except TypeError:
+#     help_command = None
 
 # Wrap a non-awaitable value with an awaitable
 def _wrap_async(value):
@@ -75,6 +75,5 @@ def main():
     run(
         os.environ["JOSHGONE_TOKEN"],
         command_prefix=command_prefix,
-        intents=intents,
-        help_command=help_command,
+        intents=intents
     )
