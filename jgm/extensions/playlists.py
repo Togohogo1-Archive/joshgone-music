@@ -10,12 +10,12 @@ from discord.ext import commands
 from discord.utils import escape_markdown
 from discord.ext.commands import BucketType
 
-class Dashes(commands.Converter):
+class Dash(commands.Converter):
     async def convert(self, ctx, argument):
         if not argument:
-            raise commands.BadArgument("argument does not consist of dashes only")
-        if not all(char == "-" for char in argument):
-            raise commands.BadArgument("argument does not consist of dashes only")
+            raise commands.BadArgument("argument does not consist of a single dash")
+        if argument != "-":
+            raise commands.BadArgument("argument does not consist of a single dash")
         return "-"
 
 def match(pattern: str, string: str) -> bool:
@@ -347,7 +347,7 @@ class Playlists(commands.Cog):
 
     @_playlists.command(name="owner", ignore_extra=False)
     @commands.cooldown(1, 1, BucketType.user)
-    async def _owner(self, ctx, name: str, new_owner: typing.Union[discord.Member, Dashes] = None):
+    async def _owner(self, ctx, name: str, new_owner: typing.Union[Dash, discord.Member] = None):
         """Check or set the owner of a playlist
 
         To change a playlist's owner, either the playlist must have no owner, or you
@@ -380,7 +380,6 @@ class Playlists(commands.Cog):
                 await ctx.send("You are not allowed to change this playlist's owner")
                 return
         # Store the playlist's new owner
-        print(new_owner, type(new_owner), type(new_owner) == discord.Member)
         if new_owner == "-":
             new_owner_value = None
         else:
