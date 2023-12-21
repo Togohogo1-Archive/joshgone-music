@@ -23,7 +23,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 | [`;playlists find`](#find) `<name_pattern>` | `;li find` | 1s | Find playlists whose names contain or match the given pattern |
 | [`;playlists owner`](#owner) `<name>` `[new_owner]` | `;li owner` | 1s | Check or set the owner of a playlist |
 | [`;playlists remove`](#remove) `<name>` | `;li remove` | 1s | Remove a playlist |
-| [`;playlists rename`](#rename) ... | | | |
+| [`;playlists rename`](#rename) `<name>` `<new_name>` | `;li rename` | 1s | Rename a playlist |
 | [`;playlists search`](#search) ... | | | |
 | [`;playlists update`](#update) ... | | | |
 
@@ -212,13 +212,31 @@ To clear the owner, pass `-` as the new owner.
 
 Remove a playlist
 
-A user may only remove a playlist if they are the bot owner, server owner, the playlist themselves, or if the playlist has no owner.
+A user may only remove a playlist if they are the bot owner, server owner, the playlist owner, or if the playlist has no owner.
 
 #### Arguments
 
 - `name` – The name of the playlist
 
 ### [`rename`](#rename)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Rename a playlist
+
+A user may only rename a playlist if they are the bot owner, server owner, playlist owner, or if they playlist has no owner.
+
+The constraints for the new playlist name follows the same guidelines as the [add](#add) command.
+
+Additionally, a playlist cannot be renamed to itself or an existing playlist name.
+
+#### Arguments
+
+- `name` – The name of the playlist
+- `new_name` – The new name of the playlist
 
 ### [`search`](#search)
 
