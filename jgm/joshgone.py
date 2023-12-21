@@ -17,6 +17,9 @@ intents = discord.Intents.all()
 command_prefix = commands.when_mentioned_or(";")
 
 # Use v1.x help command
+help_command = commands.DefaultHelpCommand(
+    show_parameter_descriptions=False
+)
 # try:
 #     help_command = commands.DefaultHelpCommand(
 #         show_parameter_descriptions=False
@@ -75,5 +78,6 @@ def main():
     run(
         os.environ["JOSHGONE_TOKEN"],
         command_prefix=command_prefix,
-        intents=intents
+        intents=intents,
+        help_command=help_command
     )

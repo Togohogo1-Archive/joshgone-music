@@ -22,7 +22,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 | [`;playlists add`](#add) `<name>` `<text>` | `;li add` | 5s | Add a playlist |
 | [`;playlists find`](#find) `<name_pattern>` | `;li find` | 1s | Find playlists whose names contain or match the given pattern |
 | [`;playlists owner`](#owner) `<name>` `[new_owner]` | `;li owner` | 1s | Check or set the owner of a playlist |
-| [`;playlists remove`](#remove) ... | | | |
+| [`;playlists remove`](#remove) `<name>` | `;li remove` | 1s | Remove a playlist |
 | [`;playlists rename`](#rename) ... | | | |
 | [`;playlists search`](#search) ... | | | |
 | [`;playlists update`](#update) ... | | | |
@@ -204,6 +204,19 @@ To clear the owner, pass `-` as the new owner.
     ```
 
 ### [`remove`](#remove)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Remove a playlist
+
+A user may only remove a playlist if they are the bot owner, server owner, the playlist themselves, or if the playlist has no owner.
+
+#### Arguments
+
+- `name` – The name of the playlist
 
 ### [`rename`](#rename)
 
