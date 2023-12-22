@@ -91,19 +91,19 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 
     ```
     ;playlists add myplaylist
-    # My Playlist
+    ## My Playlist
 
-    ## Jazz
+    ### Jazz
     - "Autumn Leaves" by Miles Davis
     - "Take Five" by Dave Brubeck
     - "So What" by Miles Davis
 
-    ## Rock
+    ### Rock
     - "Stairway to Heaven" by Led Zeppelin
     - "Bohemian Rhapsody" by Queen
     - "Hotel California" by Eagles
 
-    ## Pop
+    ### Pop
     - "Shape of You" by Ed Sheeran
     - "Happy" by Pharrell Williams
     - "Uptown Funk" by Mark Ronson ft. Bruno Mars
@@ -111,23 +111,23 @@ Playlists also must only contain alphanumeric characters + underscore, and the m
 
     Will result in nicely rendered Discord output when `;check myplaylist` is run:
 
-    <h1>My Playlist</h1>
+    <h2>My Playlist</h2>
 
-    <h2>Jazz</h2>
+    <h3>Jazz</h3>
     <ul>
       <li>"Autumn Leaves" by Miles Davis</li>
       <li>"Take Five" by Dave Brubeck</li>
       <li>"So What" by Miles Davis</li>
     </ul>
 
-    <h2>Rock</h2>
+    <h3>Rock</h3>
     <ul>
       <li>"Stairway to Heaven" by Led Zeppelin</li>
       <li>"Bohemian Rhapsody" by Queen</li>
       <li>"Hotel California" by Eagles</li>
     </ul>
 
-    <h2>Pop</h2>
+    <h3>Pop</h3>
     <ul>
       <li>"Shape of You" by Ed Sheeran</li>
       <li>"Happy" by Pharrell Williams</li>
