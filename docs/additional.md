@@ -1,5 +1,5 @@
 ---
-title: Additional Features
+title: Additional Music Features
 ---
 
 ## Overview
