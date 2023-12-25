@@ -117,14 +117,18 @@ This task is created with the `(ctx, error)` item returned by `self.advance_queu
 
 ### (10) Do the Advance Handling
 
-Inside the `Music.handle_advance()` coroutine, the music advancing logic first go through many sanity checks, then plays the songs, and automatically sets up to run the `Music.schedule()` coroutine after playing the song.
+Inside the `Music.handle_advance()` coroutine, the **music advancing logic** first go through many sanity/error checks, then plays the songs, and automatically sets up to run the `Music.schedule()` coroutine after playing the song.
 
-#### Sanity Checks
+#### Status Flags
 
 There are 2 flags that control the state of the bot, located in the `Music.data` dictionary. For each server, a specified "state dictionary" (we call this `info`) is obtained through a call to `self.get_info(ctx)`. These 2 flags are
 
 - `info["processing"]`, can be `True` or `False`
 - `info["waiting"]`, can be `True` or `False`
+
+`info["waiting"]` is `True` right after `self.advance_queue.put_nowait` put an item in `self.advance_queue` when `Music.schedule()` is run (then proceeds to handle the advancement). It gets set to `False` when the music advancing logic runs into exception or the advancing logic finishes.
+
+`info["processing"]` is mostly `False`, but can be `True` if something unexpected happens (usually high latency) combined with (optionally) spamming the `;reschedule` command.
 
 In summary:
 
@@ -135,11 +139,9 @@ In summary:
 | `False` | `True`     | a              |
 | `False` | `False`    | a<br><br><br>a |
 
-...
-
 #### Setup After Playing
 
-If there are more than 0 songs in the actual playback queue, right when the playback of a song has ended, the kwarg `after=after` in `ctx.voice_client.play`, will run the `Music.schedule()` coroutine, ensuring that there is an item in `self.advance_queue` to be "picked up" when looping back to the beginning of the while loop in `Music.handle_advance` in [(5)](#5-wait-for-advance_queueget).
+If there are more than 0 songs in the actual playback queue, right when the playback of a song has ended, the kwarg `after=after` in [`ctx.voice_client.play`](https://discordpy.readthedocs.io/en/stable/api.html?highlight=play#discord.VoiceClient.play) will run the `Music.schedule()` coroutine as `after` (the argument) is set to `lambda error, ctx=ctx: self.schedule(ctx, error)`, ensuring that there is an item in `self.advance_queue` to be "picked up" when looping back to the beginning of the while loop in `Music.handle_advance` in [(5)](#5-wait-for-advance_queueget).
 
 If there are 0 songs in the actual playback queue, then the `Music.handle_advance()` will skip the part where `after=after` is added to the `ctx.voice_client.play` function (unless if some Internal Error occurs). This results in the code returning to [(5)](#5-wait-for-advance_queueget) and hanging until [(6)](#6-play-song) happens.
 
