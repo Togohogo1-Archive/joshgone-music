@@ -16,7 +16,7 @@ All flowchart nodes are labelled with a number to be elaborated further on in th
 ```mermaid
 graph TD
     subgraph "Normal Function"
-    Z(["(1) Start"]) --> A["(2) On initialize"];
+    Z(["(1) Start"]) --> A["(2) On Initialize"];
     A --> B["(3) <code>self.advancer.start</code>"];
     B --> C["(4) Create <code>handle_advances</code> task"];
     C --> G["(5) Wait for <code>advance_queue.get</code>"]
@@ -46,7 +46,7 @@ graph TD
 
 The entry point of JG Music is `jgmusic.py`. When `hatch run jgm` is executed in the terminal, a series of functions are called which eventually leads to `jgm/extensions/music.Music.setup` which is a special discord.py function that executes when an extension gets loaded with [`load_extension`](https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.load_extension):
 
-### (2) On initialize
+### (2) On Initialize
 
 Initialization refers to the instantiation of the `Music` cog, which happens when `Music.setup` calls `return bot.add_cog(Music(bot))`. The bot enters this state on startups and loads, which is covered [below](#4-load-music).
 
@@ -119,7 +119,25 @@ This task is created with the `(ctx, error)` item returned by `self.advance_queu
 
 Inside the `Music.handle_advance()` coroutine, the music advancing logic first go through many sanity checks, then plays the songs, and automatically sets up to run the `Music.schedule()` coroutine after playing the song.
 
+#### Sanity Checks
+
+There are 2 flags that control the state of the bot, located in the `Music.data` dictionary. For each server, a specified "state dictionary" (we call this `info`) is obtained through a call to `self.get_info(ctx)`. These 2 flags are
+
+- `info["processing"]`, can be `True` or `False`
+- `info["waiting"]`, can be `True` or `False`
+
+In summary:
+
+| Waiting | Processing | When           |
+|---------|------------|----------------|
+| `True`  | `True`     | a              |
+| `True`  | `False`    | a              |
+| `False` | `True`     | a              |
+| `False` | `False`    | a<br><br><br>a |
+
 ...
+
+#### Setup After Playing
 
 If there are more than 0 songs in the actual playback queue, right when the playback of a song has ended, the kwarg `after=after` in `ctx.voice_client.play`, will run the `Music.schedule()` coroutine, ensuring that there is an item in `self.advance_queue` to be "picked up" when looping back to the beginning of the while loop in `Music.handle_advance` in [(5)](#5-wait-for-advance_queueget).
 
