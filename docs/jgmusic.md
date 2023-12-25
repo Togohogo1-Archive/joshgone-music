@@ -69,11 +69,38 @@ Inside the `Music.handle_advances()` coroutine is an infinite loop that first `a
 
 ### (6) Play song
 
+The way to play a song involves invoking the following commands
+
+- `;stream`
+- `;stream_prepend`
+- `;local`
+- `;local_prepend`
+- `;playlist_link`
+
+or directly as Python code from the [REPL](./dev.md#the-repl).
+
+Each of these commands trigger the `self.schedule` function from `Music`.
+
 ### (7) Schedule
 
 ### (8) `advance_queue.put_nowait`
 
 ### (9) Received `(ctx, error)`
+
+Continuing from [(6)](#6-play-song), the coroutine resumes execution after an item is obtained. This item is a tuple:
+
+- The first element `ctx` is an `discord.ext.commands.context.Context` object
+- The second element `error` is a player error that happened sometime before handling an advance.
+
+Having a `discord.ext.commands.context.Context` object useful for fetching the user who ran the command, along with the server they are currently in, along with a lot of other useful information. This allows one `asyncio.Queue` to be used to manage multiple bot "instances" in many servers.
+
+Player errors are quite rare under normal usage of the bot. However, the most common one is
+
+```text
+Player error: OSError(10038, 'An operation was attempted on something that is not a socket', None, 10038, None)
+```
+
+Technically, the code is completely functional if the second element was removed. It is kept for clarity and ease of debugging.
 
 ### (10) Create a `handle_advance` task
 
@@ -90,3 +117,5 @@ Inside the `Music.handle_advances()` coroutine is an infinite loop that first `a
 ### (4) `;load music`
 
 ## Extra Notes
+
+### `asyncio.sleep(1)`
