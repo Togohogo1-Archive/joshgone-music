@@ -21,11 +21,10 @@ graph TD
     B --> C["(4) Create <code>handle_advances</code> task"];
     C --> G["(5) Wait for <code>advance_queue.get</code>"]
     D["(6) Play song"] --> E["(7) <code>schedule</code>"];
-    E --> F["(8) <code>advance_queue.put_nowait</code>"];
-    F --> G
-    G --> H["(9) Received <code>(ctx, error)</code>"];
-    H --> I["(10) Create a <code>handle_advance</code> task"];
-    I --> J["(11) Do the advance handling"];
+    E --> G
+    G --> H["(8) Received <code>(ctx, error)</code>"];
+    H --> I["(9) Create a <code>handle_advance</code> task"];
+    I --> J["(10) Do the advance handling"];
     J -->|"<code>after=after<code>"| E;
     end
     subgraph "Loading and Unloading"
@@ -59,13 +58,15 @@ At the very end of the `__init__` function in `Music`, `self.advancer.start` is 
 
 ### (4) Create `handle_advances` task
 
-If `self.advance_task` is `None`, it will be set to an `asyncio.Task` (`asyncio.create_task` wrapped) `Music.handle_advances()` coroutine, otherwise known as the **music_advancer**.
+If `self.advance_task` is `None`, it will be set to an `asyncio.Task` (`asyncio.create_task` wrapped) `Music.handle_advances()` coroutine, otherwise known as the **music advancer**[^1].
+
+[^1]: Space replaced with underscore in the code.
 
 This gets put in the global `asyncio` event loop and eventually runs "soon".
 
 ### (5) Wait for `advance_queue.get`
 
-Inside the `Music.handle_advances()` coroutine is an infinite loop that first `await`s an item from `self.advance_queue` (pauses its execution until it receives the queued item).
+Inside the `Music.handle_advances()` coroutine is an infinite loop that first `await`s an item from `self.advance_queue` (pauses its execution until it receives the queued item). This infinite loop is called the **music advancer task loop**.
 
 ### (6) Play song
 
@@ -79,15 +80,21 @@ The way to play a song involves invoking the following commands
 
 or directly as Python code from the [REPL](./dev.md#the-repl).
 
-Each of these commands trigger the `self.schedule` function from `Music`.
+Each of these commands trigger the `Music.schedule` function.
 
 ### (7) Schedule
 
-### (8) `advance_queue.put_nowait`
+The `Music.schedule` function schedules advancement of the queue, provided the bot is not currently "waiting" ("waiting" is elaborated on in [(10)](#10-do-the-advance-handling)).
 
-### (9) Received `(ctx, error)`
+Within the `Music.schedule` function, the `self.advance_queue.put_nowait` function is called, which places a `(ctx, error)` tuple (see [(8)](#8-received-ctx-error)) in `self.advance_queue`. The `ctx` object is that of the most recently run bot command that calls the `Music.schedule` function. The `put_nowait` function allows an item to be added without pausing execution.
 
-Continuing from [(6)](#6-play-song), the coroutine resumes execution after an item is obtained. This item is a tuple:
+As the `(ctx, error)` item is being awaited in the music advancer task loop, once an item is placed in `self.advance_queue`, the `self.advance_queue.get` function will immediately "capture" it, allowing the music advancer task loop to be unpaused from execution.
+
+The option to force a schedule is done by running the [`;reschedule`](./additional.md#reschedule) command.
+
+### (8) Received `(ctx, error)`
+
+Continuing from [(6)](#6-play-song), the coroutine resumes execution after an item is obtained. This item is a tuple.
 
 - The first element `ctx` is an `discord.ext.commands.context.Context` object
 - The second element `error` is a player error that happened sometime before handling an advance.
@@ -102,9 +109,21 @@ Player error: OSError(10038, 'An operation was attempted on something that is no
 
 Technically, the code is completely functional if the second element was removed. It is kept for clarity and ease of debugging.
 
-### (10) Create a `handle_advance` task
+### (9) Create a `handle_advance` task
 
-### (11) Do the advance handling
+Continuing from [(8)](#8-received-ctx-error), the execution of the music advancer task loop (`Music.handle_advances()` coroutine) resumes. An `asyncio.Task` is created around the `Music.handle_advance()` coroutine, which performs all the music advancing logic.
+
+This task is created with the `(ctx, error)` item returned by `self.advance_queue.get` and will eventually get executed after being placed in the global event loop.
+
+### (10) Do the advance handling
+
+Inside the `Music.handle_advance()` coroutine, the music advancing logic first go through many sanity checks, then plays the songs, and automatically sets up to run the `Music.schedule()` coroutine after playing the song.
+
+...
+
+If there are more than 0 songs in the actual playback queue, right when the playback of a song has ended, the kwarg `after=after` in `ctx.voice_client.play`, will run the `Music.schedule()` coroutine, ensuring that there is an item in `self.advance_queue` to be "picked up" when looping back to the beginning of the while loop in `Music.handle_advance` in [(5)](#5-wait-for-advance_queueget).
+
+If there are 0 songs in the actual playback queue, then the `Music.handle_advance()` will skip the part where `after=after` is added to the `ctx.voice_client.play` function (unless if some Internal Error occurs). This results in the code returning to [(5)](#5-wait-for-advance_queueget) and hanging until [(6)](#6-play-song) happens.
 
 ## Loading and Unloading in Detail
 
