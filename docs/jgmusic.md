@@ -18,13 +18,13 @@ graph TD
     subgraph "Normal Function"
     Z(["(1) Start"]) --> A["(2) On Initialize"];
     A --> B["(3) <code>self.advancer.start</code>"];
-    B --> C["(4) Create <code>handle_advances</code> task"];
+    B --> C["(4) Create <code>handle_advances</code> Task"];
     C --> G["(5) Wait for <code>advance_queue.get</code>"]
-    D["(6) Play song"] --> E["(7) <code>schedule</code>"];
+    D["(6) Play Song"] --> E["(7) <code>schedule</code>"];
     E --> G
     G --> H["(8) Received <code>(ctx, error)</code>"];
-    H --> I["(9) Create a <code>handle_advance</code> task"];
-    I --> J["(10) Do the advance handling"];
+    H --> I["(9) Create a <code>handle_advance</code> Task"];
+    I --> J["(10) Do the Advance Handling"];
     J -->|"<code>after=after<code>"| E;
     end
     subgraph "Loading and Unloading"
@@ -56,7 +56,7 @@ There exists the `bot` object and the `Music` cog. `Music` may be unloaded but `
 
 At the very end of the `__init__` function in `Music`, `self.advancer.start` is called, which eventually [starts](https://discordpy.readthedocs.io/en/stable/ext/tasks/index.html?highlight=start#discord.ext.tasks.Loop.start) the advancer in the event loop. `Music.advancer` is a `discord.ext.tasks.Loop` object that runs once every 15 seconds to see if an `self.advance_task` can be created. If there is an issue (`self.advance_task` will be done), this function auto-restarts the `self.advance_task` advancer.
 
-### (4) Create `handle_advances` task
+### (4) Create `handle_advances` Task
 
 If `self.advance_task` is `None`, it will be set to an `asyncio.Task` (`asyncio.create_task` wrapped) `Music.handle_advances()` coroutine, otherwise known as the **music advancer**[^1].
 
@@ -68,7 +68,7 @@ This gets put in the global `asyncio` event loop and eventually runs "soon".
 
 Inside the `Music.handle_advances()` coroutine is an infinite loop that first `await`s an item from `self.advance_queue` (pauses its execution until it receives the queued item). This infinite loop is called the **music advancer task loop**.
 
-### (6) Play song
+### (6) Play Song
 
 The way to play a song involves invoking the following commands
 
@@ -109,13 +109,13 @@ Player error: OSError(10038, 'An operation was attempted on something that is no
 
 Technically, the code is completely functional if the second element was removed. It is kept for clarity and ease of debugging.
 
-### (9) Create a `handle_advance` task
+### (9) Create a `handle_advance` Task
 
 Continuing from [(8)](#8-received-ctx-error), the execution of the music advancer task loop (`Music.handle_advances()` coroutine) resumes. An `asyncio.Task` is created around the `Music.handle_advance()` coroutine, which performs all the music advancing logic.
 
 This task is created with the `(ctx, error)` item returned by `self.advance_queue.get` and will eventually get executed after being placed in the global event loop.
 
-### (10) Do the advance handling
+### (10) Do the Advance Handling
 
 Inside the `Music.handle_advance()` coroutine, the music advancing logic first go through many sanity checks, then plays the songs, and automatically sets up to run the `Music.schedule()` coroutine after playing the song.
 
