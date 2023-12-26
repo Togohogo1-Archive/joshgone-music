@@ -8,7 +8,7 @@ title: How JG Music Works
 
 To ensure a working music advancing system that works across servers, JG Music at its core uses a somewhat complicated strategy involving asynchronous queues and status flags. In short, the music advancing process is the bot's preprocess-playback-repeat system.
 
-The following flowchart depicts a high-level overview of the music advancing system, including a small section on what happens during [`load`]()s/[`unload`]()s.
+The following flowchart depicts a high-level overview of the music advancing system, including a small section on what happens during [`load`](./dev.md#adminload)s/[`unload`](./dev.md#adminunload)s.
 
 All flowchart nodes are labelled with a number to be elaborated further on in the next sections.
 
