@@ -289,7 +289,7 @@ If there are 0 songs in the actual playback queue, then the `Music.handle_advanc
 
 ## Loading and Unloading in Detail
 
-The bot was designed to be reloadable for ease of development. However loading and unloading when the bot is running may cause unexpected behaviour at times.
+The bot was designed to be reloadable for ease of development. However loading and unloading when the bot is running may cause unexpected behaviour at times. Loading and unloading is only explained in terms of the scope of the music advancement process.
 
 When unloading with `;unload music`, a special function `cog_unload`
 
