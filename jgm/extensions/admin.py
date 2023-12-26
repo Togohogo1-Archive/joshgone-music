@@ -50,7 +50,7 @@ class Admin(commands.Cog):
         await self.bot.wrap_async(self.bot.reload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension reloaded.")
 
-    @commands.command(name="list", hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def extensions(self, ctx):
         extensions = ", ".join(self.bot.extensions)
