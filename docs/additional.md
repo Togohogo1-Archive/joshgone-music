@@ -33,8 +33,8 @@ And some additional owner-only commands:
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;local`](#local) `<query>` | | 1s | Plays a file from the local filesystem |
-| [`;local_prepend`](#local_prepend) `<query>` | | 1s | Plays a file from the local filesystem and places it at the beginning of the queue |
+| [`;local`](#local) `<query>` | | | Plays a file from the local filesystem |
+| [`;local_prepend`](#local_prepend) `<query>` | | | Plays a file from the local filesystem and places it at the beginning of the queue |
 | [`;reschedule`](#reschedule) | |  | Reschedules the current guild onto the advancer task |
 
 [^1]: `[optinal argument] <required arguiment>`
