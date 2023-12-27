@@ -30,7 +30,7 @@ class Database(commands.Cog):
     async def reinit_command(self, ctx):
         await self.on_guild_remove(ctx.guild)
         await self.on_guild_join(ctx.guild)
-        await ctx.send("Reinitialized JoshGone Music.")
+        await ctx.send("Reinitialized Just Good Music.")
 
 def setup(bot):
     return bot.add_cog(Database(bot))
