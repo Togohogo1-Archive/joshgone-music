@@ -31,9 +31,9 @@ And some owner-only subcommands
 
 | Command with Arguments[^1] | Aliases | Cooldown | Description |
 |-|-|-|-|
-| [`;playlist regexfind`](#add) ... | | | |
-| [`;playlist regexremove`](#add) ... | | | |
-| [`;playlist regexsearch`](#add) ... | | | |
+| [`;playlist regexfind`](#regexfind) `[max_amount]` `<regex>` | `;li regexfind` | | Find playlists whose names match the regex pattern |
+| [`;playlist regexremove`](#regexremove) `[max_amount]` `<regex>` | `;li regexremove` | | Remove playlists whose names match the regex pattern |
+| [`;playlist regexsearch`](#regexsearch) `[max_amount]` `<regex>` | `;li regexsearch` | | Find playlists whose contents match the regex pattern |
 
 ## Commands
 
@@ -249,7 +249,7 @@ Find playlists whose contents contain or match the given pattern
 
 This command functions exactly the same as [`;find`](#find) but it acts on the chant contents rather than the chant names.
 
-Searching through chant contents might take a while, so there is an optional parameter that only returns the first `max_amount` chants (in alphabetical order) in which the substring or glob-ish pattern to search for matches the playlist contents.
+Searching through chant contents might take a while, so there is an optional parameter that only returns the first `max_amount` chants (in alphabetical order) in which the substring or glob-ish pattern to search for matches the playlist contents. If not specified, all possible matches will be listed.
 
 #### Arguments
 
@@ -298,6 +298,72 @@ Also like the [`;remove`](#remove) command, it is only possible to update a play
 
 ### [`regexfind`](#regexfind)
 
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Find playlists whose names match the regex pattern
+
+Operates in the same manner as the [`;find`](#find) command but the match string is a regex, which allows for more flexibility.
+
+If specified, the first `max_amount` playlists (sorted alphabetically) found are listed. Otherwise, all possible matches are listed.
+
+#### Arguments
+
+- `max_amount` – (Optional) The maximum number of results to display
+- `regex` – The regex pattern
+
+??? Warning
+
+    It is possible to design a playlist name such that a [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attack is possible. This is why this command is reserved for the owner only. The only known way to recover from a ReDos attack is to restart the bot.
+
+    For example, if there is a playlist named `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaX` and the command `;playlists regexfind (a|a)+$` is run will cause the bot to hang.
+
 ### [`regexremove`](#regexremove)
 
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Remove playlists whose names match the regex pattern
+
+Operates in the same manner as the [`;remove`](#remove) command but the match string is a regex, which allows for more flexibility and the removal of more than 1 playlist.
+
+If specified, the first `max_amount` playlists (sorted alphabetically) with matching names will be removed. Otherwise, all possible matches are removed.
+
+After removal, this command lists out all removed playlists.
+
+#### Arguments
+
+- `max_amount` – (Optional) The maximum number of playlists to remove
+- `regex` – The regex pattern
+
+??? Tip
+
+    This command is useful for removing all playlists with `;playlists remove .*`
+
 ### [`regexsearch`](#regexsearch)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Find playlists whose contents match the regex pattern
+
+Operates in the same manner as the [`;search`](#search) command but the match string is a regex, which allows for more flexibility.
+
+If specified, the first `max_amount` playlists (sorted alphabetically) with matching contents are listed. Otherwise, all possible matches are listed.
+
+#### Arguments
+
+- `max_amount` – (Optional) The maximum number of results to display
+- `regex` – The regex pattern
+
+??? Warning
+
+    Given that playlist contents are longer than playlist names in general, it is possible for this command to take a long time to process.
+
+    A ReDoS attack is still possible here. Simply put the ReDoS string in the playlist name. See [`;regexfind`](#regexfind) for more details.
