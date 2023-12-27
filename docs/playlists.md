@@ -25,7 +25,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 | [`;playlists remove`](#remove) `<name>` | `;li remove` | 1s | Remove a playlist |
 | [`;playlists rename`](#rename) `<name>` `<new_name>` | `;li rename` | 1s | Rename a playlist |
 | [`;playlists search`](#search) `<name_pattern>` `[max_amount]` | `;li search` | 1s | Find playlists whose contents contain or match the given pattern |
-| [`;playlists update`](#update) ... | | | |
+| [`;playlists update`](#update) `<name>` `<text>` | `;li update` | 1s | Update a playlist |
 
 And some owner-only subcommands
 
@@ -257,6 +257,42 @@ Searching through chant contents might take a while, so there is an optional par
 - `max_amount` – (Optional) The maximum number of playlists to return
 
 ### [`update`](#update)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Update a playlist
+
+This command will silently overwrite any previous playlist with the same name. Just like the [`;add`](#add) command, the new playlist contents can be a multiline text block with Discord markdown formatting.
+
+Also like the [`;remove`](#remove) command, it is only possible to update a playlist if the user is the bot owner, server owner, playlist owner or the playlist has no owner.
+
+??? example
+
+    First add a playlist:
+    ```
+    ;playlists add to_be_renamed
+    this
+    contains
+    old
+    contents
+    ```
+
+    Then update it:
+    ```
+    ;playlists update to_be_renamed
+    this
+    contains
+    new
+    contents
+    ```
+
+#### Arguments
+
+- `name` – Name of the playlist to be updated
+- `text` – Contents of the new playlist
 
 ## Owner Only Subcommands
 

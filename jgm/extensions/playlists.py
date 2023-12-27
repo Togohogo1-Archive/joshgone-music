@@ -133,8 +133,7 @@ class Playlists(commands.Cog):
     @_playlists.command(name="search", ignore_extra=False)
     @commands.cooldown(1, 1, BucketType.user)
     async def _search(self, ctx, name_pattern: str, max_amount: typing.Optional[int] = -1):
-        """Find playlists whose contents contain or match the given pattern
-        """
+        """Find playlists whose contents contain or match the given pattern"""
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT playlist_name, playlist_text FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
                 playlists = [row async for row in cursor]
@@ -228,11 +227,9 @@ class Playlists(commands.Cog):
             await ctx.send(message)
 
     @_playlists.command(name="update")
+    @commands.cooldown(1, 1, BucketType.user)
     async def _update(self, ctx, name, *, text):
-        """Update a playlist
-
-        This will silently overwrite any previous playlist with the same name.
-        """
+        """Update a playlist"""
         if len(name) > 35:
             raise ValueError("name too long (length over 35)")
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
