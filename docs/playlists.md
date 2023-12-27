@@ -24,7 +24,7 @@ The [`;playlists`](#playlists) command may be followed by a subcommand to form `
 | [`;playlists owner`](#owner) `<name>` `[new_owner]` | `;li owner` | 1s | Check or set the owner of a playlist |
 | [`;playlists remove`](#remove) `<name>` | `;li remove` | 1s | Remove a playlist |
 | [`;playlists rename`](#rename) `<name>` `<new_name>` | `;li rename` | 1s | Rename a playlist |
-| [`;playlists search`](#search) ... | | | |
+| [`;playlists search`](#search) `<name_pattern>` `[max_amount]` | `;li search` | 1s | Find playlists whose contents contain or match the given pattern |
 | [`;playlists update`](#update) ... | | | |
 
 And some owner-only subcommands
@@ -239,6 +239,22 @@ Additionally, a playlist cannot be renamed to itself or an existing playlist nam
 - `new_name` – The new name of the playlist
 
 ### [`search`](#search)
+
+<sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release">:octicons-rocket-24: v2.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update">:octicons-tag-24: v2.0.0</a>
+</sup>
+
+Find playlists whose contents contain or match the given pattern
+
+This command functions exactly the same as [`;find`](#find) but it acts on the chant contents rather than the chant names.
+
+Searching through chant contents might take a while, so there is an optional parameter that only returns the first `max_amount` chants (in alphabetical order) in which the substring or glob-ish pattern to search for matches the playlist contents.
+
+#### Arguments
+
+- `name_pattern_` – Substring or glob-ish pattern match to find in playlist contents
+- `max_amount` – (Optional) The maximum number of playlists to return
 
 ### [`update`](#update)
 

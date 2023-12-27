@@ -131,10 +131,9 @@ class Playlists(commands.Cog):
             await ctx.send(message)
 
     @_playlists.command(name="search", ignore_extra=False)
+    @commands.cooldown(1, 1, BucketType.user)
     async def _search(self, ctx, name_pattern: str, max_amount: typing.Optional[int] = -1):
         """Find playlists whose contents contain or match the given pattern
-
-        Can use substring or glob-ish pattern match
         """
         async with aiosqlite.connect(os.environ["JOSHGONE_DB"]) as db:
             async with db.execute("SELECT playlist_name, playlist_text FROM playlists WHERE server_id = ?;", (ctx.guild.id,)) as cursor:
