@@ -14,12 +14,4 @@ this bot (JoshGone music) is a basic bare bones, there are minimal permissions s
 
 How is this bot different than the others?
 
-## TODO
-
-- [ ] `<>` not actually needed for optional arguments
-- [ ] Update JGM envvars and db name
-- [ ] Turn all emphasis '', "" to italics
-- [ ] 1x vs x1 speed
-- [ ] Design philosopy (keyboard ASCII, simple, etc.)
-- [ ] Not all changes reflect repo rename
-- [ ] Still have text portions in help manual
+Design philosopy (keyboard ASCII, simple, etc.)
