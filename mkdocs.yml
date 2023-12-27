@@ -2,6 +2,9 @@ site_name: JG (Just Good) Music
 repo_url: https://github.com/Togohogo1/jgmusic
 
 theme:
+  logo: assets/jgmusic.svg
+  favicon: assets/jgmusic.svg
+
   features:
     - navigation.top
     - navigation.sections
