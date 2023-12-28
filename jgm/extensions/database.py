@@ -25,9 +25,9 @@ class Database(commands.Cog):
             await db.execute("DELETE FROM server WHERE server_id = ?;", (guild.id,))
             await db.commit()
 
-    @commands.command(name="reinit", ignore_extra=False, hidden=True)
+    @commands.command(ignore_extra=False, hidden=True)
     @commands.is_owner()
-    async def reinit_command(self, ctx):
+    async def reinit(self, ctx):
         await self.on_guild_remove(ctx.guild)
         await self.on_guild_join(ctx.guild)
         await ctx.send("Reinitialized Just Good Music.")

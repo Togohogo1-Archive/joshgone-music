@@ -35,18 +35,21 @@ class Admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def load(self, ctx, *, module: str):
+        # `wrap_async` because ..._extension used to be sync in v1.x
         await self.bot.wrap_async(self.bot.load_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension loaded.")
 
     @commands.command(hidden=True)
     @commands.is_owner()
     async def unload(self, ctx, *, module: str):
+        # `wrap_async` because ..._extension used to be sync in v1.x
         await self.bot.wrap_async(self.bot.unload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension unloaded.")
 
     @commands.command(hidden=True)
     @commands.is_owner()
     async def reload(self, ctx, *, module: str):
+        # `wrap_async` because ..._extension used to be sync in v1.x
         await self.bot.wrap_async(self.bot.reload_extension(f"jgm.extensions.{module}"))
         await ctx.send("Extension reloaded.")
 
@@ -64,22 +67,10 @@ class Admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def apply(self, ctx):
-        await asyncio.to_thread(self.apply_outstanding)
-        await ctx.send("Migrations applied.")
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
     async def ctx_(self, ctx):
         if not hasattr(self.bot, "ctx_"):
             self.bot._ctx = ctx
             await ctx.send("[DEBUG PURPOSES] Added a `ctx` instance to the bot.")
-
-    def apply_outstanding(self):
-        backend = yoyo.get_backend(f"sqlite:///{os.environ['JOSHGONE_DB']}")
-        migrations = yoyo.read_migrations("./migrations")
-        with backend.lock():
-            backend.apply_migrations(backend.to_apply(migrations))
 
 def setup(bot):
     return bot.add_cog(Admin(bot))
