@@ -69,7 +69,7 @@ class Admin(commands.Cog):
     @commands.is_owner()
     async def ctx_(self, ctx):
         if not hasattr(self.bot, "ctx_"):
-            self.bot._ctx = ctx
+            self.bot.ctx_ = ctx
             await ctx.send("[DEBUG PURPOSES] Added a `ctx` instance to the bot.")
 
 def setup(bot):
