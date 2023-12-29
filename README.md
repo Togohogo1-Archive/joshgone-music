@@ -1,4 +1,4 @@
-# title: Just Good (JG) Music
+# Just Good (JG) Music
 
 <img
     src = "./docs/assets/jgmusic_no_bg.svg"
