@@ -136,14 +136,37 @@ This command removes the current server the bot is in from the table (or does no
 
 ## Database Information
 
+Building off of [More Setup](./setup.md#more-setup), just Good Music uses [SQLite](https://www.sqlite.org/index.html) for database management. In the code, asynchronous database management is handled with [aiosqlite](https://aiosqlite.omnilib.dev/en/stable/). Database migrations are handled with [yoyo](https://aiosqlite.omnilib.dev/en/stable/).
+
+Although the database for playlists is unlikely to evolve much, yoyo is a tool available for developers to take care of any database migrations if necessary. A list of common yoyo commands can be found [here](https://ollycope.com/software/yoyo/latest/#command-line-usage). Remember to append <code>hatch run&nbsp;</code> before every command.
+
+Migration files are located in `./migrations`. More information regarding them can be found [here](https://ollycope.com/software/yoyo/latest/#command-line-usage). The purposes of this bot only requires one with simple apply and rollback steps.
+
+A server may contain 0 or more playlists but a *specific* playlist can come from one and only one server. A playlist cannot exist without a server. These relationships are outlined below in the entity-relation diagram. For more information, see the [mermaid.js](https://mermaid.js.org/syntax/entityRelationshipDiagram.html) docs:
+
+```mermaid
+erDiagram
+    SERVER ||--o{ PLAYLIST : contains
+    SERVER {
+        integer server_id PK
+    }
+    PLAYLIST {
+        integer server_id "PK,FK"
+        text playlist_name "PK"
+        text playlist_text
+        integer owner_id
+    }
+```
+
+In the database, a servers TABLE stores all the server entities and a playlists TABLE stores all the playlist entities.
+
 ## The REPL
 
 All the bot's functionality can be replicated via command line with an REPL (read-evaluate-print-loop), which is an incredibly useful tool for debugging the bot. The REPL is an adaptation of Python 3.9's [asyncio REPL](https://github.com/python/cpython/blob/3.9/Lib/asyncio/__main__.py), using a subclass of Python's builtin `code` module's [`InteractiveConsole`](https://docs.python.org/3/library/code.html#code.InteractiveConsole) class.
 
 On startup, the REPL cog is loaded only if the `JGM_REPL` environment variable is set to 1 (see [Setup](./setup.md) for more details).
 
-
-??? bug
+??? warning
 
     There is an issue with the REPL not being able to register the arrow keys (hence getting previous lines do not work). See this [Stack Overflow](https://stackoverflow.com/questions/68664269/why-doesnt-pressing-the-up-arrow-get-the-previous-command-in-nested-processes) post for more details
 
@@ -167,7 +190,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 🐷🐷🐷 |
 ```
 
-Before using the REPL, it is useful to run `;ctx_` on the bot for access to the Context object:
+Before using the REPL, it is useful to run `;ctx_` on the bot for access to the Context object.
 
 === "REPL"
 
@@ -183,6 +206,10 @@ Before using the REPL, it is useful to run `;ctx_` on the bot for access to the 
     bot.ctx_
     ctx = bot.ctx_
     ```
+
+??? note
+
+    All REPL examples below assumes the examples above a specific example were run
 
 All accessible instance variables and functions in the bot:
 
@@ -245,9 +272,11 @@ Alternatively, there is another way to get the Context variable:
 === "Commands"
 
     ```py
-    server_name = "server_name"
-    text_channel_name = "text_channel_name"
-    message_id = 9999999999999999999
+    # Placeholders to be replaced
+    server_name = ...
+    text_channel_name = ...
+    message_id = ...
+    # Code in the example
     server = discord.utils.get(bot.guilds, name=server_name)
     chat = discord.utils.get(server.text_channels, name=text_channel_name)
     chat_message = await chat.fetch_message(message_id)
@@ -283,4 +312,4 @@ Some basic Python code:
         print(i)
     ```
 
-Of course, there are endless possibilities with the REPL. This section only highlights how to get started with it.
+Of course, there are much more complex things one can do with the REPL. This section only highlights how to get started with it.

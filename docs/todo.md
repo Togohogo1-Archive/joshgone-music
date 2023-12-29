@@ -9,5 +9,6 @@
 - [ ] Not all changes reflect repo rename
 - [ ] Still have text portions in help manual
 - [ ] Specify any default params (max_remove = -1 or smth)
+- [ ] Rename server to servers in migrations python file
 
 ## General
