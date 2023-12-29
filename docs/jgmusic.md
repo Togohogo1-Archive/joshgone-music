@@ -1,12 +1,12 @@
 ---
-title: How JG Music Works
+title: How JGMusic Works
 ---
 
 *The information may be useful for future developers looking to dig more into the inner working of the bot and for my own reference. Understanding this section requires knowledge on Python's `asyncio` library.*
 
 ## Flowchart
 
-To ensure a working music advancing system that works across servers, JG Music at its core uses a somewhat complicated strategy involving asynchronous queues and status flags. In short, the music advancing process is the bot's preprocess-playback-repeat system.
+To ensure a working music advancing system that works across servers, JGMusic at its core uses a somewhat complicated strategy involving asynchronous queues and status flags. In short, the music advancing process is the bot's preprocess-playback-repeat system.
 
 The following flowchart depicts a high-level overview of the music advancing system, including a small section on what happens during [`load`](./dev.md#adminload)s/[`unload`](./dev.md#adminunload)s.
 
@@ -42,7 +42,7 @@ graph TD
 
 ### (1) Start
 
-The entry point of JG Music is `jgmusic.py`. When `hatch run jgm` is executed in the terminal, a series of functions are called which eventually leads to `jgm/extensions/music.Music.setup` which is a special discord.py function that executes when an extension gets loaded with [`load_extension`](https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.load_extension):
+The entry point of JGMusic is `jgmusic.py`. When `hatch run jgm` is executed in the terminal, a series of functions are called which eventually leads to `jgm/extensions/music.Music.setup` which is a special discord.py function that executes when an extension gets loaded with [`load_extension`](https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.load_extension):
 
 ### (2) On Initialize
 

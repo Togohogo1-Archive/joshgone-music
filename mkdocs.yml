@@ -1,4 +1,4 @@
-site_name: JG (Just Good) Music
+site_name: Just Good (JG) Music
 repo_url: https://github.com/Togohogo1/jgmusic
 
 theme:
@@ -70,13 +70,13 @@ markdown_extensions:
 
 nav:
   - Setup: setup.md
-  - Using JG Music:
+  - Using JGMusic:
     - Basic Music Features: basic.md
     - Additional Music Features: additional.md
     - Playlist Management: playlists.md
   - For Developers:
     - Developer Features: dev.md
-    - How JG Music Works: jgmusic.md
+    - How JGMusic Works: jgmusic.md
 
 extra_javascript:
   - javascripts/mathjax.js
