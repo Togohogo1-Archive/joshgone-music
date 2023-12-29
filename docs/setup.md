@@ -80,3 +80,4 @@ To build the documentation from source, run:
 ```sh
 hatch env run -e docs serve
 ```
+
