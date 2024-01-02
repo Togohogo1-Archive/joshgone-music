@@ -1,0 +1,1127 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../playlists/">
+      
+      
+        <link rel="next" href="../jgmusic/">
+      
+      
+      <link rel="icon" href="../assets/jgmusic.svg">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>Developer Features - Just Good (JG) Music</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Just Good (JG) Music" class="md-header__button md-logo" aria-label="Just Good (JG) Music" data-md-component="logo">
+      
+  <img src="../assets/jgmusic.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Just Good (JG) Music
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Developer Features
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Togohogo1/jgmusic" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Just Good (JG) Music" class="md-nav__button md-logo" aria-label="Just Good (JG) Music" data-md-component="logo">
+      
+  <img src="../assets/jgmusic.svg" alt="logo">
+
+    </a>
+    Just Good (JG) Music
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Togohogo1/jgmusic" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Using JGMusic
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Using JGMusic
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../basic/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Music Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Additional Music Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playlists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Playlist Management
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    For Developers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            For Developers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Developer Features
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Developer Features
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Admin Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adminctx_" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.ctx_
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminextensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.extensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminload" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.load
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminreload" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.reload
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminshutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.shutdown
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminunload" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.unload
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#databasereinit" class="md-nav__link">
+    <span class="md-ellipsis">
+      database.reinit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Information
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-repl" class="md-nav__link">
+    <span class="md-ellipsis">
+      The REPL
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jgmusic/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How JGMusic Works
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Admin Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adminctx_" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.ctx_
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminextensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.extensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminload" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.load
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminreload" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.reload
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminshutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.shutdown
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminunload" class="md-nav__link">
+    <span class="md-ellipsis">
+      admin.unload
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#databasereinit" class="md-nav__link">
+    <span class="md-ellipsis">
+      database.reinit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Information
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-repl" class="md-nav__link">
+    <span class="md-ellipsis">
+      The REPL
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Developer Features</h1>
+
+<h2 id="overview">Overview</h2>
+<p>This section contains an overview of commands located in <code>jgm/extensions/admin.py</code> and <code>jgm/extensions/database.py</code>. Which are owner-only commands that interface more closely with the bot's code.</p>
+<p>Additionally, this section also contains information on tools the bot offers that developers might find useful, like a REPL or database management details.</p>
+<p>Since these commands are not meant to be used by the average user, there is no point in having an alias or cooldown.</p>
+<p>First, common administrative commands:</p>
+<table>
+<thead>
+<tr>
+<th>Command with Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#adminctx_"><code>;ctx_</code></a></td>
+<td>Adds a context instance to the bot</td>
+</tr>
+<tr>
+<td><a href="#adminextensions"><code>;extensions</code></a></td>
+<td>Lists all loaded extensions</td>
+</tr>
+<tr>
+<td><a href="#adminload"><code>;load</code></a> <code>&lt;module&gt;</code></td>
+<td>Loads an extension/cog</td>
+</tr>
+<tr>
+<td><a href="#adminreload"><code>;reload</code></a> <code>&lt;module&gt;</code></td>
+<td>Reloads an extension/cog</td>
+</tr>
+<tr>
+<td><a href="#adminshutdown"><code>;shutdown</code></a></td>
+<td>Shuts the bot down</td>
+</tr>
+<tr>
+<td><a href="#adminunload"><code>;unload</code></a> <code>&lt;module&gt;</code></td>
+<td>Unloads an extension/cog</td>
+</tr>
+<tr>
+<td><a href="#databasereinit"><code>;reinit</code></a></td>
+<td>Reinitializes the bot for a server</td>
+</tr>
+</tbody>
+</table>
+<h2 id="admin-commands">Admin Commands</h2>
+<h3 id="adminctx_"><a href="#adminctx_"><code>admin.ctx_</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v2.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.0.0</a>
+</sup></p>
+<p>Adds a context instance to the bot</p>
+<p>Adding a <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=discord%20ext%20commands%20context%20context#context">context</a> instance to the global <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=bot#bot">bot</a> object requires manually running this command, which is useful for debugging in the <a href="#the-repl">REPL</a>.</p>
+<h3 id="adminextensions"><a href="#adminextensions"><code>admin.extensions</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.0.0</a>
+</sup></p>
+<p>Lists all loaded extensions</p>
+<p>Those that are loaded on startup are:</p>
+<ul>
+<li><code>jgm.extensions.admin</code></li>
+<li><code>jgm.extensions.playlists</code></li>
+<li><code>jgm.extensions.music</code></li>
+<li><code>jgm.extensions.database</code></li>
+<li><code>jgm.extensions.info</code></li>
+<li><code>jgm.extensions.repl</code><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+</ul>
+<h3 id="adminload"><a href="#adminload"><code>admin.load</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v1.0.0</a>
+</sup></p>
+<p>Loads an extension/cog</p>
+<p>Loads with the <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.load_extension"><code>load_extension</code></a> coroutine function.</p>
+<h4 id="arguments">Arguments</h4>
+<ul>
+<li><code>module</code> – The extension/cog</li>
+</ul>
+<h3 id="adminreload"><a href="#adminreload"><code>admin.reload</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v1.0.0</a>
+</sup></p>
+<p>Reloads an extension/cog</p>
+<p>Reloads with the <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.reload_extension"><code>reload_extension</code></a> coroutine function.</p>
+<p>This is almost the same as an unload followed by a load. See the <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.reload_extension"><code>reload_extension</code></a> documentation for more information.</p>
+<h4 id="arguments_1">Arguments</h4>
+<ul>
+<li><code>module</code> – The extension/cog</li>
+</ul>
+<details class="note">
+<summary>Note</summary>
+<p>Running <code>;reload admin</code> on the bot will work, but running <code>;unload admin</code> followed by <code>;load admin</code> will not.</p>
+</details>
+<details class="warning">
+<summary>Warning</summary>
+<p>Although the bot was designed to support functionality to the fullest across cog loads and unloads (mainly for use during development, when a code modification is to be seen in action without needing to restart a bot), There is a chance that something might break after a reload.</p>
+</details>
+<h3 id="adminshutdown"><a href="#adminshutdown"><code>admin.shutdown</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v1.0.0</a>
+</sup></p>
+<p>Shuts the bot down</p>
+<p>Shuts the bot down by awaiting the <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=bot%20close#discord.ext.commands.Bot.close">close()</a> coroutine.</p>
+<h3 id="adminunload"><a href="#adminunload"><code>admin.unload</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v1.0.0</a>
+</sup></p>
+<p>Unloads an extension/cog</p>
+<p>Unloads with the <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.reload_extension"><code>unload_extension</code></a> coroutine function.</p>
+<h4 id="arguments_2">Arguments</h4>
+<ul>
+<li><code>module</code> – The extension/cog</li>
+</ul>
+<h3 id="databasereinit"><a href="#databasereinit"><code>database.reinit</code></a></h3>
+<p><sup>
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Initial Release"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a23.699 23.699 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.305 1.305 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.305 1.305 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a23.668 23.668 0 0 1 1.542-1.594l1.304-1.23A10.753 10.753 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.275 22.275 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744a.545.545 0 0 1 .034.034l1.743 1.858 3.288-2.192a22.263 22.263 0 0 0 3.854-3.257l1.228-1.303a9.251 9.251 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.252 9.252 0 0 0-6.344 2.518ZM6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.236.236 0 0 1-.18-.067.236.236 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0 .9.9.9 2.6 0 3.5Zm-.592-8.588L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8Z"/></svg></span> v1.0.0</a>&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Togohogo1/joshgone-music/releases/tag/v1.0.0" target="_blank", title="Latest Update"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.0.0</a>
+</sup></p>
+<p>Reinitializes the bot for a server</p>
+<p>To maintain the functionality of commands that require database reading like the <a href="../playlists/"><code>;playlist</code></a> commands, the server (guild) ID must exist under the <code>server</code> TABLE in the <code>jgmusic.db</code> database file.</p>
+<p>This command removes the current server the bot is in from the table (or does nothing if it doesn't exist), and adds it back in, thereby "reinitializing" it.</p>
+<h2 id="database-information">Database Information</h2>
+<p>Building off of <a href="../setup/#more-setup">More Setup</a>, just Good Music uses <a href="https://www.sqlite.org/index.html">SQLite</a> for database management. In the code, asynchronous database management is handled with <a href="https://aiosqlite.omnilib.dev/en/stable/">aiosqlite</a>. Database migrations are handled with <a href="https://aiosqlite.omnilib.dev/en/stable/">yoyo</a>.</p>
+<p>Although the database for playlists is unlikely to evolve much, yoyo is a tool available for developers to take care of any database migrations if necessary. A list of common yoyo commands can be found <a href="https://ollycope.com/software/yoyo/latest/#command-line-usage">here</a>. Remember to append <code>hatch run&nbsp;</code> before every command.</p>
+<p>Migration files are located in <code>./migrations</code>. More information regarding them can be found <a href="https://ollycope.com/software/yoyo/latest/#command-line-usage">here</a>. The purposes of this bot only requires one with simple apply and rollback steps.</p>
+<p>A server may contain 0 or more playlists but a <em>specific</em> playlist can come from one and only one server. A playlist cannot exist without a server. These relationships are outlined below in the entity-relation diagram. For more information, see the <a href="https://mermaid.js.org/syntax/entityRelationshipDiagram.html">mermaid.js</a> docs:</p>
+<pre class="mermaid"><code>erDiagram
+    SERVER ||--o{ PLAYLIST : contains
+    SERVER {
+        integer server_id PK
+    }
+    PLAYLIST {
+        integer server_id "PK,FK"
+        text playlist_name "PK"
+        text playlist_text
+        integer owner_id
+    }</code></pre>
+<p>In the database, a servers TABLE stores all the server entities and a playlists TABLE stores all the playlist entities.</p>
+<h2 id="the-repl">The REPL</h2>
+<p>All the bot's functionality can be replicated via command line with an REPL (read-evaluate-print-loop), which is an incredibly useful tool for debugging the bot. The REPL is an adaptation of Python 3.9's <a href="https://github.com/python/cpython/blob/3.9/Lib/asyncio/__main__.py">asyncio REPL</a>, using a subclass of Python's builtin <code>code</code> module's <a href="https://docs.python.org/3/library/code.html#code.InteractiveConsole"><code>InteractiveConsole</code></a> class.</p>
+<p>On startup, the REPL cog is loaded only if the <code>JGM_REPL</code> environment variable is set to 1 (see <a href="../setup/">Setup</a> for more details).</p>
+<details class="warning">
+<summary>Warning</summary>
+<p>There is an issue with the REPL not being able to register the arrow keys (hence getting previous lines do not work). See this <a href="https://stackoverflow.com/questions/68664269/why-doesnt-pressing-the-up-arrow-get-the-previous-command-in-nested-processes">Stack Overflow</a> post for more details</p>
+</details>
+<p>As soon as <code>hatch run jgm</code> is run in the command prompt a message along the lines of the text below will be printed and the REPL will then be ready for use (yes, instead of the classic <code>&gt;&gt;&gt;</code>, pigs are used instead):</p>
+<div class="highlight"><pre><span></span><code>Loaded admin
+Loaded playlists
+Loaded music
+Loaded database
+Loaded info
+Loaded repl
+All extensions loaded: [admin, playlists, music, database, info, repl]
+JoshGone logged on as JGMusic#7263.
+SQLite version is 3.37.2.
+Initializing bot `owner_id` [Workaround to potential bug].
+asyncio REPL 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
+Use &quot;await&quot; directly instead of &quot;asyncio.run()&quot;.
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+🐷🐷🐷 |import asyncio
+🐷🐷🐷 |
+</code></pre></div>
+<p>Before using the REPL, it is useful to run <code>;ctx_</code> on the bot for access to the Context object.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">REPL</label><label for="__tabbed_1_2">Commands</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>🐷🐷🐷 |bot.ctx_
+&lt;discord.ext.commands.context.Context object at 0x7f09dc7290c0&gt;
+🐷🐷🐷 |ctx = bot.ctx_
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>bot.ctx_
+ctx = bot.ctx_
+</code></pre></div>
+</div>
+</div>
+</div>
+<details class="note">
+<summary>Note</summary>
+<p>All REPL examples below assumes the examples above a specific example were run</p>
+</details>
+<p>All accessible instance variables and functions in the bot:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">REPL</label><label for="__tabbed_2_2">Commands</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>🐷🐷🐷 |dir(bot)
+[&#39;_BotBase__cogs&#39;, &#39;_BotBase__extensions&#39;, &#39;_BotBase__tree&#39;, &#39;__aenter__&#39;, &#39;__aexit__&#39;, &#39;__class__&#39;, &#39;__class_getitem__&#39;, &#39;__delattr__&#39;, &#39;__dict__&#39;, &#39;__dir__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__le__&#39;, &#39;__lt__&#39;, &#39;__module__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__orig_bases__&#39;, &#39;__parameters__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__setattr__&#39;, &#39;__sizeof__&#39;, &#39;__slots__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;__weakref__&#39;, &#39;_after_invoke&#39;, &#39;_application&#39;, &#39;_async_setup_hook&#39;, &#39;_before_invoke&#39;, &#39;_call_before_identify_hook&#39;, &#39;_call_module_finalizers&#39;, &#39;_check_once&#39;, &#39;_checks&#39;, &#39;_closed&#39;, &#39;_connection&#39;, &#39;_enable_debug_events&#39;, &#39;_get_state&#39;, &#39;_get_websocket&#39;, &#39;_handle_ready&#39;, &#39;_handlers&#39;, &#39;_help_command&#39;, &#39;_hooks&#39;, &#39;_is_protocol&#39;, &#39;_listeners&#39;, &#39;_load_from_module_spec&#39;, &#39;_music_advance_queue&#39;, &#39;_music_data&#39;, &#39;_music_old_ytdl_bug_report_message&#39;, &#39;_ready&#39;, &#39;_remove_module_references&#39;, &#39;_resolve_name&#39;, &#39;_run_event&#39;, &#39;_schedule_event&#39;, &#39;activity&#39;, &#39;add_check&#39;, &#39;add_cog&#39;, &#39;add_command&#39;, &#39;add_listener&#39;, &#39;add_view&#39;, &#39;after_invoke&#39;, &#39;all_commands&#39;, &#39;allowed_mentions&#39;, &#39;application&#39;, &#39;application_flags&#39;, &#39;application_id&#39;, &#39;application_info&#39;, &#39;before_identify_hook&#39;, &#39;before_invoke&#39;, &#39;cached_messages&#39;, &#39;can_run&#39;, &#39;case_insensitive&#39;, &#39;change_presence&#39;, &#39;check&#39;, &#39;check_once&#39;, &#39;clear&#39;, &#39;close&#39;, &#39;cogs&#39;, &#39;command&#39;, &#39;command_prefix&#39;, &#39;commands&#39;, &#39;connect&#39;, &#39;create_dm&#39;, &#39;create_guild&#39;, &#39;ctx_&#39;, &#39;delete_invite&#39;, &#39;description&#39;, &#39;dispatch&#39;, &#39;emojis&#39;, &#39;event&#39;, &#39;extensions&#39;, &#39;extra_events&#39;, &#39;fetch_channel&#39;, &#39;fetch_guild&#39;, &#39;fetch_guilds&#39;, &#39;fetch_invite&#39;, &#39;fetch_premium_sticker_packs&#39;, &#39;fetch_stage_instance&#39;, &#39;fetch_sticker&#39;, &#39;fetch_template&#39;, &#39;fetch_user&#39;, &#39;fetch_webhook&#39;, &#39;fetch_widget&#39;, &#39;get_all_channels&#39;, &#39;get_all_members&#39;, &#39;get_channel&#39;, &#39;get_cog&#39;, &#39;get_command&#39;, &#39;get_context&#39;, &#39;get_emoji&#39;, &#39;get_guild&#39;, &#39;get_partial_messageable&#39;, &#39;get_prefix&#39;, &#39;get_stage_instance&#39;, &#39;get_sticker&#39;, &#39;get_user&#39;, &#39;group&#39;, &#39;guilds&#39;, &#39;help_command&#39;, &#39;http&#39;, &#39;hybrid_command&#39;, &#39;hybrid_group&#39;, &#39;intents&#39;, &#39;invoke&#39;, &#39;is_closed&#39;, &#39;is_owner&#39;, &#39;is_ready&#39;, &#39;is_ws_ratelimited&#39;, &#39;latency&#39;, &#39;listen&#39;, &#39;load_extension&#39;, &#39;login&#39;, &#39;loop&#39;, &#39;on_command_error&#39;, &#39;on_error&#39;, &#39;on_message&#39;, &#39;owner_id&#39;, &#39;owner_ids&#39;, &#39;persistent_views&#39;, &#39;private_channels&#39;, &#39;process_commands&#39;, &#39;recursively_remove_all_commands&#39;, &#39;reload_extension&#39;, &#39;remove_check&#39;, &#39;remove_cog&#39;, &#39;remove_command&#39;, &#39;remove_listener&#39;, &#39;run&#39;, &#39;setup_hook&#39;, &#39;shard_count&#39;, &#39;shard_id&#39;, &#39;start&#39;, &#39;status&#39;, &#39;stickers&#39;, &#39;strip_after_prefix&#39;, &#39;tree&#39;, &#39;unload_extension&#39;, &#39;user&#39;, &#39;users&#39;, &#39;voice_clients&#39;, &#39;wait_for&#39;, &#39;wait_until_ready&#39;, &#39;walk_commands&#39;, &#39;wrap_async&#39;, &#39;ws&#39;]
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nb">dir</span><span class="p">(</span><span class="n">bot</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Next, getting a extension/cog and printing out its instance variables and function:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">REPL</label><label for="__tabbed_3_2">Commands</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>🐷🐷🐷 |m = bot.cogs[&quot;Music&quot;]
+🐷🐷🐷 |dir(m)
+[&#39;_DEFAULT_YTDL_OPTS&#39;, &#39;_FFMPEG_FILTER_DICT&#39;, &#39;__annotations__&#39;, &#39;__class__&#39;, &#39;__cog_app_commands__&#39;, &#39;__cog_app_commands_group__&#39;, &#39;__cog_commands__&#39;, &#39;__cog_description__&#39;, &#39;__cog_group_auto_locale_strings__&#39;, &#39;__cog_group_description__&#39;, &#39;__cog_group_extras__&#39;, &#39;__cog_group_name__&#39;, &#39;__cog_group_nsfw__&#39;, &#39;__cog_is_app_commands_group__&#39;, &#39;__cog_listeners__&#39;, &#39;__cog_name__&#39;, &#39;__cog_settings__&#39;, &#39;__delattr__&#39;, &#39;__dict__&#39;, &#39;__dir__&#39;, &#39;__discord_app_commands_error_handler__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__le__&#39;, &#39;__lt__&#39;, &#39;__module__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__setattr__&#39;, &#39;__sizeof__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;__weakref__&#39;, &#39;_batch_add&#39;, &#39;_eject&#39;, &#39;_get_overridden_method&#39;, &#39;_inject&#39;, &#39;_play_local&#39;, &#39;_play_raw&#39;, &#39;_play_stream&#39;, &#39;advance_queue&#39;, &#39;advance_task&#39;, &#39;advancer&#39;, &#39;app_command&#39;, &#39;apply_filter&#39;, &#39;autoshuffle&#39;, &#39;autoshuffler&#39;, &#39;bot&#39;, &#39;bot_check&#39;, &#39;bot_check_once&#39;, &#39;cancel&#39;, &#39;check_connected&#39;, &#39;check_playing&#39;, &#39;clear&#39;, &#39;cog_after_invoke&#39;, &#39;cog_app_command_error&#39;, &#39;cog_before_invoke&#39;, &#39;cog_check&#39;, &#39;cog_command_error&#39;, &#39;cog_load&#39;, &#39;cog_unload&#39;, &#39;current&#39;, &#39;data&#39;, &#39;daycore&#39;, &#39;description&#39;, &#39;ensure_connected&#39;, &#39;fast_forward&#39;, &#39;filter_dict&#39;, &#39;forceskip&#39;, &#39;get_app_commands&#39;, &#39;get_commands&#39;, &#39;get_info&#39;, &#39;get_listeners&#39;, &#39;handle_advance&#39;, &#39;handle_advances&#39;, &#39;has_app_command_error_handler&#39;, &#39;has_error_handler&#39;, &#39;info&#39;, &#39;info_global&#39;, &#39;interaction_check&#39;, &#39;join&#39;, &#39;jump&#39;, &#39;leave&#39;, &#39;listener&#39;, &#39;local&#39;, &#39;local_prepend&#39;, &#39;loop&#39;, &#39;move&#39;, &#39;nightcore&#39;, &#39;normal&#39;, &#39;normalize_index&#39;, &#39;on_advancer_cancel&#39;, &#39;pause&#39;, &#39;pitch&#39;, &#39;playback_history&#39;, &#39;playback_history_clear&#39;, &#39;player_from_url&#39;, &#39;playlist_link&#39;, &#39;pop_info&#39;, &#39;qualified_name&#39;, &#39;queue&#39;, &#39;remove&#39;, &#39;reschedule&#39;, &#39;resume&#39;, &#39;rewind&#39;, &#39;schedule&#39;, &#39;shuffle&#39;, &#39;shuffle_helper&#39;, &#39;skip&#39;, &#39;sleep_in&#39;, &#39;sleep_task&#39;, &#39;speed&#39;, &#39;stream&#39;, &#39;stream_prepend&#39;, &#39;uri_validator&#39;, &#39;volume&#39;, &#39;walk_app_commands&#39;, &#39;walk_commands&#39;, &#39;ytdl_opts&#39;]
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">bot</span><span class="o">.</span><span class="n">cogs</span><span class="p">[</span><span class="s2">&quot;Music&quot;</span><span class="p">]</span>
+<span class="nb">dir</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>After joining a voice channel, we run a command from the cog:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">REPL</label><label for="__tabbed_4_2">Commands</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>🐷🐷🐷 |await m.stream(ctx, url=&quot;Anomalie Velours&quot;)
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">await</span> <span class="n">m</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;Anomalie Velours&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Alternatively, there is another way to get the Context variable:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">REPL</label><label for="__tabbed_5_2">Commands</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>🐷🐷🐷 |server = discord.utils.get(bot.guilds, name=server_name)
+🐷🐷🐷 |chat = discord.utils.get(server.text_channels, name=text_channel_name)
+🐷🐷🐷 |chat_message = await chat.fetch_message(message_id)
+🐷🐷🐷 |ctx = await bot.get_context(chat_message)
+🐷🐷🐷 |msg = await ctx.send(&quot;Just Good Music&quot;)
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># Placeholders to be replaced</span>
+<span class="n">server_name</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">text_channel_name</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">message_id</span> <span class="o">=</span> <span class="o">...</span>
+<span class="c1"># Code in the example</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">discord</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bot</span><span class="o">.</span><span class="n">guilds</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">server_name</span><span class="p">)</span>
+<span class="n">chat</span> <span class="o">=</span> <span class="n">discord</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">server</span><span class="o">.</span><span class="n">text_channels</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">text_channel_name</span><span class="p">)</span>
+<span class="n">chat_message</span> <span class="o">=</span> <span class="k">await</span> <span class="n">chat</span><span class="o">.</span><span class="n">fetch_message</span><span class="p">(</span><span class="n">message_id</span><span class="p">)</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="k">await</span> <span class="n">bot</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Just Good Music&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Some basic Python code:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">REPL</label><label for="__tabbed_6_2">Commands</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>🐷🐷🐷 |for i in range(10):
+🐽🐽🐽 :        print(i)
+🐽🐽🐽 :
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+🐷🐷🐷 |
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Of course, there are much more complex things one can do with the REPL. This section only highlights how to get started with it.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>See the <a href="#the-repl">REPL</a> section&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Togohogo1" target="_blank" rel="noopener" title="Togohogo1" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.sections"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1141 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../dev/">
+      
+      
+      
+      <link rel="icon" href="../assets/jgmusic.svg">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>How JGMusic Works - Just Good (JG) Music</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flowchart" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Just Good (JG) Music" class="md-header__button md-logo" aria-label="Just Good (JG) Music" data-md-component="logo">
+      
+  <img src="../assets/jgmusic.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Just Good (JG) Music
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How JGMusic Works
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Togohogo1/jgmusic" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Just Good (JG) Music" class="md-nav__button md-logo" aria-label="Just Good (JG) Music" data-md-component="logo">
+      
+  <img src="../assets/jgmusic.svg" alt="logo">
+
+    </a>
+    Just Good (JG) Music
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Togohogo1/jgmusic" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Using JGMusic
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Using JGMusic
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../basic/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Music Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Additional Music Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playlists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Playlist Management
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    For Developers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            For Developers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Developer Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    How JGMusic Works
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    How JGMusic Works
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flowchart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flowchart
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normal-function-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Normal Function in Detail
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normal Function in Detail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      (1) Start
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-on-initialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      (2) On Initialize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-selfadvancerstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      (3) self.advancer.start
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-handle_advances-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      (4) Create handle_advances Task
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-wait-for-advance_queueget" class="md-nav__link">
+    <span class="md-ellipsis">
+      (5) Wait for advance_queue.get
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-play-song" class="md-nav__link">
+    <span class="md-ellipsis">
+      (6) Play Song
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      (7) Schedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-received-ctx-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      (8) Received (ctx, error)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-create-a-handle_advance-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      (9) Create a handle_advance Task
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-do-the-advance-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      (10) Do the Advance Handling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-and-unloading-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Loading and Unloading in Detail
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flowchart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flowchart
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normal-function-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Normal Function in Detail
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normal Function in Detail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      (1) Start
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-on-initialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      (2) On Initialize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-selfadvancerstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      (3) self.advancer.start
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-handle_advances-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      (4) Create handle_advances Task
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-wait-for-advance_queueget" class="md-nav__link">
+    <span class="md-ellipsis">
+      (5) Wait for advance_queue.get
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-play-song" class="md-nav__link">
+    <span class="md-ellipsis">
+      (6) Play Song
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      (7) Schedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-received-ctx-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      (8) Received (ctx, error)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-create-a-handle_advance-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      (9) Create a handle_advance Task
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-do-the-advance-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      (10) Do the Advance Handling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-and-unloading-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Loading and Unloading in Detail
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>How JGMusic Works</h1>
+
+<p><em>The information may be useful for future developers looking to dig more into the inner working of the bot and for my own reference. Understanding this section requires knowledge on Python's <code>asyncio</code> library.</em></p>
+<h2 id="flowchart">Flowchart</h2>
+<p>To ensure a working music advancing system that works across servers, JGMusic at its core uses a somewhat complicated strategy involving asynchronous queues and status flags. In short, the music advancing process is the bot's preprocess-playback-repeat system.</p>
+<p>The following flowchart depicts a high-level overview of the music advancing system, including a small section on what happens during <a href="../dev/#adminload"><code>load</code></a>s/<a href="../dev/#adminunload"><code>unload</code></a>s.</p>
+<p>All flowchart nodes are labelled with a number to be elaborated further on in the next sections.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph Normal Function
+        Z(["(1) Start"]) --&gt; A["(2) On Initialize"];
+        A --&gt; B["(3) &lt;code&gt;self.advancer.start&lt;/code&gt;"];
+        B --&gt; C["(4) Create &lt;code&gt;handle_advances&lt;/code&gt; Task"];
+        C --&gt; G["(5) Wait for &lt;code&gt;advance_queue.get&lt;/code&gt;"]
+        D["(6) Play Song"] --&gt; E["(7) &lt;code&gt;schedule&lt;/code&gt;"];
+        E --&gt; G
+        G --&gt; H["(8) Received &lt;code&gt;(ctx, error)&lt;/code&gt;"];
+        H --&gt; I["(9) Create a &lt;code&gt;handle_advance&lt;/code&gt; Task"];
+        I --&gt; J["(10) Do the Advance Handling"];
+        J --&gt;|"&lt;code&gt;after=after&lt;code&gt;"| E;
+    end
+    subgraph Loading and Unloading
+        c["&lt;code&gt;;load music&lt;/code&gt;"] --&gt; A;
+        B --&gt; a["&lt;code&gt;;unload music&lt;/code&gt;"];
+        a --&gt; b["&lt;code&gt;cog_unload&lt;/code&gt;"];
+        b --&gt; d["&lt;code&gt;on_advancer_cancel&lt;/code&gt;"];
+    end</code></pre>
+<h2 id="normal-function-in-detail">Normal Function in Detail</h2>
+<details class="note">
+<summary>Note</summary>
+<p>Mentions of <code>music.py</code>, <code>self</code>, or <code>Music</code> will refer to the file <code>jgm/extensions/music</code>, unless stated otherwise.</p>
+</details>
+<h3 id="1-start">(1) Start</h3>
+<p>The entry point of JGMusic is <code>jgmusic.py</code>. When <code>hatch run jgm</code> is executed in the terminal, a series of functions are called which eventually leads to <code>jgm/extensions/music.Music.setup</code> which is a special discord.py function that executes when an extension gets loaded with <a href="https://discordpy.readthedocs.io/en/stable/ext/commands/api.html?highlight=load_extension#discord.ext.commands.Bot.load_extension"><code>load_extension</code></a>:</p>
+<h3 id="2-on-initialize">(2) On Initialize</h3>
+<p>Initialization refers to the instantiation of the <code>Music</code> cog, which happens when <code>Music.setup</code> calls <code>return bot.add_cog(Music(bot))</code>:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code><span class="o">...</span>
+<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">bot</span><span class="p">):</span>
+    <span class="c1"># Suppress noise about console usage from errors</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">_music_old_ytdl_bug_report_message</span> <span class="o">=</span> <span class="n">youtube_dl</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">bug_reports_message</span>
+    <span class="n">youtube_dl</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">bug_reports_message</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+
+<span class="hll">    <span class="k">return</span> <span class="n">bot</span><span class="o">.</span><span class="n">add_cog</span><span class="p">(</span><span class="n">Music</span><span class="p">(</span><span class="n">bot</span><span class="p">))</span>
+</span><span class="o">...</span>
+</code></pre></div>
+<p>The bot enters this state on startups and loads, which is covered <a href="#loading-and-unloading-in-detail">below</a>.</p>
+<h3 id="3-selfadvancerstart">(3) <code>self.advancer.start</code></h3>
+<p>There exists the <code>bot</code> object and the <code>Music</code> cog. <code>Music</code> may be unloaded but <code>bot</code> will be available at all times. An <code>asyncio.Queue</code> object is stored in the <code>bot</code> and a copy is stored in <code>Music</code>. An <code>asyncio.Task</code> object <code>self.advance_task</code> is also stored in <code>Music</code> and is by default <code>None</code>. At the very end of the <code>__init__</code> function in <code>Music</code>, <code>self.advancer.start</code> is called, which eventually <a href="https://discordpy.readthedocs.io/en/stable/ext/tasks/index.html?highlight=start#discord.ext.tasks.Loop.start">starts</a> the advancer in the event loop:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>        <span class="o">...</span>
+        <span class="c1"># Data is persistent between extension reloads</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">bot</span><span class="p">,</span> <span class="s2">&quot;_music_data&quot;</span><span class="p">):</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">_music_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">bot</span><span class="p">,</span> <span class="s2">&quot;_music_advance_queue&quot;</span><span class="p">):</span>
+<span class="hll">            <span class="n">bot</span><span class="o">.</span><span class="n">_music_advance_queue</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">bot</span><span class="o">.</span><span class="n">_music_data</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">advance_queue</span> <span class="o">=</span> <span class="n">bot</span><span class="o">.</span><span class="n">_music_advance_queue</span>
+</span>        <span class="c1"># Start the advancer&#39;s auto-restart task</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">advancer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span>        <span class="o">...</span>
+</code></pre></div>
+<p><code>Music.advancer</code> is a <code>discord.ext.tasks.Loop</code> object that runs once every 15 seconds to see if an <code>self.advance_task</code> can be created. If there is an issue (<code>self.advance_task</code> will be done), this function auto-restarts the <code>self.advance_task</code> advancer:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code><span class="o">...</span>
+    <span class="c1"># Auto-restart task for the advancer task</span>
+<span class="hll">    <span class="nd">@tasks</span><span class="o">.</span><span class="n">loop</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">advancer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">exc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exception occured in advancer task:&quot;</span><span class="p">)</span>
+                <span class="n">traceback</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
+<span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span class="o">...</span>
+</code></pre></div>
+<h3 id="4-create-handle_advances-task">(4) Create <code>handle_advances</code> Task</h3>
+<p>If <code>self.advance_task</code> is <code>None</code>, it will be set to an <code>asyncio.Task</code> (<code>asyncio.create_task</code> wrapped) <code>Music.handle_advances()</code> coroutine, otherwise known as the <strong>music advancer</strong><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+    <span class="nd">@tasks</span><span class="o">.</span><span class="n">loop</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">advancer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+<span class="hll">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+</span><span class="hll">                <span class="bp">self</span><span class="o">.</span><span class="n">handle_advances</span><span class="p">(),</span>
+</span><span class="hll">                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;music_advancer&quot;</span>
+</span><span class="hll">            <span class="p">)</span>
+</span>    <span class="o">...</span>
+</code></pre></div>
+<p>This gets put in the global <code>asyncio</code> event loop and eventually runs "soon".</p>
+<h3 id="5-wait-for-advance_queueget">(5) Wait for <code>advance_queue.get</code></h3>
+<p>Inside the <code>Music.handle_advances()</code> coroutine is an infinite loop that first <code>await</code>s an item from <code>self.advance_queue</code> (pauses its execution until it receives the queued item). This infinite loop is called the <strong>music advancer task loop</strong>:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+    <span class="c1"># The advancer task loop</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_advances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll">        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span class="hll">            <span class="n">item</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span>            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_advance</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h3 id="6-play-song">(6) Play Song</h3>
+<p>The way to play a song involves invoking the following commands</p>
+<ul>
+<li><code>;stream</code></li>
+<li><code>;stream_prepend</code></li>
+<li><code>;local</code></li>
+<li><code>;local_prepend</code></li>
+<li><code>;playlist_link</code></li>
+</ul>
+<p>or directly as Python code from the <a href="../dev/#the-repl">REPL</a>.</p>
+<p>Each of these commands trigger the <code>Music.schedule</code> function.</p>
+<h3 id="7-schedule">(7) Schedule</h3>
+<p>The <code>Music.schedule</code> function schedules advancement of the queue, provided the bot is not currently "waiting" ("waiting" is elaborated on in <a href="#10-do-the-advance-handling">(10)</a>).</p>
+<p>Within the <code>Music.schedule</code> function, the <code>self.advance_queue.put_nowait</code> function is called, which places a <code>(ctx, error)</code> tuple (see <a href="#8-received-ctx-error">(8)</a>) in <code>self.advance_queue</code>. The <code>ctx</code> object is that of the most recently run bot command that calls the <code>Music.schedule</code> function. The <code>put_nowait</code> function allows an item to be added without pausing execution:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+<span class="hll">    <span class="c1"># Schedules advancement of the queue</span>
+</span>    <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;waiting&quot;</span><span class="p">]:</span>
+<span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">advance_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="n">ctx</span><span class="p">,</span> <span class="n">error</span><span class="p">))</span>
+</span>            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;waiting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>As the <code>(ctx, error)</code> item is being awaited in the music advancer task loop, once an item is placed in <code>self.advance_queue</code>, the <code>self.advance_queue.get</code> function will immediately "capture" it, allowing the music advancer task loop to be unpaused from execution.</p>
+<p>The option to force a schedule is done by running the <a href="../additional/#reschedule"><code>;reschedule</code></a> command.</p>
+<h3 id="8-received-ctx-error">(8) Received <code>(ctx, error)</code></h3>
+<p>Continuing from <a href="#6-play-song">(6)</a>, the coroutine resumes execution after an item is obtained. This item is a tuple.</p>
+<ul>
+<li>The first element <code>ctx</code> is an <code>discord.ext.commands.context.Context</code> object</li>
+<li>The second element <code>error</code> is a player error that happened sometime before handling an advance.</li>
+</ul>
+<p>Having a <code>discord.ext.commands.context.Context</code> object useful for fetching the user who ran the command, along with the server they are currently in, along with a lot of other useful information. This allows one <code>asyncio.Queue</code> to be used to manage multiple bot "instances" in many servers.</p>
+<p>Player errors are quite rare under normal usage of the bot. However, the most common one is</p>
+<div class="highlight"><pre><span></span><code>Player error: OSError(10038, &#39;An operation was attempted on something that is not a socket&#39;, None, 10038, None)
+</code></pre></div>
+<p>Technically, the code is completely functional if the second element was removed. It is kept for clarity and ease of debugging.</p>
+<h3 id="9-create-a-handle_advance-task">(9) Create a <code>handle_advance</code> Task</h3>
+<p>Continuing from <a href="#8-received-ctx-error">(8)</a>, the execution of the music advancer task loop (<code>Music.handle_advances()</code> coroutine) resumes. An <code>asyncio.Task</code> is created around the <code>Music.handle_advance()</code> coroutine, which performs all the music advancing logic:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="hll">            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_advance</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+</span>    <span class="o">...</span>
+</code></pre></div>
+<p>This task is created with the <code>(ctx, error)</code> item returned by <code>self.advance_queue.get</code> and will eventually get executed after being placed in the global event loop.</p>
+<h3 id="10-do-the-advance-handling">(10) Do the Advance Handling</h3>
+<p>Inside the <code>Music.handle_advance()</code> coroutine, the <strong>music advancing logic</strong> first go through many sanity/error checks, then plays the songs, and automatically sets up to run the <code>Music.schedule()</code> coroutine after playing the song.</p>
+<h4 id="status-flags">Status Flags</h4>
+<p>There are 2 flags that control the state of the bot, located in the <code>Music.data</code> dictionary. For each server, a specified "state dictionary" (we call this <code>info</code>) is obtained through a call to <code>self.get_info(ctx)</code>. These 2 flags are</p>
+<ul>
+<li><code>info["processing"]</code>, can be <code>True</code> or <code>False</code></li>
+<li><code>info["waiting"]</code>, can be <code>True</code> or <code>False</code></li>
+</ul>
+<p><code>info["waiting"]</code> is <code>True</code> right after <code>self.advance_queue.put_nowait</code> put an item in <code>self.advance_queue</code> when <code>Music.schedule()</code> is run (then proceeds to handle the advancement). It gets set to <code>False</code> when the music advancing logic runs into exception or the advancing logic finishes:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>        <span class="o">...</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Internal Error: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="hll">            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;waiting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</span>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+<span class="hll">            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;waiting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</span>            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;processing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="o">...</span>
+</code></pre></div>
+<p>It is usually not possible to reset or interrupt the music advancing logic, but when something breaks that causes the bot to hang, a <code>;reschedule</code> may be required.</p>
+<p><code>info["processing"]</code> is mostly <code>False</code>, but can be <code>True</code> if something unexpected happens, usually high latency. Spamming the <code>;reschedule</code> command is likely to trigger this response as well, because one way to go back to the beginning of the music advancing logic with <code>info["processing"] == True</code> is to force a schedule at the perfect time:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+    <span class="c1"># The actual music advancing logic</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># If we are processing it right now...</span>
+<span class="hll">            <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;processing&quot;</span><span class="p">]:</span>
+</span>                <span class="c1"># Wait a bit and reschedule it again</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">advance_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="k">return</span>
+<span class="hll">            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;processing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</span>    <span class="o">...</span>
+</code></pre></div>
+<p>Basically, "processing" spans the entirety of the music advancing logic, but covers slightly less time than "waiting" because it has some queue conflict system built into it.</p>
+<p>Togging of <code>True</code>/<code>False</code> of <code>info["processing"]</code> only happens in the music advancing logic.</p>
+<details class="note">
+<summary>Note</summary>
+<p>If it ever so happens that <code>info["processing"] = True</code> when the music advancing logic starts, there are is a line of code: <code>await asyncio.sleep(1)</code> in a previous block that force the music advancing logic to pause for a second before continuing. This is done to prevent two <code>(ctx, error)</code> tuples in <code>self.advance_queue</code> from continually kicking each other out, which may happen through quick reschedules, or if the bot is very laggy while the computer is very fast. In practice, this should never happen.</p>
+</details>
+<p>Summary, in general:</p>
+<table>
+<thead>
+<tr>
+<th>Waiting</th>
+<th>Processing</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>True</code></td>
+<td><code>True</code></td>
+<td>Almost always going into the music advancing logic, except for a split second at the very beginning</td>
+</tr>
+<tr>
+<td><code>True</code></td>
+<td><code>False</code></td>
+<td>The opposite of the above, in a split second at the very beginning of the music advancing logic</td>
+</tr>
+<tr>
+<td><code>False</code></td>
+<td><code>True</code></td>
+<td>Almost never happens</td>
+</tr>
+<tr>
+<td><code>False</code></td>
+<td><code>False</code></td>
+<td>When bot exits the music advancing logic and starts playing the song</td>
+</tr>
+</tbody>
+</table>
+<p>The table accounts for 99% of all cases. The remaining 1% originates is deemed to be unexpected behaviour, once again usually fixable with a <code>;reschedule</code> and in the worse case, a restart.</p>
+<h4 id="setup-after-playing">Setup After Playing</h4>
+<p>If there are more than 0 songs in the actual playback queue, right when the playback of a song has ended, the kwarg <code>after=after</code> in <a href="https://discordpy.readthedocs.io/en/stable/api.html?highlight=play#discord.VoiceClient.play"><code>ctx.voice_client.play</code></a> will run the <code>Music.schedule()</code> coroutine as <code>after</code> (the argument) is set to <code>lambda error, ctx=ctx: self.schedule(ctx, error)</code>, ensuring that there is an item in <code>self.advance_queue</code> to be "picked up" when looping back to the beginning of the while loop in <code>Music.handle_advance</code> in <a href="#5-wait-for-advance_queueget">(5)</a>:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>            <span class="o">...</span>
+            <span class="k">if</span> <span class="n">queue</span><span class="p">:</span>
+                <span class="c1"># Get the next song</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="n">info</span><span class="p">[</span><span class="s2">&quot;current&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span>
+                <span class="c1"># Get an audio source and play it</span>
+<span class="hll">                <span class="n">after</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">error</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+</span>                <span class="k">async</span> <span class="k">with</span> <span class="n">channel</span><span class="o">.</span><span class="n">typing</span><span class="p">():</span>
+                    <span class="o">...</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">voice_client</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">voice_client</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="n">after</span><span class="p">)</span>
+<span class="hll">                <span class="k">await</span> <span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Now playing: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span>            <span class="o">...</span>
+</code></pre></div>
+<p>If there are 0 songs in the actual playback queue, then the <code>Music.handle_advance()</code> will skip the part where <code>after=after</code> is added to the <code>ctx.voice_client.play</code> function (unless if some Internal Error occurs). This results in the code returning to <a href="#5-wait-for-advance_queueget">(5)</a> and hanging until <a href="#6-play-song">(6)</a> happens.</p>
+<h2 id="loading-and-unloading-in-detail">Loading and Unloading in Detail</h2>
+<p>The bot was designed to be reloadable for ease of development. However loading and unloading when the bot is running may cause unexpected behaviour at times. Loading and unloading is only explained in terms of the scope of the music advancement process.</p>
+<p>When unloading with <code>;unload music</code>, a special function <code>cog_unload</code></p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+    <span class="c1"># Cancel just the advancer and the auto-restart tasks</span>
+    <span class="k">def</span> <span class="nf">cog_unload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">advancer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+</span>    <span class="o">...</span>
+</code></pre></div>
+<p>is called. This cancels the advancer/monitoring task (that runs once ever 15 seconds). In turn, this cancels the music advancer and sets <code>self.advance_task</code> to <code>None</code>:</p>
+<div class="highlight"><span class="filename">music.py</span><pre><span></span><code>    <span class="o">...</span>
+    <span class="nd">@advancer</span><span class="o">.</span><span class="n">after_loop</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">on_advancer_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advancer</span><span class="o">.</span><span class="n">is_being_cancelled</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="hll">                <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+</span><span class="hll">                <span class="bp">self</span><span class="o">.</span><span class="n">advance_task</span> <span class="o">=</span> <span class="kc">None</span>
+</span>    <span class="o">...</span>
+</code></pre></div>
+<p>Upon unloading, the important instance variables that "disappear" are:</p>
+<ul>
+<li><code>Music.data</code></li>
+<li><code>Music.advance_queue</code></li>
+<li><code>Music.advance_task</code></li>
+</ul>
+<p>However, when <code>;load music</code> is performed, the first 2 variables on the list are set to references stored in the global bot object, while the third one gets set to a new music advancer with the same functionality. In short, loading the music cog brings the bot back to <a href="#2-on-initialize">(2)</a>.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Space replaced with underscore in the code.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Togohogo1" target="_blank" rel="noopener" title="Togohogo1" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.sections"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
